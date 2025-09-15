@@ -1,40 +1,3 @@
-<?php
-require "db_connect.php";
-
-if (isset($_POST['register'])) {
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-
-
-    $check_email = "SELECT * FROM userdata WHERE email = ?";
-    $stmt = mysqli_prepare($conn, $check_email);
-    mysqli_stmt_bind_param($stmt, "s", $email);
-    mysqli_stmt_execute($stmt);
-    $result_email = mysqli_stmt_get_result($stmt);
-
-    if (mysqli_num_rows($result_email) > 0) {
-        echo "<script>alert('Email Already Registered');</script>";
-    } else {
-
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-
-        $reg_query = "INSERT INTO userdata (username, email, password) VALUES (?, ?, ?)";
-        $stmt = mysqli_prepare($conn, $reg_query);
-        mysqli_stmt_bind_param($stmt, "sss", $username, $email, $password_hash);
-        $result = mysqli_stmt_execute($stmt);
-
-        if ($result) {
-            echo "<script>alert('Register Successful!'); window.location.href='login.php';</script>";
-        } else {
-            echo "<script>alert('Registration Failed. Please try again later.');</script>";
-        }
-    }
-}
-?>
-
-<!-- username@123 -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -46,14 +9,21 @@ if (isset($_POST['register'])) {
     <!-- <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/295/295128.png"> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <title>Registration</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 3px;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
     <div class="container p-5 d-flex flex-column align-items-center">
 
-        <form method="post" class="form-control mt-5 p-4" id="myform" style="height:auto; width:380px;
+        <form action="partials/_register.php" method="post" class="form-control mt-5 p-4" id="myForm" style="height:auto; width:380px;
             box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
             rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;">
             <div class="row text-center">
@@ -82,47 +52,46 @@ if (isset($_POST['register'])) {
                 color: navy;">I have an Account <a href="./login.php" style="text-decoration: none;">Login</a></p>
             </div>
         </form>
-    </div>
+        <script>
+            $(document).ready(function () {
+                $("#myForm").validate({
+                    rules: {
+                        username: {
+                            required: true,
+                            minlength: 2
+                        },
+                        email: {
+                            required: true,
+                            email: true
+                        },
+                        password: {
+                            required: true,
+                            minlength: 6
+                        }
+                    },
+                    messages: {
+                        username: {
+                            required: "Please enter your name",
+                            minlength: "Your name must consist of at least 2 characters"
+                        },
+                        email: {
+                            required: "Please enter your email address",
+                            email: "Please enter a valid email address"
+                        },
+                        password: {
+                            required: "Please provide a password",
+                            minlength: "Your password must be at least 6 characters long"
+                        }
+                    },
+                    submitHandler: function (form) {
 
-    <!-- form validate -->
-    <script>
-        $(document).redy(function () {
-            $("#myform").validate({
-                rules: {
-                    username: {
-                        required: true,
-                        minilenghth: 2
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    password: {
-                        required: true,
-                        minilenghth: 6
+                        alert("Form submitted successfully!");
+                        form.submit();
                     }
-                },
-                message: {
-                    username: {
-                        required: "Please enter username",
-                        minlength: "Your username must be at least 2 characters long"
-                    },
-                    email: {
-                        required: "Please enter email",
-                        email: "Please enter a valid email address"
-                    },
-                    password: {
-                        required: "Please enter password",
-                        minlength: "Your password must be at least 6 characters long"
-                    }
-                },
-                submitHandler: function (form) {
-                    alert("Form is valid and ready to submit!");
-                    form.submit();
-                }
-            })
-        });
-    </script>
+                });
+            });
+        </script>
+    </div>
 </body>
 
 </html>
