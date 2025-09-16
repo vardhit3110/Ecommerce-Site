@@ -84,8 +84,7 @@
                         }
                     },
                     submitHandler: function (form) {
-
-                        alert("Form submitted successfully!");
+                        // alert("Form submitted successfully!");
                         form.submit();
                     }
                 });
