@@ -1,9 +1,6 @@
 <?php
 require "slider.php";
 require "db_connect.php";
-
-// user update code...
-
 ?>
 
 <!DOCTYPE html>
@@ -74,53 +71,69 @@ require "db_connect.php";
 
         <div class="container p-4">
             <!-- Edit Form If ID is set -->
+            <?php
+            if (isset($_GET['id'])) {
+                $id = $_GET['id'];
+                $stmt = mysqli_prepare($conn, "SELECT * FROM userdata WHERE id= ?");
+                mysqli_stmt_bind_param($stmt, "i", $id);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                if ($row = mysqli_fetch_assoc($result)) {
+                    ?>
 
-            
-            
-            <h4>Edit User</h4>
-            <form method="POST" class="mb-4">
-                <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                <div class="row mb-3">
-                    <div class="col">
-                        <input type="text" name="username" class="form-control" placeholder="Username" value="<?php ?>"
-                            required>
-                    </div>
-                    <div class="col">
-                        <input type="email" name="email" class="form-control" placeholder="Email" value="<?php ?>"
-                            required>
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
-                        <input type="text" name="phone" class="form-control" placeholder="Phone" value="<?php ?>">
-                    </div>
-                    <div class="col">
-                        <input type="text" name="city" class="form-control" placeholder="City" value="<?php ?>">
-                    </div>
-                    <div class="col">
-                        <select name="gender" class="form-control" required>
-                            <option value="Male" <?php ?>>Male</option>
-                            <option value="Female" <?php ?>>Female</option>
-                            <option value="Other" <?php ?>>Other</option>
-                        </select>
-                    </div>
-                </div>
-                <button type="submit" name="update" class="btn btn-success">Update</button>
-                <a href="?" class="btn btn-secondary">Cancel</a>
-            </form>
-
+                    <h4>Edit User</h4>
+                    <form action="partials/_edit-user.php" method="POST" class="mb-4">
+                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" name="username" class="form-control" placeholder="Username"
+                                    value="<?php echo htmlspecialchars($row['username']); ?>" required>
+                            </div>
+                            <div class="col">
+                                <input type="email" name="email" class="form-control" placeholder="Email"
+                                    value="<?php echo htmlspecialchars($row['email']); ?>" disabled required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <input type="text" name="phone" class="form-control" placeholder="Phone"
+                                    value="<?php echo htmlspecialchars($row['phone']); ?>">
+                            </div>
+                            <div class="col">
+                                <input type="text" name="city" class="form-control" placeholder="City"
+                                    value="<?php echo htmlspecialchars($row['city']); ?>">
+                            </div>
+                            <div class="col">
+                                <select name="gender" class="form-control" required>
+                                    <option value="1" <?php echo htmlspecialchars($row['gender'] == '1' ? 'selected' : '') ?>>Male
+                                    </option>
+                                    <option value="2" <?php echo htmlspecialchars($row['gender'] == '2' ? 'selected' : '') ?>>
+                                        Female</option>
+                                    <option value="" <?php echo htmlspecialchars($row['gender'] == '' ? 'selected' : '') ?>>
+                                        Please Select Gender</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" name="update" class="btn btn-success">Update</button>
+                        <a href="?" class="btn btn-secondary">Cancel</a>
+                    </form>
+                    <?php
+                }
+            }
+            ?>
 
             <!-- User Table -->
             <div class="table-responsive">
-                <table class="table table-hover table-bordered border-dark">
+                <table class="table table-hover table-bordered border-dark text-center">
                     <thead class="table-dark">
-                        <tr>
+                        <tr class="border-warning">
                             <th>Id</th>
                             <th>Username</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>City</th>
                             <th>Gender</th>
+                            <th>Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -143,10 +156,29 @@ require "db_connect.php";
                                 echo "<td>{$row['email']}</td>";
                                 echo "<td>" . ($row['phone'] ?: 'N/A') . "</td>";
                                 echo "<td>" . ($row['city'] ?: 'N/A') . "</td>";
-                                echo "<td>" . ($row['gender'] ?: 'N/A') . "</td>";
+                                if ($row['gender'] == 1) {
+                                    $gender = "Male";
+                                } elseif ($row['gender'] == 2) {
+                                    $gender = "Female";
+                                } else {
+                                    $gender = "N/A";
+                                }
+                                echo "<td>" . $gender . "</td>";
+
+                                if ($row['status'] == 1) {
+                                    $status = "Active";
+                                } else {
+                                    $status = "Inactive";
+                                }
+                                echo '<td><form method="post">
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" class="form-check-input" role="switch" id="switchCheckChecked" checked>
+                                </div></form>
+                                        </td>';
+
                                 echo "<td>
                                     <a href='?id={$row['id']}' class='btn btn-primary btn-sm me-2'>Edit</a>
-                                    <a href='delete.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
                                   </td>";
                                 echo "</tr>";
                             }

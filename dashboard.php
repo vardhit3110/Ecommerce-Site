@@ -59,8 +59,8 @@ if ($email == true) {
         ?></h2>
     </div>
     <div class="table-responsive p-5">
-        <table class="table table-hover table-bordered border-dark">
-            <thead class="table-success">
+        <table class="table table-hover table-bordered border-dark text-center">
+            <thead class="table-success border-dark">
                 <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Username</th>
@@ -87,9 +87,17 @@ if ($email == true) {
                         echo "<td>" . $row['email'] . "</td>";
                         echo "<td>" . ($row['phone'] !== null ? $row['phone'] : 'N/A') . "</td>";
                         echo "<td>" . ($row['city'] !== null ? $row['city'] : 'N/A') . "</td>";
-                        echo "<td>" . ($row['gender'] !== null ? $row['gender'] : 'N/A') . "</td>";
+
+                        if ($row['gender'] == 1) {
+                            $gender = "Male";
+                        } elseif ($row['gender'] == 2) {
+                            $gender = "Female";
+                        } else {
+                            $gender = "N/A";
+                        }
+                        echo "<td>" . $gender . "</td>";
                         echo '<td><form method="post"><a href="edit.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm me-2">Edit</a>
-                              <a href="delete.php?id=' . $row['id'] . '" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure you want to delete this record?\')">Delete</a></form></td>';
+                              <a href="partials/_user-delete.php" class="btn btn-danger btn-sm")" >Delete</a></form></td>';
                         echo "</tr>";
                     }
                 } else {
