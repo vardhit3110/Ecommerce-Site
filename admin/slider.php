@@ -2,9 +2,9 @@
 require "db_connect.php";
 session_start();
 $email = $_SESSION['email'];
-if($email==true){
+if ($email == true) {
 
-}else{
+} else {
     header("location: index.php");
 }
 ?>
@@ -219,6 +219,10 @@ if($email==true){
             font-size: 14px;
         }
 
+        .nav-links .logout {
+            bottom: -425px;
+        }
+
         /* Content Area */
         .content-area {
             background: white;
@@ -334,6 +338,7 @@ if($email==true){
                     <span>Dashboard</span>
                 </a>
             </li>
+
             <li>
                 <a href="users_data.php">
                     <i class="fas fa-users"></i>
@@ -341,8 +346,15 @@ if($email==true){
                 </a>
             </li>
 
-
             <li>
+                <a href="category_list.php">
+                    <i class="fa-duotone fa-solid fa-folder-plus"></i>
+                    <span>Category List</span>
+                </a>
+            </li>
+
+
+            <li class="logout">
                 <a href="partials/_logout.php">
                     <i class="fa fa-sign-out"></i>
                     <span>Logout</span>

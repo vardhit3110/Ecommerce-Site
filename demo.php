@@ -1,23 +1,21 @@
-<?php 
-require "slider.php"; 
-require "db.php"; // Ensure DB connection is included
+<?php
+require "slider.php";
+require "db_connect.php";
 
-// Update logic (after form submit)
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
-    $id = $_POST['id'];
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $city = $_POST['city'];
-    $gender = $_POST['gender'];
-
-    $update_query = "UPDATE userdata SET username=?, email=?, phone=?, city=?, gender=? WHERE id=?";
-    $stmt = mysqli_prepare($conn, $update_query);
-    mysqli_stmt_bind_param($stmt, 'sssssi', $username, $email, $phone, $city, $gender, $id);
-    mysqli_stmt_execute($stmt);
-
-    // Redirect to avoid form resubmission
-    header("Location: " . strtok($_SERVER["REQUEST_URI"], '?'));
+// Add this code at the top to handle the AJAX status update request
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
+    $user_id = intval($_POST['user_id']);
+    $status = intval($_POST['status']);
+    
+    $stmt = mysqli_prepare($conn, "UPDATE userdata SET status = ? WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "ii", $status, $user_id);
+    $result = mysqli_stmt_execute($stmt);
+    
+    if ($result) {
+        echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+    }
     exit;
 }
 ?>
@@ -25,125 +23,142 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- ... existing head content ... -->
     <style>
-        .container {
-            background-color: white;
-            border-radius: 20px;
-        }
+        /* ... existing styles ... */
 
-        .pagination {
+        /* Updated Toggle Switch Styles */
+        .status-toggle-container {
             display: flex;
-            list-style: none;
-            justify-content: center;
-            padding-left: 0;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
 
-        .page-item {
-            margin: 0 4px;
+        .status-indicator {
+            display: inline-block;
+            font-weight: 600;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
         }
 
-        .page-link {
-            display: block;
-            padding: 8px 12px;
-            color: #007bff;
-            text-decoration: none;
-            border: 1px solid #dee2e6;
-            border-radius: 4px;
-            transition: background-color 0.2s ease;
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            border-radius: 20px;
+            background: #e5e5e5;
+            cursor: pointer;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        .page-item.active .page-link {
-            background-color: #007bff;
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 2;
+        }
+
+        .toggle-text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .toggle-on {
+            color: #2ecc71;
+            opacity: 0;
+        }
+
+        .toggle-off {
+            color: #e74c3c;
+            opacity: 1;
+        }
+
+        .toggle-switch.active {
+            background: rgba(46, 204, 113, 0.3);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: calc(100% - 18px);
+            transform: rotate(360deg);
+        }
+
+        .toggle-switch.active .toggle-on {
+            opacity: 1;
+        }
+
+        .toggle-switch.active .toggle-off {
+            opacity: 0;
+        }
+
+        .toggle-switch.inactive {
+            background: rgba(231, 76, 60, 0.3);
+        }
+
+        .toggle-switch.inactive .toggle-slider {
+            left: 2px;
+            transform: rotate(0);
+        }
+
+        .toggle-switch.inactive .toggle-on {
+            opacity: 0;
+        }
+
+        .toggle-switch.inactive .toggle-off {
+            opacity: 1;
+        }
+
+        .status-indicator.active {
+            background: #2ecc71;
             color: white;
-            border-color: #007bff;
-            cursor: default;
+            box-shadow: 0 1px 3px rgba(46, 204, 113, 0.3);
         }
 
-        .page-item.disabled .page-link {
-            color: #6c757d;
+        .status-indicator.inactive {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
+        }
+        
+        /* Loading indicator */
+        .status-updating {
+            opacity: 0.7;
             pointer-events: none;
-            background-color: #f8f9fa;
-            border-color: #dee2e6;
-            cursor: default;
-        }
-
-        .page-link:hover {
-            background-color: #e9ecef;
-        }
-
-        .disabled:hover {
-            cursor: not-allowed;
         }
     </style>
 </head>
-
 <body>
-<div class="main-content">
-    <div class="header">
-        <h1><i class="fa fa-users" aria-hidden="true"></i> User Table</h1>
-    </div>
-
-    <div class="container p-4">
-        <!-- Edit Form If ID is set -->
-        <?php
-        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
-            $edit_id = $_GET['id'];
-            $edit_query = "SELECT * FROM userdata WHERE id=?";
-            $stmt = mysqli_prepare($conn, $edit_query);
-            mysqli_stmt_bind_param($stmt, 'i', $edit_id);
-            mysqli_stmt_execute($stmt);
-            $result = mysqli_stmt_get_result($stmt);
-            if ($row = mysqli_fetch_assoc($result)) {
-        ?>
-                <h4>Edit User</h4>
-                <form method="POST" class="mb-4">
-                    <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                    <div class="row mb-3">
-                        <div class="col">
-                            <input type="text" name="username" class="form-control" placeholder="Username" value="<?= htmlspecialchars($row['username']) ?>" required>
-                        </div>
-                        <div class="col">
-                            <input type="email" name="email" class="form-control" placeholder="Email" value="<?= htmlspecialchars($row['email']) ?>" required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col">
-                            <input type="text" name="phone" class="form-control" placeholder="Phone" value="<?= htmlspecialchars($row['phone']) ?>">
-                        </div>
-                        <div class="col">
-                            <input type="text" name="city" class="form-control" placeholder="City" value="<?= htmlspecialchars($row['city']) ?>">
-                        </div>
-                        <div class="col">
-                            <select name="gender" class="form-control" required>
-                                <option value="Male" <?= $row['gender'] == 'Male' ? 'selected' : '' ?>>Male</option>
-                                <option value="Female" <?= $row['gender'] == 'Female' ? 'selected' : '' ?>>Female</option>
-                                <option value="Other" <?= $row['gender'] == 'Other' ? 'selected' : '' ?>>Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" name="update" class="btn btn-success">Update</button>
-                    <a href="?" class="btn btn-secondary">Cancel</a>
-                </form>
-        <?php
-            }
-        }
-        ?>
-
+    <div class="main-content">
+        <!-- ... existing header and container content ... -->
+        
         <!-- User Table -->
         <div class="table-responsive">
-            <table class="table table-hover table-bordered border-dark">
+            <table class="table table-hover table-bordered border-dark text-center">
                 <thead class="table-dark">
-                    <tr>
+                    <tr class="border-warning">
                         <th>Id</th>
                         <th>Username</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>City</th>
                         <th>Gender</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -166,11 +181,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
                             echo "<td>{$row['email']}</td>";
                             echo "<td>" . ($row['phone'] ?: 'N/A') . "</td>";
                             echo "<td>" . ($row['city'] ?: 'N/A') . "</td>";
-                            echo "<td>" . ($row['gender'] ?: 'N/A') . "</td>";
+                            if ($row['gender'] == 1) {
+                                $gender = "Male";
+                            } elseif ($row['gender'] == 2) {
+                                $gender = "Female";
+                            } else {
+                                $gender = "N/A";
+                            }
+                            echo "<td>" . $gender . "</td>";
+
+                            // Determine initial status based on database value
+                            $status_class = ($row['status'] == 1) ? 'active' : 'inactive';
+                            $status_text = ($row['status'] == 1) ? 'Active' : 'Inactive';
+                            
+                            echo '<td>
+                            <div class="status-toggle-container">
+                                <div class="status-indicator ' . $status_class . '" data-user-id="' . $row['id'] . '">' . $status_text . '</div>
+                                <div class="toggle-switch ' . $status_class . '" data-user-id="' . $row['id'] . '" data-status="' . $row['status'] . '">
+                                    <div class="toggle-slider"></div>
+                                    <div class="toggle-text">
+                                        <span class="toggle-on">On</span>
+                                        <span class="toggle-off">Off</span>
+                                    </div>
+                                </div>
+                            </div>
+                            </td>';
+
                             echo "<td>
-                                    <a href='?id={$row['id']}' class='btn btn-primary btn-sm me-2'>Edit</a>
-                                    <a href='delete.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
-                                  </td>";
+                                <a href='?id={$row['id']}' class='btn btn-primary btn-sm me-2'>Edit</a>
+                                <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                              </td>";
                             echo "</tr>";
                         }
                     } else {
@@ -181,29 +221,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
             </table>
         </div>
 
-        <!-- Pagination -->
-        <?php
-        $sql = "SELECT COUNT(*) AS total FROM userdata";
-        $result = mysqli_query($conn, $sql);
-        $row = mysqli_fetch_assoc($result);
-        $total_user = $row['total'];
-        $total_page = ceil($total_user / $total_data);
-
-        echo '<ul class="pagination">';
-        echo '<li class="page-item ' . ($page <= 1 ? 'disabled' : '') . '"><a class="page-link" href="?page=' . max(1, $page - 1) . '">« Prev</a></li>';
-        for ($i = 1; $i <= $total_page; $i++) {
-            $active = ($i == $page) ? 'active' : '';
-            echo "<li class='page-item $active'><a class='page-link' href='?page=$i'>$i</a></li>";
-        }
-        echo '<li class="page-item ' . ($page >= $total_page ? 'disabled' : '') . '"><a class="page-link" href="?page=' . min($total_page, $page + 1) . '">Next »</a></li>';
-        echo '</ul>';
-        ?>
+        <!-- ... existing pagination and footer ... -->
     </div>
-
-    <br>
-    <div class="footer">
-        <p>&copy; 2023 Admin Panel. All rights reserved.</p>
-    </div>
-</div>
+    
+    <!-- Add jQuery (required for AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    
 </body>
 </html>

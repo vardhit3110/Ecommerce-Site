@@ -2,11 +2,32 @@
 include 'db_connect.php';
 session_start();
 $email = $_SESSION['email'];
+$status = $_SESSION['status'];
 if ($email == true) {
 
 } else {
     header('Location: login.php');
 }
+
+/* status fetch */
+$sql = "SELECT * FROM userdata WHERE email = ?";
+$stmt = mysqli_prepare($conn, $sql);
+mysqli_stmt_bind_param($stmt, "s", $email);
+mysqli_stmt_execute($stmt);
+$result_email = mysqli_stmt_get_result($stmt);
+
+if (mysqli_num_rows($result_email) > 0) {
+    while ($row = mysqli_fetch_assoc($result_email)) {
+        $status = $row['status'];
+        if ($status == 1) {
+
+        } else {
+                echo "<script>alert('Login failed. This account has been blocked.');window.location.href='login.php';</script>";
+        }
+    }
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -65,10 +65,7 @@
         <div class="header">
             <h1>Welcome, <?php echo $email; ?></h1>
             <div class="user-area">
-                <div class="notification">
-                    <i class="fas fa-bell"></i>
-                    <div class="badge">3</div>
-                </div>
+
                 <div class="user-profile">
                     <i class="fa fa-user-secret fa-2x" aria-hidden="true"></i>&nbsp;
                     <div class="user-info">
@@ -82,12 +79,12 @@
         require "db_connect.php";
 
         $counts = [];
-        $tables = ["userdata"];
+        $tables = ['userdata', 'categories'];
         foreach ($tables as $table) {
-            $coun_query = "SELECT * FROM $table";
-            $result = mysqli_query($conn, $coun_query);
-            $row = mysqli_num_rows($result);
-            $counts[$table] = $row;
+            $existSql = "SELECT * FROM $table";
+            $result = mysqli_query($conn, $existSql);
+            $numExistRows = mysqli_num_rows($result);
+            $counts[$table] = $numExistRows;
         }
         ?>
         <!-- Content Area -->
@@ -100,13 +97,13 @@
                     <div class="dashboard-card1">
                         <div class="text-dark">
                             <h3 style="font-weight: bold ;">Total Users </h3>
-                            <h4><?php echo $counts["userdata"] = $row; ?></h4>
+                            <h4><?php echo $counts['userdata']; ?></h4>
                         </div>
                     </div>
                     <div class="dashboard-card2">
                         <div class="text-dark">
-                            <h3 style="font-weight: bold;">Name: Orders</h3>
-                            <h4>Count: 0</h4>
+                            <h3 style="font-weight: bold;">Total Categories </h3>
+                            <h4><?php echo $counts['categories']; ?></h4>
                         </div>
                     </div>
                     <div class="dashboard-card3">
@@ -122,7 +119,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>&copy; 2023 Admin Panel. All rights reserved.</p>
+            <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>
     </div>
 </body>

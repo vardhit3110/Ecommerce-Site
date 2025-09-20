@@ -1,6 +1,22 @@
 <?php
 require "slider.php";
 require "db_connect.php";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
+    $user_id = intval($_POST['user_id']);
+    $status = intval($_POST['status']);
+
+    $stmt = mysqli_prepare($conn, "UPDATE userdata SET status = ? WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "ii", $status, $user_id);
+    $result = mysqli_stmt_execute($stmt);
+
+    if ($result) {
+        echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+    }
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -11,6 +27,8 @@ require "db_connect.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <?php require "links/icons.html"; ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         .container {
             background-color: white;
@@ -60,6 +78,153 @@ require "db_connect.php";
         .disabled:hover {
             cursor: not-allowed;
         }
+
+        .status-toggle-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            font-weight: 600;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            border-radius: 20px;
+            background: #e5e5e5;
+            cursor: pointer;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 2;
+        }
+
+        .toggle-text {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+            font-size: 8px;
+            font-weight: bold;
+        }
+
+        .toggle-on {
+            color: #2ecc71;
+            opacity: 0;
+        }
+
+        .toggle-off {
+            color: #e74c3c;
+            opacity: 1;
+        }
+
+        .toggle-switch.active {
+            background: rgba(46, 204, 113, 0.3);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            left: calc(100% - 18px);
+            transform: rotate(360deg);
+        }
+
+        .toggle-switch.active .toggle-on {
+            opacity: 1;
+        }
+
+        .toggle-switch.active .toggle-off {
+            opacity: 0;
+        }
+
+        .toggle-switch.inactive {
+            background: rgba(231, 76, 60, 0.3);
+        }
+
+        .toggle-switch.inactive .toggle-slider {
+            left: 2px;
+            transform: rotate(0);
+        }
+
+        .toggle-switch.inactive .toggle-on {
+            opacity: 0;
+        }
+
+        .toggle-switch.inactive .toggle-off {
+            opacity: 1;
+        }
+
+        .status-indicator.active {
+            background: #2ecc71;
+            color: white;
+            box-shadow: 0 1px 3px rgba(46, 204, 113, 0.3);
+        }
+
+        .status-indicator.inactive {
+            background: #e74c3c;
+            color: white;
+            box-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
+        }
+
+        /* Add these styles to your existing CSS */
+        .status-updating {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Alert animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
+        .status-alert {
+            animation: fadeIn 0.3s ease forwards;
+        }
+
+        .status-alert.fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
     </style>
 </head>
 
@@ -67,6 +232,9 @@ require "db_connect.php";
     <div class="main-content">
         <div class="header">
             <h1><i class="fa fa-users" aria-hidden="true"></i> User Table</h1>
+            <div class="user-profile">
+                <i class="fa-duotone fa-regular fa-calendar-users fa-2x"></i>&nbsp;
+            </div>
         </div>
 
         <div class="container p-4">
@@ -164,17 +332,22 @@ require "db_connect.php";
                                     $gender = "N/A";
                                 }
                                 echo "<td>" . $gender . "</td>";
+                                /* active inactive */
+                                $status_class = ($row['status'] == 1) ? 'active' : 'inactive';
+                                $status_text = ($row['status'] == 1) ? 'Active' : 'Inactive';
 
-                                if ($row['status'] == 1) {
-                                    $status = "Active";
-                                } else {
-                                    $status = "Inactive";
-                                }
-                                echo '<td><form method="post">
-                                <div class="form-check form-switch">
-                                    <input type="checkbox" class="form-check-input" role="switch" id="switchCheckChecked" checked>
-                                </div></form>
-                                        </td>';
+                                echo '<td>
+                                        <div class="status-toggle-container">
+                                            <div class="status-indicator ' . $status_class . '" data-user-id="' . $row['id'] . '">' . $status_text . '</div>
+                                                <div class="toggle-switch ' . $status_class . '" data-user-id="' . $row['id'] . '" data-status="' . $row['status'] . '">
+                                                    <div class="toggle-slider"></div>
+                                                    <div class="toggle-text">
+                                                        <span class="toggle-on">On</span>
+                                                        <span class="toggle-off">Off</span>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </td>';
 
                                 echo "<td>
                                     <a href='?id={$row['id']}' class='btn btn-primary btn-sm me-2'>Edit</a>
@@ -225,9 +398,164 @@ require "db_connect.php";
 
         <br>
         <div class="footer">
-            <p>&copy; 2023 Admin Panel. All rights reserved.</p>
+            <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>
     </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleSwitches = document.querySelectorAll('.toggle-switch');
+
+            toggleSwitches.forEach(toggle => {
+                toggle.addEventListener('click', function () {
+                    const statusIndicator = this.previousElementSibling;
+                    const userId = this.getAttribute('data-user-id');
+                    let currentStatus = parseInt(this.getAttribute('data-status'));
+                    let newStatus = currentStatus === 1 ? 2 : 1;
+
+                    this.classList.add('status-updating');
+                    statusIndicator.classList.add('status-updating');
+
+                    if (newStatus === 1) {
+                        showAlert('User status set to Active', 'success');
+                    } else {
+                        showAlert('User status set to Inactive', 'warning');
+                    }
+
+                    if (currentStatus === 1) {
+                        this.classList.remove('active');
+                        this.classList.add('inactive');
+                        this.setAttribute('data-status', '2');
+                        statusIndicator.textContent = 'Inactive';
+                        statusIndicator.classList.remove('active');
+                        statusIndicator.classList.add('inactive');
+                    } else {
+                        this.classList.remove('inactive');
+                        this.classList.add('active');
+                        this.setAttribute('data-status', '1');
+                        statusIndicator.textContent = 'Active';
+                        statusIndicator.classList.remove('inactive');
+                        statusIndicator.classList.add('active');
+                    }
+
+                    $.ajax({
+                        url: 'users_data.php',
+                        type: 'POST',
+                        data: {
+                            action: 'update_status',
+                            user_id: userId,
+                            status: newStatus
+                        },
+                        success: function (response) {
+                            const result = JSON.parse(response);
+                            if (!result.success) {
+                                // Revert UI changes if update failed
+                                if (newStatus === 1) {
+                                    toggle.classList.remove('active');
+                                    toggle.classList.add('inactive');
+                                    toggle.setAttribute('data-status', '2');
+                                    statusIndicator.textContent = 'Inactive';
+                                    statusIndicator.classList.remove('active');
+                                    statusIndicator.classList.add('inactive');
+                                } else {
+                                    toggle.classList.remove('inactive');
+                                    toggle.classList.add('active');
+                                    toggle.setAttribute('data-status', '1');
+                                    statusIndicator.textContent = 'Active';
+                                    statusIndicator.classList.remove('inactive');
+                                    statusIndicator.classList.add('active');
+                                }
+                                showAlert('Error: ' + result.message, 'error');
+                            }
+
+
+                            toggle.classList.remove('status-updating');
+                            statusIndicator.classList.remove('status-updating');
+                        },
+                        error: function () {
+
+                            if (newStatus === 1) {
+                                toggle.classList.remove('active');
+                                toggle.classList.add('inactive');
+                                toggle.setAttribute('data-status', '2');
+                                statusIndicator.textContent = 'Inactive';
+                                statusIndicator.classList.remove('active');
+                                statusIndicator.classList.add('inactive');
+                            } else {
+                                toggle.classList.remove('inactive');
+                                toggle.classList.add('active');
+                                toggle.setAttribute('data-status', '1');
+                                statusIndicator.textContent = 'Active';
+                                statusIndicator.classList.remove('inactive');
+                                statusIndicator.classList.add('active');
+                            }
+
+
+                            toggle.classList.remove('status-updating');
+                            statusIndicator.classList.remove('status-updating');
+
+                            showAlert('Error: Could not update status. Please try again.', 'error');
+                        }
+                    });
+                });
+            });
+
+            // Function to show alert messages
+            function showAlert(message, type) {
+
+                const existingAlert = document.querySelector('.status-alert');
+                if (existingAlert) {
+                    existingAlert.remove();
+                }
+
+
+                const alert = document.createElement('div');
+                alert.className = `status-alert alert-${type}`;
+                alert.textContent = message;
+
+                alert.style.position = 'fixed';
+                alert.style.top = '20px';
+                alert.style.right = '20px';
+                alert.style.padding = '10px 15px';
+                alert.style.borderRadius = '4px';
+                alert.style.fontSize = '14px';
+                alert.style.fontWeight = '500';
+                alert.style.zIndex = '10000';
+                alert.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.2)';
+                alert.style.opacity = '0';
+                alert.style.transition = 'opacity 0.3s ease';
+
+                // Set background color based on type
+                if (type === 'success') {
+                    alert.style.backgroundColor = '#4CAF50';
+                    alert.style.color = 'white';
+                } else if (type === 'warning') {
+                    alert.style.backgroundColor = '#FF9800';
+                    alert.style.color = 'white';
+                } else if (type === 'error') {
+                    alert.style.backgroundColor = '#F44336';
+                    alert.style.color = 'white';
+                }
+
+                document.body.appendChild(alert);
+
+                setTimeout(() => {
+                    alert.style.opacity = '1';
+                }, 10);
+
+                // Remove after 3 seconds
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    setTimeout(() => {
+                        if (alert.parentNode) {
+                            alert.parentNode.removeChild(alert);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        });
+    </script>
 </body>
 
 </html>
