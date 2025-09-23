@@ -440,7 +440,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     }
 
                     $.ajax({
-                        url: 'users_data.php',
+                        url: '',
                         type: 'POST',
                         data: {
                             action: 'update_status',

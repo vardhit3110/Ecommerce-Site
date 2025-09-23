@@ -1,232 +1,363 @@
-<?php
-require "slider.php";
-require "db_connect.php";
-
-// Add this code at the top to handle the AJAX status update request
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
-    $user_id = intval($_POST['user_id']);
-    $status = intval($_POST['status']);
-    
-    $stmt = mysqli_prepare($conn, "UPDATE userdata SET status = ? WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "ii", $status, $user_id);
-    $result = mysqli_stmt_execute($stmt);
-    
-    if ($result) {
-        echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to update status']);
-    }
-    exit;
-}
-?>
-
+<?php require "slider.php"; ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <!-- ... existing head content ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <style>
-        /* ... existing styles ... */
-
-        /* Updated Toggle Switch Styles */
-        .status-toggle-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
+        body {
+            background-color: #f8f9fa;
         }
 
-        .status-indicator {
-            display: inline-block;
-            font-weight: 600;
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 50px;
-            transition: all 0.3s ease;
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 3px;
         }
 
-        .toggle-switch {
-            position: relative;
-            width: 40px;
-            height: 20px;
-            border-radius: 20px;
-            background: #e5e5e5;
+        .card-header {
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .card {
+            border-radius: 12px;
+        }
+
+        .table th,
+        .table td {
+            vertical-align: middle;
+        }
+
+        .btn i {
+            pointer-events: none;
+        }
+        
+        .status-active {
+            color: #28a745 !important;
+            font-weight: bold;
+        }
+        
+        .status-inactive {
+            color: #dc3545 !important;
+            font-weight: bold;
+        }
+        
+        .status-select {
             cursor: pointer;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+            width: 120px;
+            margin: 0 auto;
         }
-
-        .toggle-slider {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: white;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-            z-index: 2;
+        
+        .status-select:focus {
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+            border-color: #80bdff;
         }
-
-        .toggle-text {
-            position: absolute;
-            width: 100%;
-            height: 100%;
+        
+        .main-content {
+            padding: 20px;
+        }
+        
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 4px;
-            font-size: 8px;
-            font-weight: bold;
-        }
-
-        .toggle-on {
-            color: #2ecc71;
-            opacity: 0;
-        }
-
-        .toggle-off {
-            color: #e74c3c;
-            opacity: 1;
-        }
-
-        .toggle-switch.active {
-            background: rgba(46, 204, 113, 0.3);
-        }
-
-        .toggle-switch.active .toggle-slider {
-            left: calc(100% - 18px);
-            transform: rotate(360deg);
-        }
-
-        .toggle-switch.active .toggle-on {
-            opacity: 1;
-        }
-
-        .toggle-switch.active .toggle-off {
-            opacity: 0;
-        }
-
-        .toggle-switch.inactive {
-            background: rgba(231, 76, 60, 0.3);
-        }
-
-        .toggle-switch.inactive .toggle-slider {
-            left: 2px;
-            transform: rotate(0);
-        }
-
-        .toggle-switch.inactive .toggle-on {
-            opacity: 0;
-        }
-
-        .toggle-switch.inactive .toggle-off {
-            opacity: 1;
-        }
-
-        .status-indicator.active {
-            background: #2ecc71;
-            color: white;
-            box-shadow: 0 1px 3px rgba(46, 204, 113, 0.3);
-        }
-
-        .status-indicator.inactive {
-            background: #e74c3c;
-            color: white;
-            box-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        /* Loading indicator */
-        .status-updating {
-            opacity: 0.7;
-            pointer-events: none;
+        .content-area {
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
         }
     </style>
+
 </head>
+
 <body>
+    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
+        <div class="toast-header">
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body"></div>
+    </div>
+
     <div class="main-content">
-        <!-- ... existing header and container content ... -->
-        
-        <!-- User Table -->
-        <div class="table-responsive">
-            <table class="table table-hover table-bordered border-dark text-center">
-                <thead class="table-dark">
-                    <tr class="border-warning">
-                        <th>Id</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>City</th>
-                        <th>Gender</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $total_data = 5;
-                    $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-                    $offset = ($page - 1) * $total_data;
-
-                    $sql = "SELECT * FROM userdata LIMIT {$offset}, {$total_data}";
-                    $stmt = mysqli_prepare($conn, $sql);
-                    mysqli_stmt_execute($stmt);
-                    $result_email = mysqli_stmt_get_result($stmt);
-
-                    if (mysqli_num_rows($result_email) > 0) {
-                        while ($row = mysqli_fetch_assoc($result_email)) {
-                            echo "<tr>";
-                            echo "<td>{$row['id']}</td>";
-                            echo "<td>{$row['username']}</td>";
-                            echo "<td>{$row['email']}</td>";
-                            echo "<td>" . ($row['phone'] ?: 'N/A') . "</td>";
-                            echo "<td>" . ($row['city'] ?: 'N/A') . "</td>";
-                            if ($row['gender'] == 1) {
-                                $gender = "Male";
-                            } elseif ($row['gender'] == 2) {
-                                $gender = "Female";
-                            } else {
-                                $gender = "N/A";
-                            }
-                            echo "<td>" . $gender . "</td>";
-
-                            // Determine initial status based on database value
-                            $status_class = ($row['status'] == 1) ? 'active' : 'inactive';
-                            $status_text = ($row['status'] == 1) ? 'Active' : 'Inactive';
-                            
-                            echo '<td>
-                            <div class="status-toggle-container">
-                                <div class="status-indicator ' . $status_class . '" data-user-id="' . $row['id'] . '">' . $status_text . '</div>
-                                <div class="toggle-switch ' . $status_class . '" data-user-id="' . $row['id'] . '" data-status="' . $row['status'] . '">
-                                    <div class="toggle-slider"></div>
-                                    <div class="toggle-text">
-                                        <span class="toggle-on">On</span>
-                                        <span class="toggle-off">Off</span>
-                                    </div>
+        <div class="header">
+            <h1><i class="fa-solid fa-table-layout"></i> Category List</h1>
+            <div class="user-profile">
+                <i class="fa-solid fa-layer-group fa-2x"></i>&nbsp;
+            </div>
+        </div>
+        <!-- main container -->
+        <div class="content-area container-fluid py-4">
+            <div class="row g-4">
+                <!-- Left Form Container -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="card shadow-sm border-1 h-100">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"> Add New Category</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="myForm" method="post" action="partials/_categories_add.php"
+                                enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="categoryName" class="form-label">Category Name :</label>
+                                    <input type="text" class="form-control" name="categoryname" id="categoryname"
+                                        placeholder="Enter category name" required minlength="2">
                                 </div>
-                            </div>
-                            </td>';
+                                <div class="mb-3">
+                                    <label for="categoryImage" class="form-label">Category Image :</label>
+                                    <input type="file" class="form-control" name="categoryimage" id="categoryimage"
+                                        required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="categoryDesc" class="form-label">Description :</label>
+                                    <textarea class="form-control" name="categorydesc" id="categorydesc" rows="2"
+                                        placeholder="Write something..." required minlength="7"></textarea>
+                                </div>
+                                <button type="submit" name="insert" class="btn btn-success">Add Category
+                                    <!-- <i class="fa-solid fa-plus"></i>  -->
+                                </button>
+                            </form>
+                            <!-- category validation -->
+                            <script>
+                                $(document).ready(function () {
+                                    $("#myForm").validate({
+                                        rules: {
+                                            categoryname: {
+                                                required: true,
+                                                minlength: 2
+                                            },
+                                            categoryimage: {
+                                                required: true,
+                                                accept: "image/jpeg, image/png"
+                                            },
+                                            categorydesc: {
+                                                required: true,
+                                                minlength: 7,
+                                                maxlength: 100,
+                                            }
+                                        },
+                                        messages: {
+                                            categoryname: {
+                                                required: "Please enter category name",
+                                                minlength: "Your name must consist of at least 2 characters"
+                                            },
 
-                            echo "<td>
-                                <a href='?id={$row['id']}' class='btn btn-primary btn-sm me-2'>Edit</a>
-                                <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
-                              </td>";
-                            echo "</tr>";
-                        }
-                    } else {
-                        echo "<tr><td colspan='7' class='text-center'>No records found</td></tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
+                                            categoryimage: {
+                                                required: "Please select an image file.",
+                                                accept: "Only JPEG and PNG images are allowed."
+                                            },
+
+                                            categorydesc: {
+                                                required: "Please enter a description",
+                                                minlength: "Description must be at least 7 characters long",
+                                                maxlength: "Description must not exceed 100 characters"
+                                            }
+
+                                        },
+                                        submitHandler: function (form) {
+                                            form.submit();
+                                        }
+                                    });
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Table Container -->
+                <div class="col-lg-7 col-md-8">
+                    <div class="card shadow-sm border-1 h-100">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Category List</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered border-dark table-hover align-middle mb-0">
+                                    <thead class="">
+                                        <tr class="table-success border-dark">
+                                            <th>ID</th>
+                                            <th>Image</th>
+                                            <th>Category Details</th>
+                                            <th class="text-center">Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <?php
+                                        require "db_connect.php";
+                                        
+                                        $stmt = mysqli_prepare($conn, "SELECT * FROM categories");
+
+                                        // Check if prepare was successful
+                                        if ($stmt) {
+                                            mysqli_stmt_execute($stmt);
+                                            $result = mysqli_stmt_get_result($stmt);
+
+                                            // Check if any rows returned
+                                            if (mysqli_num_rows($result) > 0) {
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    $catId = $row['categorie_id'];
+                                                    $status = $row['categorie_status'];
+                                                    
+                                                    echo '<tr>';
+                                                    echo "<td>{$row['categorie_id']}</td>";
+                                                    echo "<td><img src='images/" . htmlspecialchars($row['categorie_image']) . "' class='img-thumbnail' alt='Category Image' style='width:100px; height:auto;'></td>";
+                                                    echo "<td><b>Name : </b> " . htmlspecialchars($row['categorie_name']);
+                                                    echo "<br><br><b>Desc : </b>" . htmlspecialchars($row['categorie_desc']) . "</td>";
+                                                    
+                                                    // Status column with dropdown
+                                                    echo '<td class="text-center">';
+                                                    echo '<form method="POST" class="status-form">';
+                                                    echo '<input type="hidden" name="catId" value="' . $catId . '">';
+                                                    echo '<select name="status" class="form-select status-select" onchange="updateStatus(this, ' . $catId . ')">';
+                                                    
+                                                    if ($status == 1) {
+                                                        echo '<option value="1" selected>Active</option>';
+                                                        echo '<option value="2">Inactive</option>';
+                                                    } else {
+                                                        echo '<option value="1">Active</option>';
+                                                        echo '<option value="2" selected>Inactive</option>';
+                                                    }
+                                                    
+                                                    echo '</select>';
+                                                    echo '</form>';
+                                                    echo '</td>';
+                                                    
+                                                    // Action buttons
+                                                    echo '<td>';
+                                                    echo '<button class="btn btn-sm btn-warning"><i class="fa-solid fa-pen"></i></button> ';
+                                                    echo '<button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>';
+                                                    echo '</td>';
+                                                    
+                                                    echo '</tr>';
+                                                }
+                                            } else {
+                                                echo "<tr><td colspan='5' class='text-center'>No records found</td></tr>";
+                                            }
+
+                                            mysqli_stmt_close($stmt); // Always good to close the statement
+                                        } else {
+                                            echo "<tr><td colspan='5' class='text-center text-danger'>Query preparation failed</td></tr>";
+                                        }
+                                        ?>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- ... existing pagination and footer ... -->
+        <br>
+        <div class="footer">
+            <p>&copy; 2025 Admin Panel. All rights reserved.</p>
+        </div>
     </div>
-    
-    <!-- Add jQuery (required for AJAX) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Function to show toast notification
+        function showToast(message, type = 'success') {
+            const toast = $('.toast');
+            toast.find('.toast-body').text(message);
+            
+            if (type === 'error') {
+                toast.find('.toast-header').css('background-color', '#f8d7da');
+                toast.find('.toast-body').css('background-color', '#f8d7da');
+            } else {
+                toast.find('.toast-header').css('background-color', '#d4edda');
+                toast.find('.toast-body').css('background-color', '#d4edda');
+            }
+            
+            toast.toast('show');
+        }
+
+        // Function to update status via AJAX
+        function updateStatus(selectElement, catId) {
+            const status = selectElement.value;
+            const originalStatus = selectElement.getAttribute('data-original-value');
+            
+            // Update the color immediately for better UX
+            updateStatusColor(selectElement, status);
+            
+            // Create FormData object to send via AJAX
+            const formData = new FormData();
+            formData.append('catId', catId);
+            formData.append('status', status);
+            
+            // Send AJAX request
+            fetch('partials/_categoryManage.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                // Show success message
+                showToast('Status updated successfully!');
+                
+                // Update the original value to the new status
+                selectElement.setAttribute('data-original-value', status);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while updating status.', 'error');
+                
+                // Revert to original value on error
+                selectElement.value = originalStatus;
+                updateStatusColor(selectElement, originalStatus);
+            });
+        }
+        
+        // Function to update the color of the status select element
+        function updateStatusColor(selectElement, status) {
+            // Remove existing color classes
+            selectElement.classList.remove('status-active', 'status-inactive');
+            
+            // Add appropriate class based on status
+            if (status == 1) {
+                selectElement.classList.add('status-active');
+            } else if (status == 2) {
+                selectElement.classList.add('status-inactive');
+            }
+        }
+        
+        // Initialize status colors on page load
+        document.querySelectorAll('.status-select').forEach(select => {
+            // Store original value for potential revert
+            select.setAttribute('data-original-value', select.value);
+            updateStatusColor(select, select.value);
+        });
+    </script>
 </body>
+
 </html>

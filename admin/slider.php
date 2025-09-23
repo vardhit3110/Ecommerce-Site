@@ -220,7 +220,7 @@ if ($email == true) {
         }
 
         .nav-links .logout {
-            bottom: -425px;
+            bottom: -50vh;
         }
 
         /* Content Area */
@@ -353,6 +353,13 @@ if ($email == true) {
                 </a>
             </li>
 
+            <li>
+                <a href="product_list.php">
+                    <i class="fa-solid fa-square-list"></i>
+                    <span>Product List</span>
+                </a>
+            </li>
+
 
             <li class="logout">
                 <a href="partials/_logout.php">
@@ -362,8 +369,6 @@ if ($email == true) {
             </li>
         </ul>
     </div>
-
-
 
     <script>
         // Mobile menu toggle functionality

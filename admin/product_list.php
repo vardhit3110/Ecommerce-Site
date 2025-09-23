@@ -1,5 +1,7 @@
 <?php
 require "slider.php";
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +12,12 @@ require "slider.php";
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
+        integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
+        crossorigin="anonymous"></script>
     <?php include "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
@@ -199,12 +207,11 @@ require "slider.php";
 </head>
 
 <body>
-
     <div class="main-content">
         <div class="header">
-            <h1><i class="fa-solid fa-table-layout"></i> Category List</h1>
+            <h1><i class="fa-solid fa-table-columns"></i> Product List</h1>
             <div class="user-profile">
-                <i class="fa-solid fa-layer-group fa-2x"></i>&nbsp;
+                <i class="fa-solid fa-list fa-2x"></i>&nbsp;
             </div>
         </div>
         <!-- main container  -->
@@ -215,27 +222,51 @@ require "slider.php";
                     <div class="col-lg-5 col-md-6">
                         <div class="card shadow-sm border-1 h-100">
                             <div class="card-header bg-dark text-white">
-                                <h5 class="mb-0"> Add New Category</h5>
+                                <h5 class="mb-0"> Add New Product</h5>
                             </div>
                             <div class="card-body">
-                                <form id="myForm" method="post" action="partials/_categories_add.php"
-                                    enctype="multipart/form-data">
+                                <form id="myForm" method="post" action="_product_add.php" enctype="multipart/form-data">
                                     <div class="mb-3">
-                                        <label for="categoryName" class="form-label">Category Name :</label>
-                                        <input type="text" class="form-control" name="categoryname" id="categoryname"
-                                            placeholder="Enter category name" required minlength="2">
+                                        <label for="productName" class="form-label">Name :</label>
+                                        <input type="text" class="form-control" name="productname" id="productname"
+                                            placeholder="Enter product name" required minlength="2">
                                     </div>
+
                                     <div class="mb-3">
-                                        <label for="categoryImage" class="form-label">Category Image :</label>
-                                        <input type="file" class="form-control" name="categoryimage" id="categoryimage"
-                                            required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="categoryDesc" class="form-label">Description :</label>
-                                        <textarea class="form-control" name="categorydesc" id="categorydesc" rows="2"
+                                        <label for="productDesc" class="form-label">Description :</label>
+                                        <textarea class="form-control" name="productdesc" id="productdesc" rows="2"
                                             placeholder="Write something..." required minlength="7"></textarea>
                                     </div>
-                                    <button type="submit" name="insert" class="btn btn-success">Add Category
+
+                                    <div class="mb-3">
+                                        <label for="productprice" class="form-label">Price :</label>
+                                        <input type="text" class="form-control" name="productprice" id="productprice"
+                                            placeholder="Enter productprice " required minlength="2">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="categoryid" class="form-label">Category:</label>
+                                        <select name="categoryid" id="categoryid" class="form-select" required>
+                                            <option hidden disabled selected value>None</option>
+                                            <?php
+                                            $catsql = "SELECT * FROM `categories`";
+                                            $catresult = mysqli_query($conn, $catsql);
+                                            while ($row = mysqli_fetch_assoc($catresult)) {
+                                                $catId = $row['categorie_id'];
+                                                $catName = $row['categorie_name'];
+                                                echo '<option value="' . $catId . '">' . $catName . '</option>';
+                                            }
+                                            ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="categoryImage" class="form-label">Category Image :</label>
+                                        <input type="file" class="form-control" name="productimage" id="categoryimage"
+                                            required>
+                                    </div>
+
+                                    <button type="submit" name="insert" class="btn btn-success">Add Product
                                         <!-- <i class="fa-solid fa-plus"></i>  -->
                                     </button>
                                 </form>
@@ -355,6 +386,46 @@ require "slider.php";
                                         }
                                         ?>
 
+                                        <!-- <tr>
+                                            <td>1</td>
+                                            <td>
+                                                <img src="images/CATEGORY_IMAGE.jpg" class="img-thumbnail"
+                                                    alt="Category Image" style="width:100px; height:auto;">
+                                            </td>
+                                            <td class="modify-name">
+                                                <b>Name :</b> Name 2.
+                                                <br><br>
+                                                <b>Desc :</b> Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                                                Ad laborum officiis magni eum nesciunt, nisi architecto pariatur eveniet
+                                                iste odit labore soluta dignissimos molestiae numquam incidunt nulla
+                                                dolore reprehenderit aut.
+                                                <br><br>
+                                                <b>Price :</b> ₹ 500.00
+                                            </td>
+
+                                            <td class="text-center">
+                                                <div class="status-toggle-container">
+                                                    <div class="toggle-switch ACTIVE_OR_INACTIVE"
+                                                        onclick="toggleStatus(this, CATEGORY_ID_HERE)">
+                                                        <div class="toggle-slider"></div>
+                                                        <div class="toggle-text">
+                                                            <span class="toggle-on">ON</span>
+                                                            <span class="toggle-off">OFF</span>
+                                                        </div>
+                                                    </div>
+                                                    <span
+                                                        class="status-indicator ACTIVE_OR_INACTIVE">ACTIVE_OR_INACTIVE_TEXT</span>
+                                                </div>
+                                            </td>
+
+                                            <td class="modify">
+                                                <button class="btn btn-sm btn-primary me-1"><i
+                                                        class="fa-solid fa-pen"></i></button>
+                                                <button class="btn btn-sm btn-danger"><i
+                                                        class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr> -->
+
                                     </tbody>
                                 </table>
                             </div>
@@ -369,7 +440,6 @@ require "slider.php";
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script>
 
