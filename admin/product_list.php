@@ -1,7 +1,5 @@
 <?php
 require "slider.php";
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,12 +10,6 @@ require "slider.php";
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js"
-        integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y"
-        crossorigin="anonymous"></script>
     <?php include "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
@@ -47,6 +39,14 @@ require "slider.php";
 
         .btn i {
             pointer-events: none;
+        }
+
+        .desc-size {
+            max-width: 450px;
+        }
+
+        #box-color {
+            background-color: #f8f8f8ff;
         }
 
         .status-toggle-container {
@@ -209,7 +209,7 @@ require "slider.php";
 <body>
     <div class="main-content">
         <div class="header">
-            <h1><i class="fa-solid fa-table-columns"></i> Product List</h1>
+            <h1><i class="fa-solid fa-table-columns"></i> Subcaterogy List</h1>
             <div class="user-profile">
                 <i class="fa-solid fa-list fa-2x"></i>&nbsp;
             </div>
@@ -217,123 +217,29 @@ require "slider.php";
         <!-- main container  -->
         <div class="content-area container-fluid py-4">
             <div class="row g-4">
-                <!-- Left Form Container -->
-                <div class="d-flex justify-content-center align-items-center">
-                    <div class="col-lg-5 col-md-6">
-                        <div class="card shadow-sm border-1 h-100">
-                            <div class="card-header bg-dark text-white">
-                                <h5 class="mb-0"> Add New Product</h5>
-                            </div>
-                            <div class="card-body">
-                                <form id="myForm" method="post" action="_product_add.php" enctype="multipart/form-data">
-                                    <div class="mb-3">
-                                        <label for="productName" class="form-label">Name :</label>
-                                        <input type="text" class="form-control" name="productname" id="productname"
-                                            placeholder="Enter product name" required minlength="2">
-                                    </div>
 
-                                    <div class="mb-3">
-                                        <label for="productDesc" class="form-label">Description :</label>
-                                        <textarea class="form-control" name="productdesc" id="productdesc" rows="2"
-                                            placeholder="Write something..." required minlength="7"></textarea>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="productprice" class="form-label">Price :</label>
-                                        <input type="text" class="form-control" name="productprice" id="productprice"
-                                            placeholder="Enter productprice " required minlength="2">
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="categoryid" class="form-label">Category:</label>
-                                        <select name="categoryid" id="categoryid" class="form-select" required>
-                                            <option hidden disabled selected value>None</option>
-                                            <?php
-                                            $catsql = "SELECT * FROM `categories`";
-                                            $catresult = mysqli_query($conn, $catsql);
-                                            while ($row = mysqli_fetch_assoc($catresult)) {
-                                                $catId = $row['categorie_id'];
-                                                $catName = $row['categorie_name'];
-                                                echo '<option value="' . $catId . '">' . $catName . '</option>';
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="categoryImage" class="form-label">Category Image :</label>
-                                        <input type="file" class="form-control" name="productimage" id="categoryimage"
-                                            required>
-                                    </div>
-
-                                    <button type="submit" name="insert" class="btn btn-success">Add Product
-                                        <!-- <i class="fa-solid fa-plus"></i>  -->
-                                    </button>
-                                </form>
-                                <!-- category validation -->
-                                <script>
-                                    $(document).ready(function () {
-                                        $("#myForm").validate({
-                                            rules: {
-                                                categoryname: {
-                                                    required: true,
-                                                    minlength: 2
-                                                },
-                                                categoryimage: {
-                                                    required: true,
-                                                    accept: "image/jpeg, image/png"
-                                                },
-                                                categorydesc: {
-                                                    required: true,
-                                                    minlength: 7,
-                                                    maxlength: 100,
-                                                }
-                                            },
-                                            messages: {
-                                                categoryname: {
-                                                    required: "Please enter category name",
-                                                    minlength: "Your name must consist of at least 2 characters"
-                                                },
-
-                                                categoryimage: {
-                                                    required: "Please select an image file.",
-                                                    accept: "Only JPEG and PNG images are allowed."
-                                                },
-
-                                                categorydesc: {
-                                                    required: "Please enter a description",
-                                                    minlength: "Description must be at least 7 characters long",
-                                                    maxlength: "Description must not exceed 100 characters"
-                                                }
-
-                                            },
-                                            submitHandler: function (form) {
-                                                form.submit();
-                                            }
-                                        });
-                                    });
-                                </script>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col d-flex justify-content-end">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                        <i class="fa-solid fa-plus"></i> Add New
+                    </button>
                 </div>
-
-                <br>
                 <!-- Right Table Container -->
                 <div class="">
                     <!-- <div class="col-lg-7 col-md-8"> -->
                     <div class="card shadow-sm border-1 h-100">
                         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Category List</h5>
+                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Subcategory List</h5>
                         </div>
                         <div class="card-body">
+                            <!-- edit from product -->
+
                             <div class="table-responsive">
                                 <table class="table table-bordered border-dark table-hover align-middle mb-0">
                                     <thead class="">
                                         <tr class="table-success border-dark">
                                             <th>ID</th>
                                             <th>Image</th>
-                                            <th>Category Details</th>
+                                            <th>Product Details</th>
                                             <th>Status</th>
                                             <th>Action</th>
                                         </tr>
@@ -341,26 +247,28 @@ require "slider.php";
                                     <tbody>
 
                                         <?php
-                                        $stmt = mysqli_prepare($conn, "SELECT * FROM categories");
+                                        $stmt = mysqli_prepare($conn, "SELECT * FROM product");
                                         if ($stmt) {
                                             mysqli_stmt_execute($stmt);
                                             $result = mysqli_stmt_get_result($stmt);
-                                            if (mysqli_num_rows($result) > 0) {
+                                            if (mysqli_num_rows($result)) {
                                                 while ($row = mysqli_fetch_assoc($result)) {
-                                                    $catId = $row['categorie_id'];
-                                                    $status = $row['categorie_status'];
+                                                    $productId = $row['product_Id'];
+                                                    $status = $row['product_status'];
+
                                                     $isActive = $status == 1;
 
                                                     echo '<tr>';
-                                                    echo "<td>{$row['categorie_id']}</td>";
-                                                    echo "<td><img src='images/" . htmlspecialchars($row['categorie_image']) . "' class='img-thumbnail' alt='Category Image' style='width:100px; height:auto;'></td>";
-                                                    echo "<td><b>Name : </b> " . htmlspecialchars($row['categorie_name']) . ".";
-                                                    echo "<br><br><b>Desc : </b>" . htmlspecialchars($row['categorie_desc']) . "</td>";
+                                                    echo "<td>{$row['product_Id']}</td>";
+                                                    echo "<td class='text-center'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' class='img-thumbnail' alt='Product Image' style='width:100px; height:auto;'></td>";
+                                                    echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['product_name']) . ".";
+                                                    echo "<br><b>Desc : </b>" . htmlspecialchars($row['product_desc']) . "";
+                                                    echo "<br><br><b>Price : </b>₹ " . htmlspecialchars($row['product_price']) . "</td>";
 
                                                     /* Status toggle */
                                                     echo '<td class="text-center">
                                                     <div class="status-toggle-container">
-                                                    <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $catId . ')">
+                                                    <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $productId . ')">
                                                     <div class="toggle-slider"></div>
                                                     <div class="toggle-text">
                                                     <span class="toggle-on">ON</span>
@@ -372,8 +280,19 @@ require "slider.php";
                                                     echo '</span></div>
                                                     </td>';
 
-                                                    echo '<td><button class="btn btn-sm btn-primary me-1"><i class="fa-solid fa-pen"></i></button>
-                                                            <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button></td>';
+                                                    echo "<td><button class='btn btn-primary btn-sm me-2 editBtn' 
+                                                    data-bs-toggle='modal' 
+                                                    data-bs-target='#editModal' 
+                                                    data-id='" . $row['product_Id'] . "' 
+                                                    data-name='" . htmlspecialchars($row['product_name'], ENT_QUOTES) . "' 
+                                                    data-desc='" . htmlspecialchars($row['product_desc'], ENT_QUOTES) . "' 
+                                                    data-price='" . $row['product_price'] . "' 
+                                                    data-category='" . $row['categorie_id'] . "' 
+                                                    data-image='images/product_img/" . htmlspecialchars($row['product_image'], ENT_QUOTES) . "'>
+                                                    Edit
+                                                </button>
+                                                         <a href='partials/.php?id={$row['product_Id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                    </td>";
                                                     echo '</tr>';
                                                 }
                                             } else {
@@ -385,47 +304,6 @@ require "slider.php";
                                             echo "<tr><td colspan='5' class='text-center text-danger'>Query preparation failed</td></tr>";
                                         }
                                         ?>
-
-                                        <!-- <tr>
-                                            <td>1</td>
-                                            <td>
-                                                <img src="images/CATEGORY_IMAGE.jpg" class="img-thumbnail"
-                                                    alt="Category Image" style="width:100px; height:auto;">
-                                            </td>
-                                            <td class="modify-name">
-                                                <b>Name :</b> Name 2.
-                                                <br><br>
-                                                <b>Desc :</b> Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                                Ad laborum officiis magni eum nesciunt, nisi architecto pariatur eveniet
-                                                iste odit labore soluta dignissimos molestiae numquam incidunt nulla
-                                                dolore reprehenderit aut.
-                                                <br><br>
-                                                <b>Price :</b> ₹ 500.00
-                                            </td>
-
-                                            <td class="text-center">
-                                                <div class="status-toggle-container">
-                                                    <div class="toggle-switch ACTIVE_OR_INACTIVE"
-                                                        onclick="toggleStatus(this, CATEGORY_ID_HERE)">
-                                                        <div class="toggle-slider"></div>
-                                                        <div class="toggle-text">
-                                                            <span class="toggle-on">ON</span>
-                                                            <span class="toggle-off">OFF</span>
-                                                        </div>
-                                                    </div>
-                                                    <span
-                                                        class="status-indicator ACTIVE_OR_INACTIVE">ACTIVE_OR_INACTIVE_TEXT</span>
-                                                </div>
-                                            </td>
-
-                                            <td class="modify">
-                                                <button class="btn btn-sm btn-primary me-1"><i
-                                                        class="fa-solid fa-pen"></i></button>
-                                                <button class="btn btn-sm btn-danger"><i
-                                                        class="fa-solid fa-trash"></i></button>
-                                            </td>
-                                        </tr> -->
-
                                     </tbody>
                                 </table>
                             </div>
@@ -440,7 +318,207 @@ require "slider.php";
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>
     </div>
+
+    <!-- popup subcategory -->
+    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <form id="categoryForm" method="post" action="partials/_product_add.php" enctype="multipart/form-data">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title" id="addCategoryModalLabel"><i class="fa-solid fa-layer-group"></i>
+                            Add New Subcategory</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Name :</label>
+                            <input type="text" class="form-control" name="productname" id="productname"
+                                placeholder="Enter product name" required minlength="2">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="productDesc" class="form-label">Description :</label>
+                            <textarea class="form-control" name="productdesc" id="productdesc" rows="2"
+                                placeholder="Write something..." required minlength="10"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="productprice" class="form-label">Price :</label>
+                            <input type="text" class="form-control" name="productprice" id="productprice"
+                                placeholder="Enter productprice " required minlength="2">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="categoryid" class="form-label">Category:</label>
+                            <select name="categoryid" id="categoryid" class="form-select" required>
+                                <option hidden disabled selected value>None</option>
+                                <?php
+                                $catsql = "SELECT * FROM `categories`";
+                                $catresult = mysqli_query($conn, $catsql);
+                                while ($row = mysqli_fetch_assoc($catresult)) {
+                                    $catId = $row['categorie_id'];
+                                    $catName = $row['categorie_name'];
+                                    echo '<option value="' . $catId . '">' . $catName . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="productImage" class="form-label">Product Image :</label>
+                            <input type="file" class="form-control" name="productimage" id="productimage" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="insert" class="btn btn-success">Add Category</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Edit Modal -->
+
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="box-color">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data" action="partials/_product_add.php"
+                        id="editProductForm">
+
+                        <input type="hidden" name="productid" value="...">
+                        <input type="hidden" name="old_image" value="...">
+
+
+                        <div class="mb-3 text-center">
+                            <img id="editProductImagePreview" src="" class="img-thumbnail mb-2" style="height: 100px;">
+                            <input class="form-control" type="file" name="productImage">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Product Name</label>
+                            <input type="text" class="form-control" name="productName" id="editProductName">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Description</label>
+                            <textarea class="form-control" name="productDesc" id="editProductDesc" rows="3"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Price</label>
+                            <input type="number" class="form-control" name="productPrice" id="editProductPrice">
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Category</label>
+                            <select class="form-select" name="categoryId" id="editProductCategory">
+                                <?php
+                                $catsql = "SELECT * FROM `categories`";
+                                $catresult = mysqli_query($conn, $catsql);
+                                while ($row = mysqli_fetch_assoc($catresult)) {
+                                    echo '<option value="' . $row['categorie_id'] . '">' . $row['categorie_name'] . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" name="update" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).on("click", ".editBtn", function () {
+            var id = $(this).data("id");
+            var name = $(this).data("name");
+            var desc = $(this).data("desc");
+            var price = $(this).data("price");
+            var category = $(this).data("category");
+            var image = $(this).data("image");
+
+            $("#editProductId").val(id);
+            $("#editProductName").val(name);
+            $("#editProductDesc").val(desc);
+            $("#editProductPrice").val(price);
+            $("#editProductCategory").val(category);
+            $("#editProductImagePreview").attr("src", image);
+        });
+
+    </script>
+    <!-- product validation -->
+    <script>
+        $(document).ready(function () {
+            $("#categoryForm").validate({
+                rules: {
+                    productname: {
+                        required: true,
+                        minlength: 2
+                    },
+                    productdesc: {
+                        required: true,
+                        minlength: 10,
+                        maxlength: 250
+                    },
+                    productprice: {
+                        required: true,
+                        number: true,
+                        min: 1,
+                        max: 999999
+                    },
+                    categoryid: {
+                        required: true
+                    },
+                    productimage: {
+                        required: true,
+                        accept: "image/jpeg,image/png"
+                    }
+                },
+                messages: {
+                    productname: {
+                        required: "Please enter product name",
+                        minlength: "Product name must be at least 2 characters"
+                    },
+                    productdesc: {
+                        required: "Please enter a description",
+                        minlength: "Description must be at least 10 characters",
+                        maxlength: "Description must not exceed 250 characters"
+                    },
+                    productprice: {
+                        required: "Please enter a price",
+                        number: "Please enter a valid number",
+                        min: "Price must be greater than zero",
+                        max: "Price cannot exceed 999999"
+                    },
+                    categoryid: {
+                        required: "Please select a category"
+                    },
+                    productimage: {
+                        required: "Please upload a product image",
+                        accept: "Only JPEG and PNG images are allowed"
+                    }
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
 
         function showToast(message, type = 'success') {
@@ -459,7 +537,7 @@ require "slider.php";
         }
 
 
-        function toggleStatus(toggleElement, catId) {
+        function toggleStatus(toggleElement, productId) {
             const container = toggleElement.closest('.status-toggle-container');
             const indicator = container.querySelector('.status-indicator');
             const isCurrentlyActive = toggleElement.classList.contains('active');
@@ -468,10 +546,10 @@ require "slider.php";
             container.classList.add('status-updating');
 
             const formData = new FormData();
-            formData.append('catId', catId);
+            formData.append('productId', productId);
             formData.append('status', newStatus);
 
-            fetch('partials/_categoryManage.php', {
+            fetch('partials/-product_add.php', {
                 method: 'POST',
                 body: formData
             })

@@ -41,6 +41,14 @@ require "slider.php";
             pointer-events: none;
         }
 
+        .desc-size {
+            max-width: 450px;
+        }
+
+        #box-color {
+            background-color: #f8f8f8ff;
+        }
+
         .status-toggle-container {
             display: flex;
             flex-direction: column;
@@ -210,85 +218,14 @@ require "slider.php";
         <!-- main container  -->
         <div class="content-area container-fluid py-4">
             <div class="row g-4">
-                <!-- Left Form Container -->
-                <div class="d-flex justify-content-center align-items-center">
-                    <div class="col-lg-5 col-md-6">
-                        <div class="card shadow-sm border-1 h-100">
-                            <div class="card-header bg-dark text-white">
-                                <h5 class="mb-0"> Add New Category</h5>
-                            </div>
-                            <div class="card-body">
-                                <form id="myForm" method="post" action="partials/_categories_add.php"
-                                    enctype="multipart/form-data">
-                                    <div class="mb-3">
-                                        <label for="categoryName" class="form-label">Category Name :</label>
-                                        <input type="text" class="form-control" name="categoryname" id="categoryname"
-                                            placeholder="Enter category name" required minlength="2">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="categoryImage" class="form-label">Category Image :</label>
-                                        <input type="file" class="form-control" name="categoryimage" id="categoryimage"
-                                            required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="categoryDesc" class="form-label">Description :</label>
-                                        <textarea class="form-control" name="categorydesc" id="categorydesc" rows="2"
-                                            placeholder="Write something..." required minlength="7"></textarea>
-                                    </div>
-                                    <button type="submit" name="insert" class="btn btn-success">Add Category
-                                        <!-- <i class="fa-solid fa-plus"></i>  -->
-                                    </button>
-                                </form>
-                                <!-- category validation -->
-                                <script>
-                                    $(document).ready(function () {
-                                        $("#myForm").validate({
-                                            rules: {
-                                                categoryname: {
-                                                    required: true,
-                                                    minlength: 2
-                                                },
-                                                categoryimage: {
-                                                    required: true,
-                                                    accept: "image/jpeg, image/png"
-                                                },
-                                                categorydesc: {
-                                                    required: true,
-                                                    minlength: 7,
-                                                    maxlength: 100,
-                                                }
-                                            },
-                                            messages: {
-                                                categoryname: {
-                                                    required: "Please enter category name",
-                                                    minlength: "Your name must consist of at least 2 characters"
-                                                },
-
-                                                categoryimage: {
-                                                    required: "Please select an image file.",
-                                                    accept: "Only JPEG and PNG images are allowed."
-                                                },
-
-                                                categorydesc: {
-                                                    required: "Please enter a description",
-                                                    minlength: "Description must be at least 7 characters long",
-                                                    maxlength: "Description must not exceed 100 characters"
-                                                }
-
-                                            },
-                                            submitHandler: function (form) {
-                                                form.submit();
-                                            }
-                                        });
-                                    });
-                                </script>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col d-flex justify-content-end">
+                    <form action="category-add.php">
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add Category
+                        </button>
+                    </form>
                 </div>
-
-                <br>
-                <!-- Right Table Container -->
+                <!-- category select  -->
                 <div class="">
                     <!-- <div class="col-lg-7 col-md-8"> -->
                     <div class="card shadow-sm border-1 h-100">
@@ -322,8 +259,8 @@ require "slider.php";
 
                                                     echo '<tr>';
                                                     echo "<td>{$row['categorie_id']}</td>";
-                                                    echo "<td><img src='images/" . htmlspecialchars($row['categorie_image']) . "' class='img-thumbnail' alt='Category Image' style='width:100px; height:auto;'></td>";
-                                                    echo "<td><b>Name : </b> " . htmlspecialchars($row['categorie_name']) . ".";
+                                                    echo "<td class='text-center'><img src='images/" . htmlspecialchars($row['categorie_image']) . "' class='img-thumbnail' alt='Category Image' style='width:100px; height:auto;'></td>";
+                                                    echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['categorie_name']) . ".";
                                                     echo "<br><br><b>Desc : </b>" . htmlspecialchars($row['categorie_desc']) . "</td>";
 
                                                     /* Status toggle */
@@ -341,8 +278,9 @@ require "slider.php";
                                                     echo '</span></div>
                                                     </td>';
 
-                                                    echo '<td><button class="btn btn-sm btn-primary me-1"><i class="fa-solid fa-pen"></i></button>
-                                                            <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button></td>';
+                                                    echo "<td><button class='btn btn-primary btn-sm me-2' data-bs-toggle='modal' data-bs-target='#editModal' data-id='{$row['categorie_id']}'>Edit</button>
+                                                         <a href='partials/_delete_product.php?id={$row['categorie_id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                    </td>";
                                                     echo '</tr>';
                                                 }
                                             } else {
@@ -364,6 +302,130 @@ require "slider.php";
             </div>
         </div>
 
+
+        <!-- Add Category Modal -->
+        <div class="modal fade">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <form id="categoryForm" method="post" action="partials/_categories_add.php"
+                        enctype="multipart/form-data">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title" id="addCategoryModalLabel"><i class="fa-solid fa-layer-group"></i>
+                                Add New Category</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="mb-3">
+                                <label for="categoryname" class="form-label">Category Name</label>
+                                <input type="text" class="form-control" name="categoryname" id="categoryname"
+                                    placeholder="Enter category name" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="categoryimage" class="form-label">Category Image</label>
+                                <input type="file" class="form-control" name="categoryimage" id="categoryimage"
+                                    required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="categorydesc" class="form-label">Description</label>
+                                <textarea class="form-control" name="categorydesc" id="categorydesc" rows="3"
+                                    placeholder="Write something..." required></textarea>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" name="insert" class="btn btn-success">Add Category</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $("#categoryForm").validate({
+                    rules: {
+                        categoryname: {
+                            required: true,
+                            minlength: 2
+                        },
+                        categoryimage: {
+                            required: true,
+                            accept: "image/jpeg, image/png"
+                        },
+                        categorydesc: {
+                            required: true,
+                            minlength: 7,
+                            maxlength: 100
+                        }
+                    },
+                    messages: {
+                        categoryname: {
+                            required: "Please enter category name",
+                            minlength: "Minimum 2 characters"
+                        },
+                        categoryimage: {
+                            required: "Please upload an image",
+                            accept: "Only JPG or PNG allowed"
+                        },
+                        categorydesc: {
+                            required: "Please enter a description",
+                            minlength: "Minimum 7 characters",
+                            maxlength: "Max 100 characters"
+                        }
+                    },
+                    submitHandler: function (form) {
+                        form.submit(); // or handle via AJAX
+                    }
+                });
+            });
+        </script>
+
+        <!-- category edit -->
+        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content" id="box-color">
+
+                    <!--  -->
+                    <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
+                        <h5 class="modal-title mb-0" id="editModalLabel">Edit Category</h5>
+                    </div>
+
+                    <div class="modal-body ">
+                        <form method="post" enctype="multipart/form-data" action="" id="categoryForm">
+
+                            <div class="mb-3 text-center">
+                                <img src="" alt="Current Image" class="img-thumbnail mb-2" style="height: 100px;">
+                                <div>
+                                    <label for="categoryImage" class="form-label">Change Image</label>
+                                    <input class="form-control" type="file" name="category-1image" id="productImage">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="categoryName" class="form-label">Category Name</label>
+                                <input type="text" class="form-control" id="categoryName" name="categoryname"
+                                    value="Sample Product">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="productDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="categoryDescription" name="categorydesc"
+                                    rows="3">Sample description</textarea>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" name="update" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <br>
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>

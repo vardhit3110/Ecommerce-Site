@@ -356,7 +356,7 @@ if ($email == true) {
             <li>
                 <a href="product_list.php">
                     <i class="fa-solid fa-square-list"></i>
-                    <span>Product List</span>
+                    <span>Subcategory</span>
                 </a>
             </li>
 

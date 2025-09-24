@@ -8,7 +8,7 @@
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-        <?php include "links/icons.html"; ?>
+    <?php include "links/icons.html"; ?>
     <style>
         .dashboard-container {
             padding: 20px;
@@ -80,7 +80,7 @@
         require "db_connect.php";
 
         $counts = [];
-        $tables = ['userdata', 'categories'];
+        $tables = ['userdata', 'categories', 'product'];
         foreach ($tables as $table) {
             $existSql = "SELECT * FROM $table";
             $result = mysqli_query($conn, $existSql);
@@ -109,15 +109,14 @@
                     </div>
                     <div class="dashboard-card3">
                         <div class="text-dark">
-                            <h3 style="font-weight: bold;">Name: Reports</h3>
-                            <h4>Count: 0</h4>
+                            <h3 style="font-weight: bold;">Total Product</h3>
+                            <h4><?php echo $counts['product']; ?></h4>
                         </div>
                     </div>
                 </div>
 
             </div>
         </div>
-
         <!-- Footer -->
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
