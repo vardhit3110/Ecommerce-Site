@@ -134,7 +134,7 @@
                                     <label for="productimage" class="form-label">Product Image</label>
                                     <input type="file" class="form-control" name="productimage" id="productimage">
                                 </div>
-
+                                <hr>&nbsp;
                                 <div class="d-flex justify-content-end">
                                     <a href="product_list.php" id="resetBtn" class="btn btn-danger">
                                         <i class="fa-solid fa-xmark"></i> Close

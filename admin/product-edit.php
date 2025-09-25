@@ -142,7 +142,7 @@ if (isset($_GET['id'])) {
                                         ?>
                                     </select>
                                 </div>
-
+                                <hr>&nbsp;
                                 <div class="d-flex justify-content-end">
                                     <a href="product_list.php" class="btn btn-secondary">
                                         <i class="fa-solid fa-xmark"></i> Cancel

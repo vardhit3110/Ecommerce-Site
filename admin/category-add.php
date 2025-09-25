@@ -110,7 +110,7 @@
                                     <textarea class="form-control" name="categorydesc" id="categorydesc" rows="3"
                                         placeholder="Write something..."></textarea>
                                 </div>
-
+                                <hr>&nbsp;
                                 <div class="d-flex justify-content-end">
                                     <a href="category_list.php" id="resetBtn" class="btn btn-danger">
                                         <i class="fa-solid fa-xmark"></i> Close

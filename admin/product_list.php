@@ -202,18 +202,95 @@ require "slider.php";
             right: 20px;
             z-index: 9999;
         }
-    </style>
 
+        .box1 {
+            background-color: #ffffff;
+        }
+    </style>
 </head>
 
 <body>
     <div class="main-content">
         <div class="header">
-            <h1><i class="fa-solid fa-table-columns"></i> Subcaterogy List</h1>
+            <h1><i class="fa-solid fa-table-columns"></i> Product List</h1>
             <div class="user-profile">
                 <i class="fa-solid fa-list fa-2x"></i>&nbsp;
             </div>
         </div>
+
+        <!-- Filter Section -->
+        <div class="container my-3">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <script>
+                        $(document).ready(function () {
+                            // Custom method: at least one field must be filled
+                            $.validator.addMethod("atLeastOneField", function (value, element, params) {
+                                var category = $('#category_name').val().trim();
+                                var product = $('#product_name').val().trim();
+                                var status = $('#status').val().trim();
+                                return category !== "" || product !== "" || status !== "";
+                            }, "Please fill at least one filter field.");
+
+                            $('#filterForm').validate({
+                                rules: {
+                                    category_name: {
+                                        atLeastOneField: true
+                                    }
+                                },
+                                errorElement: 'div',
+                                errorPlacement: function (error, element) {
+                                    error.addClass('error');
+                                    if (element.attr("name") === "category_name") {
+
+                                        error.insertAfter($('#status').closest('.col-md-3'));
+                                    } else {
+                                        error.insertAfter(element);
+                                    }
+                                }
+                            });
+                        });
+                    </script>
+
+                    <form method="GET" action="" class="row g-3 align-items-end" id="filterForm">
+                        <div class="col-md-4">
+                            <label for="category_name" class="form-label mb-1">Category Name</label>
+                            <input type="text" name="category_name" id="category_name"
+                                class="form-control form-control-sm" placeholder="Enter category name">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="product_name" class="form-label mb-1">Product Name</label>
+                            <select name="product_name" id="product_name" class="form-select form-select-sm">
+                                <option value="">-- Select Product --</option>
+                                <?php
+                                $productQuery = mysqli_query($conn, "SELECT DISTINCT product_name FROM product ORDER BY product_name ASC");
+                                while ($prod = mysqli_fetch_assoc($productQuery)) {
+                                    echo "<option value='" . htmlspecialchars($prod['product_name']) . "'>" . htmlspecialchars($prod['product_name']) . "</option>";
+                                }
+                                ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="status" class="form-label mb-1">Status</label>
+                            <select name="status" id="status" class="form-select form-select-sm">
+                                <option value="">-- All --</option>
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-1">
+                            <button type="submit" class="btn btn-sm btn-primary w-100"><i
+                                    class="fa fa-filter"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
         <!-- main container  -->
         <div class="content-area container-fluid py-4">
             <div class="row g-4">
@@ -225,12 +302,12 @@ require "slider.php";
                         </button>
                     </div>
                 </form>
-                <!-- Right Table Container -->
+                <!--  -->
                 <div class="">
                     <!-- <div class="col-lg-7 col-md-8"> -->
                     <div class="card shadow-sm border-1 h-100">
                         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Subcategory List</h5>
+                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Product List</h5>
                         </div>
                         <div class="card-body">
                             <!-- edit from product -->
