@@ -234,7 +234,7 @@ require "slider.php";
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered border-dark table-hover align-middle mb-0">
+                                <table class="table table-striped table-bordered border-dark table-hover align-middle mb-0">
                                     <thead class="">
                                         <tr class="table-success border-dark">
                                             <th>ID</th>
@@ -278,8 +278,9 @@ require "slider.php";
                                                     echo '</span></div>
                                                     </td>';
 
-                                                    echo "<td class='text-center'><button class='btn btn-primary btn-sm me-2' data-bs-toggle='modal' data-bs-target='#editModal' data-id='{$row['categorie_id']}'>Edit</button>
-                                                         <a href='partials/_delete_product.php?id={$row['categorie_id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                    echo "<td class='text-center'>
+                                                    <a href='category-edit.php?id={$row['categorie_id']}' class='btn btn-primary btn-sm'>Edit</a>&nbsp;
+                                                         <a href='partials/_categories_add.php?id={$row['categorie_id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
                                                     </td>";
                                                     echo '</tr>';
                                                 }
@@ -301,131 +302,6 @@ require "slider.php";
                 </div>
             </div>
         </div>
-
-
-        <!-- Add Category Modal -->
-        <div class="modal fade">
-            <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content">
-                    <form id="categoryForm" method="post" action="partials/_categories_add.php"
-                        enctype="multipart/form-data">
-                        <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title" id="addCategoryModalLabel"><i class="fa-solid fa-layer-group"></i>
-                                Add New Category</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-
-                            <div class="mb-3">
-                                <label for="categoryname" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" name="categoryname" id="categoryname"
-                                    placeholder="Enter category name" required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="categoryimage" class="form-label">Category Image</label>
-                                <input type="file" class="form-control" name="categoryimage" id="categoryimage"
-                                    required>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="categorydesc" class="form-label">Description</label>
-                                <textarea class="form-control" name="categorydesc" id="categorydesc" rows="3"
-                                    placeholder="Write something..." required></textarea>
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" name="insert" class="btn btn-success">Add Category</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <script>
-            $(document).ready(function () {
-                $("#categoryForm").validate({
-                    rules: {
-                        categoryname: {
-                            required: true,
-                            minlength: 2
-                        },
-                        categoryimage: {
-                            required: true,
-                            accept: "image/jpeg, image/png"
-                        },
-                        categorydesc: {
-                            required: true,
-                            minlength: 7,
-                            maxlength: 100
-                        }
-                    },
-                    messages: {
-                        categoryname: {
-                            required: "Please enter category name",
-                            minlength: "Minimum 2 characters"
-                        },
-                        categoryimage: {
-                            required: "Please upload an image",
-                            accept: "Only JPG or PNG allowed"
-                        },
-                        categorydesc: {
-                            required: "Please enter a description",
-                            minlength: "Minimum 7 characters",
-                            maxlength: "Max 100 characters"
-                        }
-                    },
-                    submitHandler: function (form) {
-                        form.submit();
-                    }
-                });
-            });
-        </script>
-
-        <!-- category edit -->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content" id="box-color">
-
-                    <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
-                        <h5 class="modal-title mb-0" id="editModalLabel">Edit Category</h5>
-                    </div>
-
-                    <div class="modal-body ">
-                        <form method="post" enctype="multipart/form-data" action="" id="categoryForm">
-
-                            <div class="mb-3 text-center">
-                                <img src="" alt="Current Image" class="img-thumbnail mb-2" style="height: 100px;">
-                                <div>
-                                    <label for="categoryImage" class="form-label">Change Image</label>
-                                    <input class="form-control" type="file" name="category-1image" id="productImage">
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="categoryName" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" id="categoryName" name="categoryname"
-                                    value="Sample Product">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="productDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="categoryDescription" name="categorydesc"
-                                    rows="3">Sample description</textarea>
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" name="update" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>

@@ -236,7 +236,8 @@ require "slider.php";
                             <!-- edit from product -->
 
                             <div class="table-responsive">
-                                <table class="table table-bordered border-dark table-hover align-middle mb-0">
+                                <table
+                                    class="table table-striped table-bordered border-dark table-hover align-middle mb-0">
                                     <thead class="">
                                         <tr class="table-success border-dark">
                                             <th>ID</th>
@@ -265,7 +266,7 @@ require "slider.php";
                                                     echo "<td class='text-center'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' class='img-thumbnail' alt='Product Image' style='width:100px; height:auto;'></td>";
                                                     echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['product_name']) . ".";
                                                     echo "<br><b>Desc : </b>" . htmlspecialchars($row['product_desc']) . "";
-                                                    echo "<br><br><b>Price : </b>₹ " . htmlspecialchars($row['product_price']) . "</td>";
+                                                    echo "<br><br><b>Price : </b>₹ " . number_format((float) $row['product_price']) . "</td>";
 
                                                     /* Status toggle */
                                                     echo '<td class="text-center">
@@ -282,18 +283,9 @@ require "slider.php";
                                                     echo '</span></div>
                                                     </td>';
 
-                                                    echo "<td><button class='btn btn-primary btn-sm me-2 editBtn' 
-                                                    data-bs-toggle='modal' 
-                                                    data-bs-target='#editModal' 
-                                                    data-id='" . $row['product_Id'] . "' 
-                                                    data-name='" . htmlspecialchars($row['product_name'], ENT_QUOTES) . "' 
-                                                    data-desc='" . htmlspecialchars($row['product_desc'], ENT_QUOTES) . "' 
-                                                    data-price='" . $row['product_price'] . "' 
-                                                    data-category='" . $row['categorie_id'] . "' 
-                                                    data-image='images/product_img/" . htmlspecialchars($row['product_image'], ENT_QUOTES) . "'>
-                                                    Edit
-                                                </button>
-                                                         <a href='partials/.php?id={$row['product_Id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                    echo "<td class='text-center'>
+                                                    <a href='product-edit.php?id={$row['product_Id']}' class='btn btn-primary btn-sm'>Edit</a>&nbsp;
+                                                         <a href='partials/_product_add.php?id={$row['product_Id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
                                                     </td>";
                                                     echo '</tr>';
                                                 }
@@ -321,142 +313,6 @@ require "slider.php";
         </div>
     </div>
 
-
-    <!-- Edit Modal -->
-
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content" id="box-color">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title" id="editModalLabel">Edit Product</h5>
-                </div>
-                <div class="modal-body">
-                    <form method="post" enctype="multipart/form-data" action="partials/_product_add.php"
-                        id="editProductForm">
-
-                        <input type="hidden" name="productid" value="...">
-                        <input type="hidden" name="old_image" value="...">
-
-
-                        <div class="mb-3 text-center">
-                            <img id="editProductImagePreview" src="" class="img-thumbnail mb-2" style="height: 100px;">
-                            <input class="form-control" type="file" name="productImage">
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Product Name</label>
-                            <input type="text" class="form-control" name="productName" id="editProductName">
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Description</label>
-                            <textarea class="form-control" name="productDesc" id="editProductDesc" rows="3"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Price</label>
-                            <input type="number" class="form-control" name="productPrice" id="editProductPrice">
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Category</label>
-                            <select class="form-select" name="categoryId" id="editProductCategory">
-                                <?php
-                                $catsql = "SELECT * FROM `categories`";
-                                $catresult = mysqli_query($conn, $catsql);
-                                while ($row = mysqli_fetch_assoc($catresult)) {
-                                    echo '<option value="' . $row['categorie_id'] . '">' . $row['categorie_name'] . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" name="update" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
-        $(document).on("click", ".editBtn", function () {
-            var id = $(this).data("id");
-            var name = $(this).data("name");
-            var desc = $(this).data("desc");
-            var price = $(this).data("price");
-            var category = $(this).data("category");
-            var image = $(this).data("image");
-
-            $("#editProductId").val(id);
-            $("#editProductName").val(name);
-            $("#editProductDesc").val(desc);
-            $("#editProductPrice").val(price);
-            $("#editProductCategory").val(category);
-            $("#editProductImagePreview").attr("src", image);
-        });
-
-    </script>
-    <!-- product validation -->
-    <script>
-        $(document).ready(function () {
-            $("#categoryForm").validate({
-                rules: {
-                    productname: {
-                        required: true,
-                        minlength: 2
-                    },
-                    productdesc: {
-                        required: true,
-                        minlength: 10,
-                        maxlength: 250
-                    },
-                    productprice: {
-                        required: true,
-                        number: true,
-                        min: 1,
-                        max: 999999
-                    },
-                    categoryid: {
-                        required: true
-                    },
-                    productimage: {
-                        required: true,
-                        accept: "image/jpeg,image/png"
-                    }
-                },
-                messages: {
-                    productname: {
-                        required: "Please enter product name",
-                        minlength: "Product name must be at least 2 characters"
-                    },
-                    productdesc: {
-                        required: "Please enter a description",
-                        minlength: "Description must be at least 10 characters",
-                        maxlength: "Description must not exceed 250 characters"
-                    },
-                    productprice: {
-                        required: "Please enter a price",
-                        number: "Please enter a valid number",
-                        min: "Price must be greater than zero",
-                        max: "Price cannot exceed 999999"
-                    },
-                    categoryid: {
-                        required: "Please select a category"
-                    },
-                    productimage: {
-                        required: "Please upload a product image",
-                        accept: "Only JPEG and PNG images are allowed"
-                    }
-                },
-                submitHandler: function (form) {
-                    form.submit();
-                }
-            });
-        });
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>

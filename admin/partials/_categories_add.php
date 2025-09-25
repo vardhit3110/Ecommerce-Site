@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include "db_connect.php";
 
 if (isset($_POST['insert'])) {
@@ -44,6 +48,26 @@ if (isset($_POST['insert'])) {
         echo "<script>alert('Category Added Successfully!');window.location.href='../category_list.php';</script>";
     } else {
         echo "<script>alert('Category Not Inserted!');window.location.href='../category_list.php';</script>";
+    }
+}
+
+/* delete category */
+
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    $stmt = mysqli_prepare($conn, "DELETE FROM categories WHERE categorie_id=?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        if (mysqli_stmt_execute($stmt)) {
+            header("Location: ../category_list.php");
+            exit();
+        } else {
+            echo "<script>alert('Category Not Deleted');window.location.href='../category_list.php';</script>";
+        }
+        mysqli_stmt_close($stmt);
+    } else {
+        echo "<script>alert('Failed to prepare statement.');window.location.href='../category_list.php';</script>";
     }
 }
 ?>

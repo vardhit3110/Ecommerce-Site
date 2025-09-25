@@ -136,8 +136,8 @@
                                 </div>
 
                                 <div class="d-flex justify-content-end">
-                                    <a href="" id="resetBtn" class="btn btn-secondary">
-                                        <i class="fa-solid fa-rotate-left"></i> Reset
+                                    <a href="product_list.php" id="resetBtn" class="btn btn-danger">
+                                        <i class="fa-solid fa-xmark"></i> Close
                                     </a>
                                     &nbsp;
                                     <button type="submit" name="insert" class="btn btn-success">

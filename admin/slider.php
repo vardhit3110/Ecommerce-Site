@@ -6,6 +6,7 @@ if ($email == true) {
 
 } else {
     header("location: index.php");
+    exit();
 }
 ?>
 <!DOCTYPE html>

@@ -54,44 +54,64 @@ if (isset($_POST['insert'])) {
 /* product edit */
 
 
-if (isset($_POST['update'])) {
-    $product_id = trim($_POST['productId']);
-    $product_name = trim($_POST['productName']);
-    $product_desc = trim($_POST['productDesc']);
-    $product_price = trim($_POST['productPrice']);
-    $category_id = trim($_POST['categoryId']);
-    $old_image = trim($_POST['old_image']);
+// if (isset($_POST['update'])) {
+//     $product_id = trim($_POST['productId']);
+//     $product_name = trim($_POST['productName']);
+//     $product_desc = trim($_POST['productDesc']);
+//     $product_price = trim($_POST['productPrice']);
+//     $category_id = trim($_POST['categoryId']);
+//     $old_image = trim($_POST['old_image']);
 
-    $filename = $old_image;
+//     $filename = $old_image;
 
-    if (isset($_FILES['productimage']) && $_FILES['productimage']['error'] == 0) {
-        $path = $_FILES['productimage']['name'];
-        $tmp_name = $_FILES['productimage']['tmp_name'];
-        $ext = pathinfo($path, PATHINFO_EXTENSION);
-        $filename = $product_name . "_" . time() . "." . $ext;
-        $upload_path = "../images/product_img/" . $filename;
+//     if (isset($_FILES['productimage']) && $_FILES['productimage']['error'] == 0) {
+//         $path = $_FILES['productimage']['name'];
+//         $tmp_name = $_FILES['productimage']['tmp_name'];
+//         $ext = pathinfo($path, PATHINFO_EXTENSION);
+//         $filename = $product_name . "_" . time() . "." . $ext;
+//         $upload_path = "../images/product_img/" . $filename;
 
-        if (!move_uploaded_file($tmp_name, $upload_path)) {
-            echo "<script>alert('Failed to upload new image.');window.location.href='../product_list.php';</script>";
+//         if (!move_uploaded_file($tmp_name, $upload_path)) {
+//             echo "<script>alert('Failed to upload new image.');window.location.href='../product_list.php';</script>";
+//             exit();
+//         }
+
+//         if (!empty($old_image) && file_exists("../images/product_img/" . $old_image)) {
+//             unlink("../images/product_img/" . $old_image);
+//         }
+//     }
+
+//     // Update query
+//     $sql = "UPDATE product SET product_name = ?, product_desc = ?, product_price = ?, categorie_id = ?, product_image = ? WHERE product_Id = ?";
+//     $stmt = mysqli_prepare($conn, $sql);
+//     mysqli_stmt_bind_param($stmt, "ssiisi", $product_name, $product_desc, $product_price, $category_id, $filename, $product_id);
+//     $result = mysqli_stmt_execute($stmt);
+
+//     if ($result) {
+//         echo "<script>alert('Product Updated Successfully!');window.location.href='../product_list.php';</script>";
+//     } else {
+//         echo "<script>alert('Product Not Updated!');window.location.href='../product_list.php';</script>";
+//     }
+// }
+
+
+
+/* delete product */
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    $stmt = mysqli_prepare($conn, "DELETE FROM product WHERE product_id=?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        if (mysqli_stmt_execute($stmt)) {
+            header("Location : ../product_list.php");
             exit();
+        } else {
+            echo "<script>alert('Product Not Deleted');window.location.href='../product_list.php';</script>";
         }
-
-        if (!empty($old_image) && file_exists("../images/product_img/" . $old_image)) {
-            unlink("../images/product_img/" . $old_image);
-        }
-    }
-
-    // Update query
-    $sql = "UPDATE product SET product_name = ?, product_desc = ?, product_price = ?, categorie_id = ?, product_image = ? WHERE product_Id = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ssiisi", $product_name, $product_desc, $product_price, $category_id, $filename, $product_id);
-    $result = mysqli_stmt_execute($stmt);
-
-    if ($result) {
-        echo "<script>alert('Product Updated Successfully!');window.location.href='../product_list.php';</script>";
+        mysqli_stmt_close($stmt);
     } else {
-        echo "<script>alert('Product Not Updated!');window.location.href='../product_list.php';</script>";
+        echo "<script>alert('Failed to prepare statement.');window.location.href='../product_list.php';</script>";
     }
 }
-
 ?>
