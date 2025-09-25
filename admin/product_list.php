@@ -218,11 +218,13 @@ require "slider.php";
         <div class="content-area container-fluid py-4">
             <div class="row g-4">
 
-                <div class="col d-flex justify-content-end">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-                        <i class="fa-solid fa-plus"></i> Add New
-                    </button>
-                </div>
+                <form action="product-add.php">
+                    <div class="col d-flex justify-content-end">
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add New
+                        </button>
+                    </div>
+                </form>
                 <!-- Right Table Container -->
                 <div class="">
                     <!-- <div class="col-lg-7 col-md-8"> -->
@@ -316,68 +318,6 @@ require "slider.php";
         <br>
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
-        </div>
-    </div>
-
-    <!-- popup subcategory -->
-    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <form id="categoryForm" method="post" action="partials/_product_add.php" enctype="multipart/form-data">
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title" id="addCategoryModalLabel"><i class="fa-solid fa-layer-group"></i>
-                            Add New Subcategory</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-
-                        <div class="mb-3">
-                            <label for="productName" class="form-label">Name :</label>
-                            <input type="text" class="form-control" name="productname" id="productname"
-                                placeholder="Enter product name" required minlength="2">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="productDesc" class="form-label">Description :</label>
-                            <textarea class="form-control" name="productdesc" id="productdesc" rows="2"
-                                placeholder="Write something..." required minlength="10"></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="productprice" class="form-label">Price :</label>
-                            <input type="text" class="form-control" name="productprice" id="productprice"
-                                placeholder="Enter productprice " required minlength="2">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="categoryid" class="form-label">Category:</label>
-                            <select name="categoryid" id="categoryid" class="form-select" required>
-                                <option hidden disabled selected value>None</option>
-                                <?php
-                                $catsql = "SELECT * FROM `categories`";
-                                $catresult = mysqli_query($conn, $catsql);
-                                while ($row = mysqli_fetch_assoc($catresult)) {
-                                    $catId = $row['categorie_id'];
-                                    $catName = $row['categorie_name'];
-                                    echo '<option value="' . $catId . '">' . $catName . '</option>';
-                                }
-                                ?>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="productImage" class="form-label">Product Image :</label>
-                            <input type="file" class="form-control" name="productimage" id="productimage" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" name="insert" class="btn btn-success">Add Category</button>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 

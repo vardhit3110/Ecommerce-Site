@@ -219,8 +219,8 @@ require "slider.php";
         <div class="content-area container-fluid py-4">
             <div class="row g-4">
                 <div class="col d-flex justify-content-end">
-                    <form action="category-add.php">
-                        <button class="btn btn-primary">
+                    <form action="category-add.php" id="categoryForm">
+                        <button class="btn btn-primary" id="changePage">
                             <i class="fa-solid fa-plus"></i> Add Category
                         </button>
                     </form>
@@ -278,7 +278,7 @@ require "slider.php";
                                                     echo '</span></div>
                                                     </td>';
 
-                                                    echo "<td><button class='btn btn-primary btn-sm me-2' data-bs-toggle='modal' data-bs-target='#editModal' data-id='{$row['categorie_id']}'>Edit</button>
+                                                    echo "<td class='text-center'><button class='btn btn-primary btn-sm me-2' data-bs-toggle='modal' data-bs-target='#editModal' data-id='{$row['categorie_id']}'>Edit</button>
                                                          <a href='partials/_delete_product.php?id={$row['categorie_id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
                                                     </td>";
                                                     echo '</tr>';
@@ -378,7 +378,7 @@ require "slider.php";
                         }
                     },
                     submitHandler: function (form) {
-                        form.submit(); // or handle via AJAX
+                        form.submit();
                     }
                 });
             });
@@ -389,7 +389,6 @@ require "slider.php";
             <div class="modal-dialog">
                 <div class="modal-content" id="box-color">
 
-                    <!--  -->
                     <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
                         <h5 class="modal-title mb-0" id="editModalLabel">Edit Category</h5>
                     </div>

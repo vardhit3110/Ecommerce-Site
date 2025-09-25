@@ -13,7 +13,7 @@ if (isset($_POST['insert'])) {
     $result_categorie = mysqli_stmt_get_result($stmt);
 
     if (mysqli_num_rows($result_categorie) > 0) {
-        echo "<script>alert('Category Already Added!');window.location.href='../category_list.php';</script>";
+        echo "<script>alert('Category Already Added!');window.location.href='../category-add.php';</script>";
         exit();
     }
 
@@ -26,7 +26,7 @@ if (isset($_POST['insert'])) {
         $upload_path = "../images/" . $filename;
 
         if (!move_uploaded_file($tmp_name, $upload_path)) {
-            echo "<script>alert('Failed to upload image.');window.location.href='../category_list.php';</script>";
+            echo "<script>alert('Failed to upload image.');window.location.href='../category-add.php';</script>";
             exit();
         }
     } else {

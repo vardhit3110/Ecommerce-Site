@@ -55,6 +55,15 @@
             background-color: #f8f8f8ff;
         }
 
+        .main-box {
+            background-color: #ffffffff;
+            border-radius: 25px;
+        }
+
+        .card-body {
+            background-color: rgba(251, 251, 251, 1)
+        }
+
         .footer {
             text-align: center;
             margin-top: 50px;
@@ -67,44 +76,54 @@
 <body>
 
     <div class="main-content">
-        <div class="header text-center p-4">
-            <h1><i class="fa-solid fa-square-plus"></i> Add Category</h1>
+        <div class="header">
+            <h1><i class="fa-solid fa-square-plus" id="1"></i> Add Category</h1>
+            <div class="user-profile">
+            </div>
         </div>
 
         <!-- Form Card -->
 
-        <div class="content-area">
-            <div class="dynamic-content">
-                <div class="card shadow">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">Add New Category</h5>
+        <div class="main-box">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-xl-6">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Category Form</h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="categoryForm" method="post" action="partials/_categories_add.php"
+                                enctype="multipart/form-data">
+                                <div class="mb-3">
+                                    <label for="categoryname" class="form-label">Category Name</label>
+                                    <input type="text" class="form-control" name="categoryname" id="categoryname"
+                                        placeholder="Enter category name">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="categoryimage" class="form-label">Category Image</label>
+                                    <input type="file" class="form-control" name="categoryimage" id="categoryimage">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="categorydesc" class="form-label">Description</label>
+                                    <textarea class="form-control" name="categorydesc" id="categorydesc" rows="3"
+                                        placeholder="Write something..."></textarea>
+                                </div>
+
+                                <div class="d-flex justify-content-end">
+                                    <a href="" id="resetBtn" class="btn btn-secondary">
+                                        <i class="fa-solid fa-rotate-left"></i> Reset
+                                    </a>
+                                    &nbsp;
+                                    <button type="submit" name="insert" class="btn btn-success">
+                                        <i class="fa-solid fa-plus"></i> Add Category
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form id="categoryForm" method="post" action="partials/_categories_add.php"
-                            enctype="multipart/form-data">
-                            <div class="mb-3">
-                                <label for="categoryname" class="form-label">Category Name</label>
-                                <input type="text" class="form-control" name="categoryname" id="categoryname"
-                                    placeholder="Enter category name">
-                            </div>
 
-                            <div class="mb-3">
-                                <label for="categoryimage" class="form-label">Category Image</label>
-                                <input type="file" class="form-control" name="categoryimage" id="categoryimage">
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="categorydesc" class="form-label">Description</label>
-                                <textarea class="form-control" name="categorydesc" id="categorydesc" rows="3"
-                                    placeholder="Write something..."></textarea>
-                            </div>
-
-                            <div class="text-end">
-                                <button type="reset" class="btn btn-secondary">Reset</button>
-                                <button type="submit" name="insert" class="btn btn-success">Add Category</button>
-                            </div>
-                        </form>
-                    </div>
                 </div>
             </div>
         </div>
@@ -115,7 +134,6 @@
         </div>
     </div>
 
-    <!-- JS Validation -->
     <script>
         $(document).ready(function () {
             $("#categoryForm").validate({
@@ -155,7 +173,7 @@
                     error.insertAfter(element);
                 },
                 submitHandler: function (form) {
-                    form.submit(); // Replace with AJAX if needed
+                    form.submit();
                 }
             });
         });
