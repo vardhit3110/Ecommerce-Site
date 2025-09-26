@@ -18,11 +18,18 @@ require "slider.php";
             background-color: #f8f9fa;
         }
 
-        .error {
+        /* .error {
             color: red;
             font-size: 13px;
             margin-top: 3px;
+        } */
+        .error {
+            font-size: 12px;
+            color: red;
+            margin-top: 2px;
+            position: relative;
         }
+
 
         .card-header {
             border-bottom: 1px solid #dee2e6;
@@ -222,41 +229,14 @@ require "slider.php";
         <div class="container my-3">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <script>
-                        $(document).ready(function () {
-                            // Custom method: at least one field must be filled
-                            $.validator.addMethod("atLeastOneField", function (value, element, params) {
-                                var category = $('#category_name').val().trim();
-                                var product = $('#product_name').val().trim();
-                                var status = $('#status').val().trim();
-                                return category !== "" || product !== "" || status !== "";
-                            }, "Please fill at least one filter field.");
-
-                            $('#filterForm').validate({
-                                rules: {
-                                    category_name: {
-                                        atLeastOneField: true
-                                    }
-                                },
-                                errorElement: 'div',
-                                errorPlacement: function (error, element) {
-                                    error.addClass('error');
-                                    if (element.attr("name") === "category_name") {
-
-                                        error.insertAfter($('#status').closest('.col-md-3'));
-                                    } else {
-                                        error.insertAfter(element);
-                                    }
-                                }
-                            });
-                        });
-                    </script>
-
-                    <form method="GET" action="" class="row g-3 align-items-end" id="filterForm">
-                        <div class="col-md-4">
+                    <form method="GET" action="" class="row g-3 align-items-end position-relative" id="filterForm"
+                        style="position: relative;">
+                        <div class="col-md-4 position-relative">
                             <label for="category_name" class="form-label mb-1">Category Name</label>
                             <input type="text" name="category_name" id="category_name"
-                                class="form-control form-control-sm" placeholder="Enter category name">
+                                class="form-control form-control-sm" placeholder="Enter category name"
+                                value="<?php echo isset($_GET['category_name']) ? htmlspecialchars($_GET['category_name']) : ''; ?>">
+                            <div id="categoryError" class="error position-absolute" style="top: 70px;"></div>
                         </div>
 
                         <div class="col-md-4">
@@ -266,7 +246,8 @@ require "slider.php";
                                 <?php
                                 $productQuery = mysqli_query($conn, "SELECT DISTINCT product_name FROM product ORDER BY product_name ASC");
                                 while ($prod = mysqli_fetch_assoc($productQuery)) {
-                                    echo "<option value='" . htmlspecialchars($prod['product_name']) . "'>" . htmlspecialchars($prod['product_name']) . "</option>";
+                                    $selected = (isset($_GET['product_name']) && $_GET['product_name'] == $prod['product_name']) ? 'selected' : '';
+                                    echo "<option value='" . htmlspecialchars($prod['product_name']) . "' $selected>" . htmlspecialchars($prod['product_name']) . "</option>";
                                 }
                                 ?>
                             </select>
@@ -276,14 +257,15 @@ require "slider.php";
                             <label for="status" class="form-label mb-1">Status</label>
                             <select name="status" id="status" class="form-select form-select-sm">
                                 <option value="">-- All --</option>
-                                <option value="1">Active</option>
-                                <option value="2">Inactive</option>
+                                <option value="1" <?php echo (isset($_GET['status']) && $_GET['status'] == '1') ? 'selected' : ''; ?>>Active</option>
+                                <option value="2" <?php echo (isset($_GET['status']) && $_GET['status'] == '2') ? 'selected' : ''; ?>>Inactive</option>
                             </select>
                         </div>
 
-                        <div class="col-md-1">
-                            <button type="submit" class="btn btn-sm btn-primary w-100"><i
-                                    class="fa fa-filter"></i></button>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="submit" class="btn btn-success btn-sm w-100">
+                                <i class="fa fa-filter"></i>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -327,15 +309,39 @@ require "slider.php";
                                     <tbody>
 
                                         <?php
-                                        $stmt = mysqli_prepare($conn, "SELECT * FROM product");
+                                        $query = "SELECT * FROM product WHERE 1";
+                                        $params = [];
+
+                                        if (!empty($_GET['categorie_id'])) {
+                                            $query .= " AND categorie_id LIKE ?";
+                                            $params[] = "%" . $_GET['categorie_id'] . "%";
+                                        }
+
+                                        if (!empty($_GET['product_name'])) {
+                                            $query .= " AND product_name = ?";
+                                            $params[] = $_GET['product_name'];
+                                        }
+
+                                        if (!empty($_GET['status'])) {
+                                            $query .= " AND product_status = ?";
+                                            $params[] = $_GET['status'];
+                                        }
+
+                                        $stmt = mysqli_prepare($conn, $query);
+
                                         if ($stmt) {
+                                            if (!empty($params)) {
+                                                $types = str_repeat("s", count($params));
+                                                mysqli_stmt_bind_param($stmt, $types, ...$params);
+                                            }
+
                                             mysqli_stmt_execute($stmt);
                                             $result = mysqli_stmt_get_result($stmt);
+
                                             if (mysqli_num_rows($result)) {
                                                 while ($row = mysqli_fetch_assoc($result)) {
                                                     $productId = $row['product_Id'];
                                                     $status = $row['product_status'];
-
                                                     $isActive = $status == 1;
 
                                                     echo '<tr>';
@@ -345,29 +351,28 @@ require "slider.php";
                                                     echo "<br><b>Desc : </b>" . htmlspecialchars($row['product_desc']) . "";
                                                     echo "<br><br><b>Price : </b>₹ " . number_format((float) $row['product_price']) . "</td>";
 
-                                                    /* Status toggle */
                                                     echo '<td class="text-center">
-                                                    <div class="status-toggle-container">
-                                                    <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $productId . ')">
-                                                    <div class="toggle-slider"></div>
-                                                    <div class="toggle-text">
-                                                    <span class="toggle-on">ON</span>
-                                                    <span class="toggle-off">OFF</span>
-                                                    </div>
-                                                    </div>
-                                                    <span class="status-indicator ' . ($isActive ? 'active' : 'inactive') . '">';
+                                                        <div class="status-toggle-container">
+                                                            <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $productId . ')">
+                                                                <div class="toggle-slider"></div>
+                                                                <div class="toggle-text">
+                                                                    <span class="toggle-on">ON</span>
+                                                                    <span class="toggle-off">OFF</span>
+                                                                </div>
+                                                            </div>
+                                                            <span class="status-indicator ' . ($isActive ? 'active' : 'inactive') . '">';
                                                     echo $isActive ? 'ACTIVE' : 'INACTIVE';
                                                     echo '</span></div>
                                                     </td>';
 
                                                     echo "<td class='text-center'>
-                                                    <a href='product-edit.php?id={$row['product_Id']}' class='btn btn-primary btn-sm'>Edit</a>&nbsp;
-                                                         <a href='partials/_product_add.php?id={$row['product_Id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
-                                                    </td>";
+                                                            <a href='product-edit.php?id={$row['product_Id']}' class='btn btn-primary btn-sm'>Edit</a>&nbsp;
+                                                            <a href='partials/_product_add.php?id={$row['product_Id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                        </td>";
                                                     echo '</tr>';
                                                 }
                                             } else {
-                                                echo "<tr><td colspan='5' class='text-center'>No records found</td></tr>";
+                                                echo "<tr><td colspan='5' class='text-center text-danger'>No records found</td></tr>";
                                             }
 
                                             mysqli_stmt_close($stmt);
@@ -377,7 +382,7 @@ require "slider.php";
                                         ?>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div>  
                         </div>
                     </div>
                 </div>
