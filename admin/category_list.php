@@ -74,6 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             background-color: #f8f8f8ff;
         }
 
+        .card-body {
+            background-color: rgba(255, 249, 249, 1)
+        }
+
         .status-toggle-container {
             display: flex;
             flex-direction: column;

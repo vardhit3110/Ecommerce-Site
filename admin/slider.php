@@ -46,7 +46,6 @@ if ($email == true) {
             overflow-x: hidden;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-expanded-width);
             height: 100vh;
@@ -139,7 +138,6 @@ if ($email == true) {
             margin-right: 15px;
         }
 
-        /* Main Content */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-expanded-width);
@@ -147,7 +145,6 @@ if ($email == true) {
             padding: 20px;
         }
 
-        /* Header */
         .header {
             display: flex;
             justify-content: space-between;
@@ -224,7 +221,6 @@ if ($email == true) {
             bottom: -50vh;
         }
 
-        /* Content Area */
         .content-area {
             background: white;
             border-radius: 15px;
@@ -232,9 +228,6 @@ if ($email == true) {
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             margin-bottom: 30px;
             min-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         .dynamic-content {
@@ -260,7 +253,6 @@ if ($email == true) {
             line-height: 1.6;
         }
 
-        /* Footer */
         .footer {
             text-align: center;
             padding: 20px;
@@ -271,7 +263,6 @@ if ($email == true) {
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
                 width: 0;

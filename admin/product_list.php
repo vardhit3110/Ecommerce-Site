@@ -55,6 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             position: relative;
         }
 
+        .card-body {
+            background-color: rgba(255, 249, 249, 1)
+        }
 
         .card-header {
             border-bottom: 1px solid #dee2e6;
@@ -332,7 +335,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                                         </tr>
                                     </thead>
                                     <tbody>
-
                                         <?php
                                         $query = "SELECT * FROM product p INNER JOIN categories c ON p.categorie_id = c.categorie_id WHERE 1";
                                         $params = [];

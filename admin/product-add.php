@@ -52,7 +52,7 @@
         }
 
         #box-color {
-            background-color: #f8f8f8ff;
+            background-color: rgba(238, 238, 238, 1)
         }
 
         .main-box {
@@ -61,7 +61,7 @@
         }
 
         .card-body {
-            background-color: rgba(251, 251, 251, 1)
+            background-color: rgba(238, 238, 238, 1)
         }
 
         .footer {

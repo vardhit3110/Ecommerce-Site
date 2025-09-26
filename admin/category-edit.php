@@ -13,10 +13,7 @@ error_reporting(0);
     <!-- Bootstrap & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <?php include "links/icons.html"; ?>
-
-    <!-- jQuery & Validation -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
@@ -55,7 +52,7 @@ error_reporting(0);
         }
 
         #box-color {
-            background-color: #f8f8f8ff;
+            background-color: rgba(235, 235, 235, 1)
         }
 
         .main-box {
@@ -64,7 +61,7 @@ error_reporting(0);
         }
 
         .card-body {
-            background-color: rgba(251, 251, 251, 1)
+            background-color: rgba(255, 249, 249, 1)
         }
 
         .footer {

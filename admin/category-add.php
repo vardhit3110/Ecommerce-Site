@@ -61,7 +61,7 @@
         }
 
         .card-body {
-            background-color: rgba(251, 251, 251, 1)
+            background-color: rgba(238, 238, 238, 1)
         }
 
         .footer {

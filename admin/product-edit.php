@@ -57,6 +57,10 @@ if (isset($_GET['id'])) {
             max-width: 600px;
         }
 
+        .card-body {
+            background-color: rgba(255, 249, 249, 1)
+        }
+
         .main-box {
             background-color: #ffffff;
             border-radius: 25px;
