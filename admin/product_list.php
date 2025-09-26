@@ -1,5 +1,30 @@
 <?php
 require "slider.php";
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'update_status') {
+    header('Content-Type: application/json');
+
+    $catId = $_POST['id'];
+    $status = $_POST['status'];
+    if (!is_numeric($catId) || !is_numeric($status)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid input']);
+        exit;
+    }
+
+    $stmt = mysqli_prepare($conn, "UPDATE product SET product_status = ? WHERE product_Id = ?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "ii", $status, $catId);
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Database update failed']);
+        }
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Database error']);
+    }
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -263,14 +288,14 @@ require "slider.php";
                         </div>
 
                         <div class="col-md-1 d-flex align-items-end">
-                            <button type="submit" class="btn btn-success btn-sm w-100">
+                            <button type="submit" class="btn btn-primary btn-sm w-100">
                                 <i class="fa fa-filter"></i>
                             </button>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
+        </div><br>
 
 
         <!-- main container  -->
@@ -309,12 +334,12 @@ require "slider.php";
                                     <tbody>
 
                                         <?php
-                                        $query = "SELECT * FROM product WHERE 1";
+                                        $query = "SELECT * FROM product p INNER JOIN categories c ON p.categorie_id = c.categorie_id WHERE 1";
                                         $params = [];
 
-                                        if (!empty($_GET['categorie_id'])) {
-                                            $query .= " AND categorie_id LIKE ?";
-                                            $params[] = "%" . $_GET['categorie_id'] . "%";
+                                        if (!empty($_GET['category_name'])) {
+                                            $query .= " AND categorie_name LIKE ?";
+                                            $params[] = "%" . $_GET['category_name'] . "%";
                                         }
 
                                         if (!empty($_GET['product_name'])) {
@@ -347,13 +372,12 @@ require "slider.php";
                                                     echo '<tr>';
                                                     echo "<td>{$row['product_Id']}</td>";
                                                     echo "<td class='text-center'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' class='img-thumbnail' alt='Product Image' style='width:100px; height:auto;'></td>";
-                                                    echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['product_name']) . ".";
+                                                    echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['product_name']);
                                                     echo "<br><b>Desc : </b>" . htmlspecialchars($row['product_desc']) . "";
                                                     echo "<br><br><b>Price : </b>₹ " . number_format((float) $row['product_price']) . "</td>";
-
                                                     echo '<td class="text-center">
                                                         <div class="status-toggle-container">
-                                                            <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $productId . ')">
+                                                            <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $productId . ', ' . $status . ')">
                                                                 <div class="toggle-slider"></div>
                                                                 <div class="toggle-text">
                                                                     <span class="toggle-on">ON</span>
@@ -382,7 +406,7 @@ require "slider.php";
                                         ?>
                                     </tbody>
                                 </table>
-                            </div>  
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -396,68 +420,49 @@ require "slider.php";
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
+        function toggleStatus(element, productId, currentStatus) {
+            const newStatus = currentStatus == 1 ? 2 : 1;
+            const willBeActive = newStatus == 1;
 
-        function showToast(message, type = 'success') {
-            const toast = $('.toast');
-            toast.find('.toast-body').text(message);
+            element.classList.add('status-updating');
 
-            if (type === 'error') {
-                toast.find('.toast-header').css('background-color', '#f8d7da');
-                toast.find('.toast-body').css('background-color', '#f8d7da');
-            } else {
-                toast.find('.toast-header').css('background-color', '#d4edda');
-                toast.find('.toast-body').css('background-color', '#d4edda');
-            }
+            $.ajax({
+                url: window.location.href,
+                type: 'POST',
+                data: {
+                    action: 'update_status',
+                    id: productId,
+                    status: newStatus
+                },
+                success: function (response) {
+                    element.classList.remove('status-updating');
 
-            toast.toast('show');
-        }
+                    if (response.success) {
+                        if (willBeActive) {
+                            element.classList.remove('inactive');
+                            element.classList.add('active');
+                            element.parentElement.querySelector('.status-indicator').textContent = 'ACTIVE';
+                            element.parentElement.querySelector('.status-indicator').classList.remove('inactive');
+                            element.parentElement.querySelector('.status-indicator').classList.add('active');
+                        } else {
+                            element.classList.remove('active');
+                            element.classList.add('inactive');
+                            element.parentElement.querySelector('.status-indicator').textContent = 'INACTIVE';
+                            element.parentElement.querySelector('.status-indicator').classList.remove('active');
+                            element.parentElement.querySelector('.status-indicator').classList.add('inactive');
+                        }
 
-
-        function toggleStatus(toggleElement, productId) {
-            const container = toggleElement.closest('.status-toggle-container');
-            const indicator = container.querySelector('.status-indicator');
-            const isCurrentlyActive = toggleElement.classList.contains('active');
-            const newStatus = isCurrentlyActive ? 2 : 1;
-
-            container.classList.add('status-updating');
-
-            const formData = new FormData();
-            formData.append('productId', productId);
-            formData.append('status', newStatus);
-
-            fetch('partials/-product_add.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.text())
-                .then(data => {
-
-                    if (newStatus == 1) {
-                        toggleElement.classList.remove('inactive');
-                        toggleElement.classList.add('active');
-                        indicator.classList.remove('inactive');
-                        indicator.classList.add('active');
-                        indicator.textContent = 'ACTIVE';
+                        alert('Product status updated successfully!');
                     } else {
-                        toggleElement.classList.remove('active');
-                        toggleElement.classList.add('inactive');
-                        indicator.classList.remove('active');
-                        indicator.classList.add('inactive');
-                        indicator.textContent = 'INACTIVE';
+                        alert('Product status updated successfully!'); window.location.href = "product_list.php";
                     }
-
-                    showToast('Status updated successfully!');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('An error occurred while updating status.', 'error');
-                })
-                .finally(() => {
-
-                    container.classList.remove('status-updating');
-                });
+                },
+                error: function (xhr, status, error) {
+                    element.classList.remove('status-updating');
+                    alert('Error updating Product status: ' + error);
+                }
+            });
         }
     </script>
 </body>

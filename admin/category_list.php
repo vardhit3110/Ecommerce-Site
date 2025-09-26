@@ -1,5 +1,30 @@
 <?php
 require "slider.php";
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'update_status') {
+    header('Content-Type: application/json');
+
+    $catId = $_POST['id'];
+    $status = $_POST['status'];
+    if (!is_numeric($catId) || !is_numeric($status)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid input']);
+        exit;
+    }
+
+    $stmt = mysqli_prepare($conn, "UPDATE categories SET categorie_status = ? WHERE categorie_id = ?");
+    if ($stmt) {
+        mysqli_stmt_bind_param($stmt, "ii", $status, $catId);
+        if (mysqli_stmt_execute($stmt)) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Database update failed']);
+        }
+        mysqli_stmt_close($stmt);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Database error']);
+    }
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -157,7 +182,6 @@ require "slider.php";
             box-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
         }
 
-
         .status-updating {
             opacity: 0.7;
             pointer-events: none;
@@ -202,6 +226,31 @@ require "slider.php";
             right: 20px;
             z-index: 9999;
         }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
     </style>
 
 </head>
@@ -225,16 +274,16 @@ require "slider.php";
                         </button>
                     </form>
                 </div>
-                <!-- category select  -->
-                <div class="">
-                    <!-- <div class="col-lg-7 col-md-8"> -->
+
+                <div class="col-12">
                     <div class="card shadow-sm border-1 h-100">
                         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                             <h5 class="mb-0"><i class="fa-solid fa-list"></i> Category List</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered border-dark table-hover align-middle mb-0">
+                                <table
+                                    class="table table-striped table-bordered border-dark table-hover align-middle mb-0">
                                     <thead class="">
                                         <tr class="table-success border-dark">
                                             <th>ID</th>
@@ -266,7 +315,7 @@ require "slider.php";
                                                     /* Status toggle */
                                                     echo '<td class="text-center">
                                                     <div class="status-toggle-container">
-                                                    <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $catId . ')">
+                                                    <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $catId . ', ' . $status . ')">
                                                     <div class="toggle-slider"></div>
                                                     <div class="toggle-text">
                                                     <span class="toggle-on">ON</span>
@@ -285,7 +334,7 @@ require "slider.php";
                                                     echo '</tr>';
                                                 }
                                             } else {
-                                                echo "<tr><td colspan='5' class='text-center'>No records found</td></tr>";
+                                                echo "<tr><td colspan='5' class='text-center text-danger'>No records found</td></tr>";
                                             }
 
                                             mysqli_stmt_close($stmt);
@@ -309,66 +358,48 @@ require "slider.php";
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function toggleStatus(element, catId, currentStatus) {
+            const newStatus = currentStatus == 1 ? 2 : 1;
+            const willBeActive = newStatus == 1;
 
-        function showToast(message, type = 'success') {
-            const toast = $('.toast');
-            toast.find('.toast-body').text(message);
+            element.classList.add('status-updating');
 
-            if (type === 'error') {
-                toast.find('.toast-header').css('background-color', '#f8d7da');
-                toast.find('.toast-body').css('background-color', '#f8d7da');
-            } else {
-                toast.find('.toast-header').css('background-color', '#d4edda');
-                toast.find('.toast-body').css('background-color', '#d4edda');
-            }
+            $.ajax({
+                url: window.location.href,
+                type: 'POST',
+                data: {
+                    action: 'update_status',
+                    id: catId,
+                    status: newStatus
+                },
+                success: function (response) {
+                    element.classList.remove('status-updating');
 
-            toast.toast('show');
-        }
+                    if (response.success) {
+                        if (willBeActive) {
+                            element.classList.remove('inactive');
+                            element.classList.add('active');
+                            element.parentElement.querySelector('.status-indicator').textContent = 'ACTIVE';
+                            element.parentElement.querySelector('.status-indicator').classList.remove('inactive');
+                            element.parentElement.querySelector('.status-indicator').classList.add('active');
+                        } else {
+                            element.classList.remove('active');
+                            element.classList.add('inactive');
+                            element.parentElement.querySelector('.status-indicator').textContent = 'INACTIVE';
+                            element.parentElement.querySelector('.status-indicator').classList.remove('active');
+                            element.parentElement.querySelector('.status-indicator').classList.add('inactive');
+                        }
 
-
-        function toggleStatus(toggleElement, catId) {
-            const container = toggleElement.closest('.status-toggle-container');
-            const indicator = container.querySelector('.status-indicator');
-            const isCurrentlyActive = toggleElement.classList.contains('active');
-            const newStatus = isCurrentlyActive ? 2 : 1;
-
-            container.classList.add('status-updating');
-
-            const formData = new FormData();
-            formData.append('catId', catId);
-            formData.append('status', newStatus);
-
-            fetch('partials/_categoryManage.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.text())
-                .then(data => {
-
-                    if (newStatus == 1) {
-                        toggleElement.classList.remove('inactive');
-                        toggleElement.classList.add('active');
-                        indicator.classList.remove('inactive');
-                        indicator.classList.add('active');
-                        indicator.textContent = 'ACTIVE';
+                        alert('Category status updated successfully!');
                     } else {
-                        toggleElement.classList.remove('active');
-                        toggleElement.classList.add('inactive');
-                        indicator.classList.remove('active');
-                        indicator.classList.add('inactive');
-                        indicator.textContent = 'INACTIVE';
+                        alert('Category status updated successfully!'); window.location.href = "category_list.php";
                     }
-
-                    showToast('Status updated successfully!');
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showToast('An error occurred while updating status.', 'error');
-                })
-                .finally(() => {
-
-                    container.classList.remove('status-updating');
-                });
+                },
+                error: function (xhr, status, error) {
+                    element.classList.remove('status-updating');
+                    alert('Error updating category status: ' + error);
+                }
+            });
         }
     </script>
 </body>

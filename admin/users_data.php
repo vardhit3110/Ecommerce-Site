@@ -292,7 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
             <!-- User Table -->
             <div class="table-responsive">
-                <table class="table table-hover table-bordered border-dark text-center">
+                <table class="table table-hover table-striped table-bordered border-dark  text-center">
                     <thead class="table-dark">
                         <tr class="border-warning">
                             <th>Id</th>
@@ -350,8 +350,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     </td>';
 
                                 echo "<td>
-                                    <a href='?id={$row['id']}' class='btn btn-primary btn-sm me-2'>Edit</a>
-                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                    <a href='?id={$row['id']}' class='btn btn-primary  me-2'>Edit</a>
+                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-danger' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
                                   </td>";
                                 echo "</tr>";
                             }

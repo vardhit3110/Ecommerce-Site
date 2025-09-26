@@ -9,16 +9,16 @@ if (isset($_POST['insert'])) {
 
 
     // Check duplicate
-    $check_productName = "SELECT * FROM product WHERE product_name = ?";
-    $stmt = mysqli_prepare($conn, $check_productName);
-    mysqli_stmt_bind_param($stmt, "s", $product_name);
-    mysqli_stmt_execute($stmt);
-    $result_product = mysqli_stmt_get_result($stmt);
+    // $check_productName = "SELECT * FROM product WHERE product_name = ?";
+    // $stmt = mysqli_prepare($conn, $check_productName);
+    // mysqli_stmt_bind_param($stmt, "s", $product_name);
+    // mysqli_stmt_execute($stmt);
+    // $result_product = mysqli_stmt_get_result($stmt);
 
-    if (mysqli_num_rows($result_product) > 0) {
-        echo "<script>alert('Product Already Added!');window.location.href='../product_list.php';</script>";
-        exit();
-    }
+    // if (mysqli_num_rows($result_product) > 0) {
+    //     echo "<script>alert('Product Already Added!');window.location.href='../product_list.php';</script>";
+    //     exit();
+    // }
 
     // Image upload
     if (isset($_FILES['productimage']) && $_FILES['productimage']['error'] == 0) {
@@ -115,3 +115,4 @@ if (isset($_GET['id'])) {
     }
 }
 ?>
+
