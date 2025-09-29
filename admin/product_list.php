@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     <?php include "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -55,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             position: relative;
         }
 
-        .card-body {
+        .card-body1 {
             background-color: rgba(255, 249, 249, 1)
         }
 
@@ -320,8 +321,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                             <h5 class="mb-0"><i class="fa-solid fa-list"></i> Product List</h5>
                         </div>
                         <div class="card-body">
-                            <!-- edit from product -->
-
                             <div class="table-responsive">
                                 <table
                                     class="table table-striped table-bordered border-dark table-hover align-middle mb-0">
@@ -375,7 +374,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                                                     echo "<td>{$row['product_Id']}</td>";
                                                     echo "<td class='text-center'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' class='img-thumbnail' alt='Product Image' style='width:100px; height:auto;'></td>";
                                                     echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['product_name']);
-                                                    echo "<br><b>Desc : </b>" . htmlspecialchars($row['product_desc']) . "";
+                                                    echo "<br><b>Description : </b><br>" . nl2br(htmlspecialchars(str_replace(', ', "<br>", $row['product_desc']))) . "";
                                                     echo "<br><br><b>Price : </b>₹ " . number_format((float) $row['product_price']) . "</td>";
                                                     echo '<td class="text-center">
                                                         <div class="status-toggle-container">

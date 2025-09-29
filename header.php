@@ -2,127 +2,155 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responsive Header</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsive Header</title>
+  <?php require "links/icons.html"; ?>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 30px;
-            background-color: #ffffff;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background-color: #ffffff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+    }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #0077cc;
-        }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0077cc;
+    }
 
-        nav {
-            display: flex;
-            gap: 25px;
-        }
+    .menu-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #0077cc;
+    }
 
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+    nav {
+      display: flex;
+      gap: 25px;
+    }
 
-        nav a:hover {
-            color: #0077cc;
-        }
+    nav a {
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
 
-        .auth-buttons {
-            display: flex;
-            gap: 15px;
-        }
+    nav a:hover {
+      color: #0077cc;
+    }
 
-        .auth-buttons button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s, color 0.3s;
-        }
+    .auth-buttons {
+      display: flex;
+      gap: 15px;
+    }
 
-        .sign-in {
-            background-color: transparent;
-            color: #0077cc;
-            border: 2px solid #0077cc;
-        }
+    .auth-buttons button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+    }
 
-        .sign-in:hover {
-            background-color: #0077cc;
-            color: white;
-        }
+    .sign-in {
+      background-color: transparent;
+      color: #0077cc;
+      border: 2px solid #0077cc;
+    }
 
-        .sign-up {
-            background-color: #0077cc;
-            color: white;
-        }
+    .sign-in:hover {
+      background-color: #0077cc;
+      color: white;
+    }
 
-        .sign-up:hover {
-            background-color: #005fa3;
-        }
+    .sign-up {
+      background-color: transparent;
+      color: #0077cc;
+      border: 2px solid #0077cc;
+    }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+    .sign-up:hover {
+      background-color: #0077cc;
+      color: white;
+    }
 
-            nav {
-                margin: 10px 0;
-                flex-direction: column;
-                gap: 10px;
-            }
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
 
-            .auth-buttons {
-                align-self: flex-end;
-                margin-top: 10px;
-            }
-        }
-    </style>
+      nav,
+      .auth-buttons {
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+        display: none;
+        margin-top: 10px;
+      }
+
+      nav.active,
+      .auth-buttons.active {
+        display: flex;
+      }
+
+      header {
+        align-items: flex-start;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-    <header>
-        <div class="logo">MyLogo</div>
+  <header>
+    <div class="logo">MobileSite</div>
 
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">About Us</a>
-            <a href="#">Contact</a>
-        </nav>
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
-        <div class="auth-buttons">
-            <button class="sign-in">Sign In</button>
-            <button class="sign-up">Sign Up</button>
-        </div>
-    </header>
+    <nav id="main-nav">
+      <a href="#">Home</a>
+      <a href="#">About Us</a>
+      <a href="#">Contact</a>
+    </nav>
+
+    <div class="auth-buttons" id="auth-buttons">
+      <button class="sign-in">Sign In</button>
+      <button class="sign-up">Sign Up</button>
+    </div>
+  </header>
+
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById("main-nav");
+      const auth = document.getElementById("auth-buttons");
+      nav.classList.toggle("active");
+      auth.classList.toggle("active");
+    }
+  </script>
 
 </body>
 
 </html>
-

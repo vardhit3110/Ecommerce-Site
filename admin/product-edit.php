@@ -239,7 +239,7 @@ if (isset($_POST['update'])) {
     $name = $_POST['productname'];
     $desc = $_POST['productdesc'];
     $price = $_POST['productprice'];
-    $category_id = $_POST['category_id']; // Added category_id for update
+    $category_id = $_POST['category_id']; 
     $oldImage = $_POST['old_image'];
 
     $newImageName = $oldImage;
