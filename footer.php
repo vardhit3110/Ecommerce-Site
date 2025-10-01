@@ -11,7 +11,8 @@
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -19,6 +20,18 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
 
         html,
         body {
@@ -123,6 +136,52 @@
             color: #95a5a6;
         }
 
+        .subscribe-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .subscribe-form input[type="email"] {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            outline: none;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .subscribe-form button {
+            padding: 10px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .subscribe-form button:hover {
+            background-color: #2980b9;
+        }
+
+        @media (min-width: 768px) {
+            .subscribe-form {
+                flex-direction: row;
+            }
+
+            .subscribe-form input[type="email"] {
+                flex: 1;
+            }
+
+            .subscribe-form button {
+                width: auto;
+                margin-left: 10px;
+            }
+        }
+
+
         @media (min-width: 768px) {
             .footer-container {
                 flex-direction: row;
@@ -148,12 +207,62 @@
                 font-size: 0.8rem;
             }
         }
+
+        .subscribe-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .subscribe-form {
+                flex-direction: row;
+                align-items: flex-start;
+                /* Prevents stretching */
+            }
+
+            .input-wrapper {
+                flex: 1;
+            }
+
+            .button-wrapper {
+                margin-left: 10px;
+            }
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-wrapper input[type="email"] {
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            outline: none;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .subscribe-form button {
+            padding: 10px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .subscribe-form button:hover {
+            background-color: #2980b9;
+        }
     </style>
 </head>
 
 <body>
-
-
     <footer class="footer-v">
         <div class="footer-container">
             <div class="footer-section">
@@ -166,6 +275,7 @@
                     <a href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
+
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <ul class="footer-links">
@@ -175,6 +285,7 @@
                     <li><a href="#">Contact</a></li>
                 </ul>
             </div>
+
             <div class="footer-section">
                 <h3>Contact Info</h3>
                 <ul class="footer-links">
@@ -183,11 +294,77 @@
                     <li><i class="fas fa-envelope"></i> info@mobilesite.com</li>
                 </ul>
             </div>
+
+            <!--  Subscribe Section -->
+            <div class="footer-section">
+                <h3>Subscribe</h3>
+                <p>Stay updated with our latest news and offers.</p>
+                <form class="subscribe-form" method="post" id="myForm">
+                    <div class="input-wrapper">
+                        <input type="email" placeholder="Enter your email" name="subcriber_email" required>
+                    </div>
+                    <div class="button-wrapper">
+                        <button type="submit" name="sub">subcriber</button>
+                    </div>
+                </form>
+                <script>
+                    $(document).ready(function () {
+                        $("#myForm").validate({
+                            rules: {
+                                emailField: {
+                                    required: true,
+                                    email: true
+                                }
+                            },
+                            messages: {
+                                emailField: {
+                                    required: "Please enter your email address.",
+                                    email: "Please enter a valid email address."
+                                }
+                            },
+                            errorPlacement: function (error, element) {
+                                error.insertAfter(element);
+                            }
+                        });
+                    });
+                </script>
+            </div>
         </div>
+        <?php include "db_connect.php";
+
+        if (isset($_POST['sub'])) {
+            $subcriber_email = trim($_POST['subcriber_email']);
+
+            $check_email = "SELECT * FROM subcriber WHERE subcriber_email = ?";
+            $stmt = mysqli_prepare($conn, $check_email);
+            mysqli_stmt_bind_param($stmt, "s", $subcriber_email);
+            mysqli_stmt_execute($stmt);
+            $result_subcriber = mysqli_stmt_get_result($stmt);
+
+            if (mysqli_num_rows($result_subcriber) > 0) {
+                echo "<script>alert('Already Subscribed.');</script>";
+                exit();
+            } else {
+
+                $sub_query = "INSERT INTO subcriber (subcriber_email) VALUES (?)";
+                $stmt = mysqli_prepare($conn, $sub_query);
+                mysqli_stmt_bind_param($stmt, "s", $subcriber_email);
+                $result = mysqli_stmt_execute($stmt);
+
+                if ($result) {
+                    echo "<script>alert('Subcriber Successful!');</script>";
+                } else {
+                    echo "<script>alert('Subcriber Failed. Please try again later.');</script>";
+                }
+            }
+        }
+        ?>
+
         <div class="footer-bottom">
-            <p>&copy; 2023 MobileSite. All rights reserved.</p>
+            <p>&copy; 2025 MobileSite. All rights reserved.</p>
         </div>
     </footer>
+
 </body>
 
 </html>

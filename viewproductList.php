@@ -101,10 +101,9 @@ include "db_connect.php";
                 }
                 mysqli_stmt_close($stmt);
             } else {
-                echo "<script>alert('Query preparation failed: " . mysqli_error($conn) . "');</script>";
+                echo "<.script>alert('Query preparation failed: " . mysqli_error($conn) . "');</script>";
             }
         }
-
         ?>
     </main>
     <?php require_once "footer.php"; ?>

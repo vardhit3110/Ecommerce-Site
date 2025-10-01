@@ -375,7 +375,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                                                     echo "<td class='text-center'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' class='img-thumbnail' alt='Product Image' style='width:100px; height:auto;'></td>";
                                                     echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['product_name']);
                                                     echo "<br><b>Description : </b><br>" . nl2br(htmlspecialchars(str_replace(', ', "<br>", $row['product_desc']))) . "";
-                                                    echo "<br><br><b>Price : </b>₹ " . number_format((float) $row['product_price']) . "</td>";
+                                                    echo "<br><br><b>Price : </b>₹" . number_format((float) $row['product_price']) . "</td>";
                                                     echo '<td class="text-center">
                                                         <div class="status-toggle-container">
                                                             <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $productId . ', ' . $status . ')">
