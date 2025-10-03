@@ -258,7 +258,7 @@ if (isset($_POST['update'])) {
         }
     }
 
-    // Update query includes categorie_id now
+    // Update query 
     $stmt = mysqli_prepare($conn, "UPDATE product SET product_name=?, product_desc=?, product_price=?, product_image=?, categorie_id=? WHERE product_id=?");
     if ($stmt) {
         mysqli_stmt_bind_param($stmt, "ssdsii", $name, $desc, $price, $newImageName, $category_id, $id);

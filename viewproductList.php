@@ -10,6 +10,49 @@ include "db_connect.php";
     <title>MobileSite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        ul.pagination {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.pagination li a {
+            text-decoration: none;
+            color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            font-size: 16px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        ul.pagination li a:hover {
+            background-color: #e0e0e0;
+        }
+
+        ul.pagination li a.active {
+            background-color: #2c3e50;
+            color: white;
+            border: 2px solid black;
+        }
+
+        ul.pagination li.prev-next a {
+            width: auto;
+            padding: 0 12px;
+            border-radius: 20px;
+            border: 1px solid #ccc;
+        }
+
+        ul.pagination li.prev-next a:hover {
+            background-color: #ddd;
+        }
+
         #card-color {
             color: #0023c0ff;
             font-weight: 600;
@@ -50,7 +93,12 @@ include "db_connect.php";
         if (isset($_GET['id'])) {
             $cateid = $_GET['id'];
 
-            $showProduct = "SELECT * FROM product WHERE categorie_id=? AND product_status=?";
+
+            $limit = 4;
+            $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+            $offset = ($page - 1) * $limit;
+
+            $showProduct = "SELECT * FROM product WHERE categorie_id=? AND product_status=? LIMIT {$offset}, {$limit}";
             $stmt = mysqli_prepare($conn, $showProduct);
             if ($stmt) {
 
@@ -105,6 +153,55 @@ include "db_connect.php";
             }
         }
         ?>
+
+        <?php
+        $sql = "SELECT * FROM product WHERE categorie_id = '$cateid'";
+        $result = mysqli_query($conn, $sql);
+        if (mysqli_num_rows($result) > 0) {
+
+            $total_product = mysqli_num_rows($result);
+
+            $total_page = ceil($total_product / $limit);
+
+            echo '<div class="d-flex justify-content-center mt-4">';
+            echo '<ul class="pagination">';
+            if ($page <= 1) {
+
+            } else {
+                echo '<li class="prev-next"><a href="?id=' . $cateid . '&page=' . ($page - 1) . '">« Prev</a></li>';
+            }
+            for ($i = 1; $i <= $total_page; $i++) {
+                if ($i == $page) {
+                    $active = "active";
+                } else {
+                    $active = "";
+                }
+                echo '<li><a href="?id=' . $cateid . '&page=' . $i . '" class="' . $active . '">' . $i . '</a></li>';
+            }
+            if ($total_page <= $page) {
+
+            } else {
+                echo '<li class="prev-next"><a href="?id=' . $cateid . '&page=' . ($page + 1) . '">Next »</a></li>';
+            }
+            echo '</ul>';
+            echo '</div>';
+        }
+        ?>
+
+        <!-- <div class="d-flex justify-content-center mt-4">
+            <ul class="pagination">
+                <li class="prev-next"><a href="#">« Prev</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#" class="active">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+                <li class="prev-next"><a href="#">Next »</a></li>
+            </ul>
+        </div> -->
+
+
+        <br>
     </main>
     <?php require_once "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

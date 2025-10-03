@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 26, 2025 at 07:40 AM
+-- Generation Time: Oct 03, 2025 at 11:26 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -61,9 +61,9 @@ CREATE TABLE `categories` (
 --
 
 INSERT INTO `categories` (`categorie_id`, `categorie_name`, `categorie_image`, `categorie_desc`, `categorie_status`, `categorie_created`) VALUES
-(1, 'Mobile Phones', 'Mobile Phones_1758520829.jpg', 'Latest smartphones from top brands – find your perfect phone today.', '1', '2025-09-22 11:30:29'),
-(2, 'Mobile Accessories', 'Mobile Accessories_1758605025.jpg', 'Screen protectors, stylish back covers, and magnetic phone holders – protect, style.', '1', '2025-09-23 10:53:45'),
-(5, 'Buds', '1758604460032.jpg', 'Auto pair. Noise cancel. Touch control. Tiny buds, big performance-perfect for work & workouts.', '1', '2025-09-25 11:50:04');
+(1, 'Mobile Phones', 'Mobile Phones_1758869905.jpg', 'Latest smartphones from top brands - find your perfect phone today.', '1', '2025-09-26 12:28:25'),
+(2, 'Mobile Accessories', 'Mobile Accessories_1758869947.jpg', 'Screen protectors, stylish back covers, and magnetic phone holders - protect, style.', '1', '2025-09-26 12:29:07'),
+(3, 'Buds', 'Buds_1758870014.jpg', 'Auto pair. Noise cancel. Touch control. Tiny buds, big performance - perfect for work & workouts.', '1', '2025-09-26 12:30:14');
 
 -- --------------------------------------------------------
 
@@ -87,16 +87,43 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_Id`, `product_name`, `product_image`, `product_desc`, `product_price`, `categorie_id`, `product_status`, `product_creatdated`) VALUES
-(1, 'iPhone 14 (Blue , 256 GB)', 'iPhone 14 (Blue , 256 GB)_1758608967.jpeg', '256 GB ROM\r\n15.49 cm (6.1 inch) Super Retina XDR Display\r\n12MP + 12MP | 12MP Front Camera\r\nA15 Bionic Chip, 6 Core Processor Processor', 64999, 1, '1', '2025-09-23 11:59:27.280043'),
-(2, 'Samsung Galaxy S24 FE 5G (Blue, 8 GB RAM, 128 GB)', 'Samsung Galaxy S24 FE 5G (Blue, 8 GB RAM, 128 GB)  )_1758609268.jpeg', '8 GB RAM | 128 GB ROM,\r\n17.02 cm (6.7 inch) Full HD+ Display,\r\n50MP + 12MP | 10MP Front Camera,\r\n4700 mAh Battery,\r\nExynos 2400e Processor.', 29999, 1, '1', '2025-09-23 12:04:28.129371'),
-(3, 'MOTOROLA G96 5G (Pantone Cattleya Orchid, 8 GB RAM, 128 GB)', 'MOTOROLA G96 5G (Pantone Cattleya Orchid, 8 GB RAM, 128 GB)._1758609451.jpeg', '8 GB RAM | 128 GB ROM,\r\n16.94 cm (6.67 inch) Full HD+ Display,\r\n50MP + 8MP | 32MP Front Camera,\r\n5500 mAh Battery,\r\n7s Gen 2 Processor.', 15999, 1, '1', '2025-09-23 12:07:31.594614'),
-(4, 'SuperVOOC 80 W Charger (White, Cable Included)', 'SuperVOOC 80 W Charger (White, Cable Included)._1758609749.jpeg', 'Wall Charger,\r\nSuitable For: Mobile,\r\nUniversal Voltage,\r\nOutput Current : 6 A.', 283, 2, '1', '2025-09-23 12:12:29.051542'),
-(5, 'Power Bank Ambrane 20000 mAh 22.5 W ( Green )', 'Power Bank Ambrane 20000 mAh 22.5 W ( Green )_1758609963.jpeg', 'Capacity: 20000 mAh,\r\nLithium Polymer Battery | Type-A, Type-C Connector,\r\nPower Source: AC Adapter,\r\nCharging Cable Included.', 1099, 2, '1', '2025-09-23 12:16:03.430299'),
-(6, 'Noise Buds VS102', 'Noise Buds VS102_1758610163.jpeg', 'With Mic:Yes,\r\nWireless range: 10 m,\r\nBattery life: 50 Hours | Charging time: 2 Hour,\r\nBattery life: 50 hrs Playtime,\r\nDriver Size : Immersive Audio with 11mm driver,\r\nType - C Charging Port | Upto 50 Hours of Total Playtime,\r\nUnique Flybird Design.', 799, 3, '1', '2025-09-23 12:19:23.814518'),
-(8, 'realme Buds T200', 'realme Buds T200_1758621032.jpeg', 'With Mic:Yes.,\r\nWireless range: 10 m,\r\nBattery life: 48 hr | Charging time: 2,\r\n12.4mm Dynamic Bass Driver,\r\n48 Hours Total Playback | 10mins Charge for 5 Hrs Playback,\r\nDual-mic AI Deep Call Noise Cancellation,\r\nDual Device Connection.', 999, 5, '1', '2025-09-23 15:20:32.300604'),
-(12, 'OnePlus USB Type C Cable', 'OnePlus USB Type C Cable_1758804495.jpeg', 'Length 1 m, \r\nRound Cable,\r\nConnector One: USB Type A|Connector Two: Type-C,\r\nCable Speed: 480 Mbps,\r\nMobile, Computer, Laptop.', 259, 2, '1', '2025-09-25 18:18:15.677126'),
-(13, 'ZOLDYCK Nord Buds 2r', 'ZOLDYCK Nord Buds 2r_1758804719.jpeg', 'With Mic : Yes,\r\nConnector type: no', 1199, 5, '1', '2025-09-25 18:21:59.668466'),
-(14, 'OnePlus USB Type C Cable', 'OnePlus USB Type C Cable._1758862753.jpeg', 'Length 1 m.\r\nRound Cable,\r\nConnector One: USB Type C|Connector Two: TYPE C,\r\nCable Speed: 480 Mbps,\r\nMobile.', 295, 2, '2', '2025-09-26 10:29:13.082740');
+(1, 'realme P4 Pro 5G', 'realme P4 Pro 5G_1758870375.jpeg', '8 GB RAM | 256 GB ROM,\r\n17.27 cm (6.8 inch) Display,\r\n50MP + 8MP | 50MP Front Camera,\r\n7000 mAh Battery,\r\nSnapdragon 7 Gen 4 Mobile Processor.', 24999, 1, '1', '2025-09-26 12:36:15.435172'),
+(2, 'Samsung Galaxy A35 5G', 'Samsung Galaxy A35 5G_1758870502.jpeg', '8 GB RAM | 128 GB ROM | Expandable Upto 1 TB,\r\n16.76 cm (6.6 inch) Full HD+ Display,\r\n50MP + 8MP + 5MP | 13MP Front Camera,\r\n5000 mAh Battery,\r\nSamsung Exynos 1380 Processor.', 17999, 1, '1', '2025-09-26 12:38:22.340524'),
+(3, 'Samsung Galaxy S24 FE 5G', 'Samsung Galaxy S24 FE 5G_1758870636.jpeg', '8 GB RAM | 256 GB ROM,\r\n17.02 cm (6.7 inch) Full HD+ Display,\r\n50MP + 12MP | 10MP Front Camera,\r\n4700 mAh Battery,\r\nExynos 2400e Processor.', 33999, 1, '1', '2025-09-26 12:40:36.809211'),
+(4, 'Apple iPhone 17', 'Apple iPhone 17_1758870730.jpeg', '256 GB ROM,\r\n16.0 cm (6.3 inch) Super Retina XDR Display,\r\n48MP + 48MP | 18MP Front Camera,\r\nA19 Chip, 6 Core Processor Processor.', 82900, 1, '1', '2025-09-26 12:42:10.507793'),
+(5, 'realme Buds T200', 'realme Buds T200_1758871015.jpeg', 'With Mic:Yes,\r\nWireless range: 10 m.\r\nBattery life: 48 hr | Charging time: 2,\r\n12.4mm Dynamic Bass Driver,\r\n48 Hours Total Playback | 10mins Charge for 5 Hrs Playback,\r\nDual-mic AI Deep Call Noise Cancellation,\r\nDual Device Connection,\r\nLow Latency for Ga', 999, 3, '1', '2025-09-26 12:46:55.321459'),
+(6, 'OnePlus Nord Buds 3r', 'OnePlus Nord Buds 3r_1758871100.jpeg', 'Fast Charging:Get 8 hours of playback with just 10 minutes of charging.Up to 54 hours of total music time on a full charge.', 1599, 3, '1', '2025-09-26 12:48:20.615559'),
+(7, 'OnePlus Nord Buds 3r', 'OnePlus Nord Buds 3r_1758871346.jpeg', 'Fast Charging:Get 8 hours of playback with just 10 minutes of charging.Up to 54 hours of total music time on a full charge.\r\n\r\nTitanium-coated Drivers:Enjoy powerful bass and crisp audio with 12.4mm Titanium-coated drivers and fixed spatial audio.', 1699, 3, '1', '2025-09-26 12:52:26.342437'),
+(8, 'Charger EliteGadgets 67 W', 'Charger EliteGadgets 67 W_1758875222.jpeg', 'Wall Charger,\r\nSuitable For: Mobile,\r\nNo Cable Included,\r\nUniversal Voltage.', 283, 2, '1', '2025-09-26 13:57:02.813674'),
+(9, 'Apple iPhone 17', 'Apple iPhone 17_1758875436.jpeg', '256 GB ROM, 1\r\n6.0 cm (6.3 inch) Super Retina XDR Display, \r\n48MP + 48MP | 18MP Front Camera, \r\nA19 Chip, \r\n6 Core Processor Processor.', 82999, 1, '1', '2025-09-26 14:00:36.415872'),
+(10, 'realme P4 5G', 'realme P4 5G_1759147927.jpeg', '8 GB RAM | 128 GB ROM,\r\n17.2 cm (6.77 inch) Display,\r\n50MP + 8MP | 16MP Front Camera,\r\n7000 mAh Battery,\r\nMediatek Dimensity 7400 Processor.', 19499, 1, '1', '2025-09-29 17:42:07.131418'),
+(11, 'realme P3 Pro 5G', 'realme P3 Pro 5G_1759148137.jpeg', '8 GB RAM | 128 GB ROM,\r\n17.35 cm (6.83 inch) Display,\r\n50MP + 2MP | 16MP Front Camera,\r\n6000 mAh Battery,\r\n7s Gen 3 Mobile Platform Processor.', 16999, 1, '1', '2025-09-29 17:45:37.503636'),
+(12, 'Noise Aura Buds', 'Noise Aura Buds_1759470841.jpeg', 'Battery life: 60 hrs Playtime,\r\nENC with Quad Mic,\r\nDriver Size : 12mm polymer composite driver,\r\nInstacharge: 10-min = 150-min playtime,\r\nLow Latency(Upto 50ms).', 1499, 3, '1', '2025-10-03 11:24:01.806162'),
+(13, 'OPPO Enco Buds3 Pro', 'OPPO Enco Buds3 Pro_1759471019.jpeg', 'Battery life: 54 hr | Charging time: 2.0 hr,\r\n12.4mm Dynamic Bass Boost Driver - Powerful & Rhythmic Bass,\r\nFast Charging- 4Hrs Playback after 10mins Charge,\r\nIntelligent Touch Controls | IP55 Dust &Water Resistant.', 1799, 3, '1', '2025-10-03 11:26:59.068164'),
+(14, 'OPPO Enco Buds3 Pro', 'OPPO Enco Buds3 Pro_1759471138.jpeg', 'Battery life: 28 hrs | Charging time: 1.5 hrs,\r\n10mm Dynamic Bass Boost Driver - Powerful & Rhythmic Bass,\r\nEnco Live Stereo Sound Effects,\r\nAI Deep Noise Cancellation | 80ms Ultra Low Latency game mode.', 1399, 3, '1', '2025-10-03 11:28:58.484094'),
+(15, 'USB Type C Cable', 'USB Type C Cable_1759471431.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: USB Type A | Connector Two: USB Type C,\r\nCable Speed: 680 Mbps.\r\nMobile, Tablet.', 210, 2, '1', '2025-10-03 11:33:51.784597'),
+(16, 'MarQ Power Bank', 'MarQ Power Bank_1759471631.jpeg', 'Capacity: 10000 mAh,\r\nLithium Polymer Battery | Type-C Connector,\r\nPower Source: DC 5V,9V,12V,\r\nCharging Cable Included.', 3999, 2, '1', '2025-10-03 11:37:11.243206'),
+(17, 'PTron Power Bank', 'PTron Power Bank_1759471796.jpeg', 'Pocket Size Power Bank with Max. Output: 22.5W (Max.),\r\nCharging Protocols: PD 3.0, QC 3.0, VOOC, PPS & Number of Ports: 3 (1 Type-C, 2 USB A),\r\nCompatibility: All iPhones & Android Phones Charging Compatibility,\r\nWeight: 407 g | Capacity: 20000 mAh.', 1199, 2, '1', '2025-10-03 11:39:56.892581'),
+(18, 'PTron Type C', 'PTron Type C_1759471978.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: Type C|Connector Two: Type C,\r\nCable Speed: 480 Mbps,\r\nMobile, Tablet.', 198, 2, '1', '2025-10-03 11:42:58.819258');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subcriber`
+--
+
+CREATE TABLE `subcriber` (
+  `id` int(21) NOT NULL,
+  `subcriber_email` varchar(50) NOT NULL,
+  `subcriber_date` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `subcriber`
+--
+
+INSERT INTO `subcriber` (`id`, `subcriber_email`, `subcriber_date`) VALUES
+(1, 'abc@gmail.com', '2025-10-01');
 
 -- --------------------------------------------------------
 
@@ -112,6 +139,7 @@ CREATE TABLE `userdata` (
   `phone` varchar(20) DEFAULT NULL,
   `city` varchar(100) DEFAULT NULL,
   `gender` enum('1','2') DEFAULT NULL COMMENT 'male = 1,\r\nfemale = 2',
+  `image` varchar(255) DEFAULT NULL,
   `status` enum('1','2') NOT NULL DEFAULT '1' COMMENT 'active = 1, \r\ninactive = 2'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -119,19 +147,21 @@ CREATE TABLE `userdata` (
 -- Dumping data for table `userdata`
 --
 
-INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `city`, `gender`, `status`) VALUES
-(1, 'hiten', 'hiten@gmail.com', '$2y$10$ZUA/3jx2MScfwqtYNthgCeDP7kh7LKOLDJqjPB', '9898989898', 'surat', '1', '2'),
-(2, 'om', 'om@gmail.com', '$2y$10$azeyEt45SovTnV8hisMxdeNfOdar7hwuw2nCLb', '7894859475', 'bharuch', '1', '1'),
-(3, 'prince', 'prince@gmail.com', '$2y$10$.QCLcK9mNYlQrptKR6R8Lus.KGAxWbD/WFfu7k', '7096761516', 'amreli', '1', '1'),
-(4, 'admin', 'admin@gmail.com', '$2y$10$0Jg5MUd92.NXOvFsln8cdu/UAxDE1PmMILmA5w', '9638527415', 'rajakot', '2', '1'),
-(5, 'anil', 'anil@gmail.com', '$2y$10$PIAUkD3hjhXLPoc9lBCBleLWBNDGVQbbpAUZaN2klpxxGd.v3838C', '9879879872', 'surat', '1', '2'),
-(7, 'dixitpatel', 'dixitpatel@gmail.com', '$2y$10$a0XpIEU3korUVQ3U86n5A..A4GW0orTGRzt/UFevoq2lgE7LlAfX.', '9797979797', 'surat', '1', '1'),
-(8, 'vardhit', 'vardhit31@gmail.com', '$2y$10$0.Xphxy3/m3nqoM.3j2BAesybkcpxHrXLYHQKY4LJdHqyRN543uYa', '', '', '', '1'),
-(9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', '', '', '2'),
-(10, 'dhruv321', 'dhruv321@gmail.com', '$2y$10$GLkGP8f2XraRWU9E.x1WU.sbXMXQCbc6eH3h224jJj0vqFl.yVh2S', '', '', '', '1'),
-(12, 'pateldix', 'pateldix@gmail.com', '$2y$10$7kiih7PgCM3zmi68q7.LVOGY6WjoShfHz97IAjd/uPmMh1u6OUs0O', '9876543210', 'gandhinagar', '2', '1'),
-(13, 'abc', 'abc@gmail.com', '$2y$10$yu5/obd1ogq2Yf3VQrvaP.wLA7c.XXTjvRud2c/kZXwTvTg6BjIii', '9513578524', 'bharuch', '2', '1'),
-(15, 'xyz', '', '', '1234567890', 'xyz', '', '2');
+INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `city`, `gender`, `image`, `status`) VALUES
+(1, 'hiten', 'hiten@gmail.com', '$2y$10$ZUA/3jx2MScfwqtYNthgCeDP7kh7LKOLDJqjPB', '9898989898', 'surat', '1', NULL, '2'),
+(2, 'om', 'om@gmail.com', '$2y$10$azeyEt45SovTnV8hisMxdeNfOdar7hwuw2nCLb', '7894859475', 'bharuch', '1', NULL, '1'),
+(3, 'prince', 'prince@gmail.com', '$2y$10$.QCLcK9mNYlQrptKR6R8Lus.KGAxWbD/WFfu7k', '7096761516', 'amreli', '1', NULL, '1'),
+(4, 'admin', 'admin@gmail.com', '$2y$10$0Jg5MUd92.NXOvFsln8cdu/UAxDE1PmMILmA5w', '9638527415', 'rajakot', '2', NULL, '1'),
+(5, 'anil', 'anil@gmail.com', '$2y$10$PIAUkD3hjhXLPoc9lBCBleLWBNDGVQbbpAUZaN2klpxxGd.v3838C', '9879879872', 'surat', '1', NULL, '2'),
+(7, 'dixitpatel', 'dixitpatel@gmail.com', '$2y$10$a0XpIEU3korUVQ3U86n5A..A4GW0orTGRzt/UFevoq2lgE7LlAfX.', '9797979797', 'surat', '1', NULL, '1'),
+(8, 'vardhit', 'vardhit31@gmail.com', '$2y$10$0.Xphxy3/m3nqoM.3j2BAesybkcpxHrXLYHQKY4LJdHqyRN543uYa', '', '', '', NULL, '1'),
+(9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', '', '', NULL, '2'),
+(10, 'dhruv321', 'dhruv321@gmail.com', '$2y$10$GLkGP8f2XraRWU9E.x1WU.sbXMXQCbc6eH3h224jJj0vqFl.yVh2S', '', '', '', NULL, '1'),
+(12, 'pateldix', 'pateldix@gmail.com', '$2y$10$7kiih7PgCM3zmi68q7.LVOGY6WjoShfHz97IAjd/uPmMh1u6OUs0O', '9876543210', 'gandhinagar', '2', NULL, '1'),
+(13, 'abc', 'abc@gmail.com', '$2y$10$yu5/obd1ogq2Yf3VQrvaP.wLA7c.XXTjvRud2c/kZXwTvTg6BjIii', '9513578524', 'bharuch', '2', NULL, '1'),
+(15, 'xyz', 'xyz@gmail.com', '', '1234567890', 'xyz', '', NULL, '2'),
+(16, 'dev', 'dev@gmail.com', '$2y$10$hPOQSvgt0R4KoRM5U4GhFOBQNJkcc1v5EO/stAlQRc5.aUpRVt2fi', NULL, NULL, NULL, NULL, '1'),
+(17, 'kishan', 'kishan@gmail.com', '$2y$10$vN9AF1oBXWr0l1kO97qN/OLDClQdqyM6rUjLn2n2RR3jmfemGfnQ6', NULL, NULL, NULL, NULL, '1');
 
 --
 -- Indexes for dumped tables
@@ -153,7 +183,14 @@ ALTER TABLE `categories`
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
-  ADD PRIMARY KEY (`product_Id`);
+  ADD PRIMARY KEY (`product_Id`),
+  ADD KEY `fk_product_category` (`categorie_id`);
+
+--
+-- Indexes for table `subcriber`
+--
+ALTER TABLE `subcriber`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `userdata`
@@ -175,19 +212,35 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categorie_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `categorie_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `product_Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT for table `subcriber`
+--
+ALTER TABLE `subcriber`
+  MODIFY `id` int(21) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `userdata`
 --
 ALTER TABLE `userdata`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `product`
+--
+ALTER TABLE `product`
+  ADD CONSTRAINT `fk_product_category` FOREIGN KEY (`categorie_id`) REFERENCES `categories` (`categorie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

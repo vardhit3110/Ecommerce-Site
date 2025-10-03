@@ -1,11 +1,17 @@
+<?php
+require "db_connect.php";
+@session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Responsive Header</title>
+  <title>MobileSite</title>
   <?php require "links/icons.html"; ?>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -97,13 +103,77 @@
       color: #000000ff;
     }
 
+    /* User dropdown styles */
+    .user-dropdown {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 2px solid #f39c12;
+      border-radius: 30px;
+      padding: 6px 12px;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .user-dropdown-btn:hover {
+      background-color: #f39c12;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #fff;
+    }
+
+    .user-dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: #fff;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .user-dropdown-content a {
+      color: #333;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+      transition: background 0.3s;
+    }
+
+    .user-dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .user-dropdown:hover .user-dropdown-content {
+      display: block;
+    }
+
     @media (max-width: 768px) {
       .menu-toggle {
         display: block;
       }
 
       nav,
-      .auth-buttons {
+      .auth-buttons,
+      .user-dropdown {
         width: 100%;
         flex-direction: column;
         display: none;
@@ -112,8 +182,15 @@
       }
 
       nav.active,
-      .auth-buttons.active {
+      .auth-buttons.active,
+      .user-dropdown.active {
         display: flex;
+      }
+
+      .user-dropdown-content {
+        position: static;
+        box-shadow: none;
+        width: 100%;
       }
 
       header {
@@ -148,10 +225,28 @@
       <a href="#">Contact Us</a>
     </nav>
 
-    <div class="auth-buttons" id="auth-buttons">
-      <button class="sign-in" data-bs-toggle="modal" data-bs-target="#signInModal">Sign In</button>
-      <button class="sign-up" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign Up</button>
-    </div>
+    <?php if (isset($_SESSION['email'])): ?>
+      <!-- User dropdown when logged in -->
+      <div class="user-dropdown" id="user-dropdown">
+        <button class="user-dropdown-btn">
+          <img src="store/images/logo.jpg" alt="User" class="user-avatar"
+            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAxMmMxLjY1IDAgMy0xLjM1IDMtM3MtMS4zNS0zLTMtMy0zIDEuMzUtMyAzIDEuMzUgMyAzIDN6bTAgMWMtMS42NiAwLTUgLjgzLTUgMi41VjE3aDEwdjEuNWMwLTEuNjctMy4zNC0yLjUtNS0yLjV6Ii8+PC9zdmc+'">
+          <span><?php echo $_SESSION['username']; ?></span>
+          <i class="fa fa-chevron-down"></i>
+        </button>
+        <div class="user-dropdown-content">
+          <a href="viewprofile.php"><i class="fa fa-user"></i> Profile</a>
+          <a href="#"><i class="fa-solid fa-heart"></i> Favorite</a>
+          <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
+        </div>
+      </div>
+    <?php else: ?>
+
+      <div class="auth-buttons" id="auth-buttons">
+        <button class="sign-in" data-bs-toggle="modal" data-bs-target="#signInModal">Sign In</button>
+        <button class="sign-up" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign Up</button>
+      </div>
+    <?php endif; ?>
   </header>
 
   <!-- Sign Up Modal -->
@@ -159,7 +254,6 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <form method="post" id="signUpForm">
-
           <div class="modal-header bg-success">
             <h5 class="modal-title text-light" id="signUpModalLabel">Sign Up</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -226,49 +320,19 @@
           </div>
           <div class="modal-footer d-flex justify-content-between align-items-center w-100">
             <p class="mb-0" style="font-weight: 600; color: navy;">
-              Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-toggle="modal"
-                data-bs-target="#signUpModal" style="text-decoration: none;">Create Account</a>
+              Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signUpModal"
+                style="text-decoration: none;">Create Account</a>
             </p>
             <button type="submit" class="btn btn-success" name="login" style="font-weight: 600;">Login</button>
           </div>
         </form>
-        <script>
-          $(document).ready(function () {
-            $("#myForm").validate({
-              rules: {
-                email: {
-                  required: true,
-                  email: true
-                },
-                password: {
-                  required: true,
-                  minlength: 6
-                }
-              },
-              messages: {
-                email: {
-                  required: "Please enter your email address",
-                  email: "Please enter a valid email address"
-                },
-                password: {
-                  required: "Please provide a password",
-                  minlength: "Your password must be at least 6 characters long"
-                }
-              },
-              submitHandler: function (form) {
-                /*  */
-                form.submit();
-              }
-            });
-          });
-        </script>
       </div>
     </div>
   </div>
 
-  <!-- validation sign in / sign up -->
   <script>
     $(document).ready(function () {
+      /* sign Up validation*/
       $("#signUpForm").validate({
         rules: {
           username: {
@@ -287,15 +351,15 @@
         messages: {
           username: {
             required: "Please enter your name",
-            minlength: "Your name must be at least 2 characters"
+            minlength: "Name must be at least 2 characters long"
           },
           email: {
-            required: "Please enter your email address",
-            email: "Please enter a valid email address"
+            required: "Please enter your email",
+            email: "Please enter a valid email"
           },
           password: {
-            required: "Please provide a password",
-            minlength: "Your password must be at least 6 characters long"
+            required: "Please enter a password",
+            minlength: "Password must be at least 6 characters long"
           }
         },
         submitHandler: function (form) {
@@ -303,6 +367,7 @@
         }
       });
 
+      /* sign in validation*/
       $("#signInForm").validate({
         rules: {
           email: {
@@ -316,12 +381,12 @@
         },
         messages: {
           email: {
-            required: "Please enter your email address",
-            email: "Please enter a valid email address"
+            required: "Please enter your email",
+            email: "Please enter a valid email"
           },
           password: {
-            required: "Please provide a password",
-            minlength: "Your password must be at least 6 characters long"
+            required: "Please enter a password",
+            minlength: "Password must be at least 6 characters long"
           }
         },
         submitHandler: function (form) {
@@ -329,15 +394,22 @@
         }
       });
     });
-
   </script>
-
   <script>
     function toggleMenu() {
       const nav = document.getElementById("main-nav");
       const auth = document.getElementById("auth-buttons");
+      const userDropdown = document.getElementById("user-dropdown");
+
       nav.classList.toggle("active");
-      auth.classList.toggle("active");
+
+      if (auth) {
+        auth.classList.toggle("active");
+      }
+
+      if (userDropdown) {
+        userDropdown.classList.toggle("active");
+      }
     }
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -345,3 +417,77 @@
 </body>
 
 </html>
+
+<?php
+/* sign up */
+if (isset($_POST['register'])) {
+  $username = trim($_POST['username']);
+  $email = trim($_POST['email']);
+  $password = $_POST['password'];
+
+
+  $check_email = "SELECT * FROM userdata WHERE email = ?";
+  $stmt = mysqli_prepare($conn, $check_email);
+  mysqli_stmt_bind_param($stmt, "s", $email);
+  mysqli_stmt_execute($stmt);
+  $result_email = mysqli_stmt_get_result($stmt);
+
+  if (mysqli_num_rows($result_email) > 0) {
+    echo "<script>alert('Email Already Registered');</script>";
+  } else {
+
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    $reg_query = "INSERT INTO userdata (username, email, password) VALUES (?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $reg_query);
+    mysqli_stmt_bind_param($stmt, "sss", $username, $email, $password_hash);
+    $result = mysqli_stmt_execute($stmt);
+
+    if ($result) {
+      echo "<script>alert('Register Successful!');</script>";
+    } else {
+      echo "<script>alert('Registration Failed. Please try again later.');</script>";
+    }
+  }
+}
+
+/* sign in model */
+
+if (isset($_POST['login'])) {
+
+  $email = trim($_POST['email']);
+  $password = trim($_POST['password']);
+
+
+  $stmt = mysqli_prepare($conn, "SELECT username, email, password, status FROM userdata WHERE email = ?");
+  mysqli_stmt_bind_param($stmt, "s", $email);
+  mysqli_stmt_execute($stmt);
+  $result = mysqli_stmt_get_result($stmt);
+
+  if ($result && mysqli_num_rows($result) === 1) {
+    $row = mysqli_fetch_assoc($result);
+
+    if (password_verify($password, $row['password'])) {
+
+      if ($row['status'] == 1) {
+        $_SESSION['email'] = $row['email'];
+        $_SESSION['username'] = $row['username'];
+        $_SESSION['status'] = $row['status'];
+
+        echo "<script>alert('Login Successful!'); window.location.href = window.location.href;</script>";
+        exit();
+      } else {
+        echo "<script>alert('Login failed. This account has been blocked.');</script>";
+      }
+
+    } else {
+      echo "<script>alert('Incorrect password.');</script>";
+    }
+
+  } else {
+    echo "<script>alert('Email not registered.');</script>";
+  }
+  mysqli_stmt_close($stmt);
+  mysqli_close($conn);
+}
+?>

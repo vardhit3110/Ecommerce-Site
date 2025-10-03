@@ -1,5 +1,5 @@
 <?php
-include "db_connect.php";
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,6 +45,8 @@ include "db_connect.php";
 
         <!-- card -->
         <?php
+        include "db_connect.php";
+
         $showCategories = "SELECT * FROM categories WHERE categorie_status=?";
         $stmt = mysqli_prepare($conn, $showCategories);
 
@@ -95,7 +97,6 @@ include "db_connect.php";
     </main>
     <?php require_once "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>
