@@ -1,4 +1,39 @@
-<?php include "partials/viewuser.php"; ?>
+<?php
+require "db_connect.php";
+require "./partials/viewuser.php";
+
+if (isset($_GET['email'])) {
+    $email = $_GET['email'];
+} else {
+    echo "<script>alert('No username provided.');window:location:href='';</script>";
+    exit;
+}
+
+/* update user code */
+if (isset($_POST['update-profile']) && isset($_GET['email'])) {
+    $get_email = $_GET['email'];
+
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+    $city = $_POST['city'];
+    $gender = $_POST['gender'];
+
+    $stmt = mysqli_prepare($conn, "UPDATE userdata SET username = ?, email = ?, phone = ?, address = ?, city = ?, gender = ? WHERE email = ?");
+    mysqli_stmt_bind_param($stmt, "sssssss", $username, $email, $phone, $address, $city, $gender, $get_email);
+
+    if (mysqli_stmt_execute($stmt)) {
+        echo "<script>alert('Profile updated successfully.');window.location.href = window.location.href;</script>";
+        exit;
+    } else {
+        echo "<script>alert('Error updating profile.');</script>";
+    }
+    mysqli_stmt_close($stmt);
+}
+
+mysqli_close($conn);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -66,19 +101,61 @@
                         <div class="card-body">
                             <!-- file change -->
                             <div class="d-flex flex-column align-items-center text-center">
+                                <form method="POST" enctype="multipart/form-data">
+                                    <input type="file" id="profileImageInput" name="profile_image"
+                                        style="display: none;" accept="image/*">
 
-                                <input type="file" id="profileImageInput" style="display: none;" accept="image/*">
+                                    <img src="./store/images/user_img/<?php echo $image; ?>" alt="User"
+                                        class="rounded-circle p-1 border border-primary border-3" width="110"
+                                        id="profileImage"
+                                        onerror="this.onerror=null; this.src='./store/images/user_img/default.png'">
 
-                                <img src="https://bootdey.com/img/Content/avatar/avatar6.png" alt="Admin"
-                                    class="rounded-circle p-1 bg-primary" width="110" id="profileImage">
-
-                                <div class="mt-3">
-                                    <h4>John Doe</h4>
-                                    <p class="text-secondary mb-1">Full Stack Developer</p>
-                                    <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
-                                    <button class="btn btn-success">Change Image</button>
-                                </div>
+                                    <div class="mt-3">
+                                        <h4><?php echo $username; ?></h4>
+                                        <p class="text-secondary mb-1"><?php echo $email; ?></p>
+                                        <p class="text-muted font-size-sm"><?php echo $address; ?></p>
+                                        <button class="btn btn-success" name="change-image">Change Image</button>
+                                    </div>
+                                </form>
                             </div>
+                            <?php
+                            if (isset($_POST['change-image'])) {
+                                $imagepath = "store/images/user_img/";
+
+                                $originalName = basename($_FILES["profile_image"]["name"]);
+                                $imageFileType = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+
+                                $fileName = $username . "_" . time() . "." . $imageFileType;
+
+                                $targetFilePath = $imagepath . $fileName;
+
+                                $allowedTypes = array('jpg', 'png', 'jpeg', 'gif');
+
+                                if (in_array($imageFileType, $allowedTypes)) {
+
+                                    if (move_uploaded_file($_FILES["profile_image"]["tmp_name"], $targetFilePath)) {
+                                        $stmt = mysqli_prepare($conn, "UPDATE userdata SET image = ? WHERE email = ?");
+                                        mysqli_stmt_bind_param($stmt, "ss", $fileName, $email);
+
+                                        if (mysqli_stmt_execute($stmt)) {
+                                            echo "<script>alert('Image updated successfully.'); window.location.href = window.location.href;</script>";
+                                            exit;
+                                        } else {
+                                            echo "<script>alert('Error updating image in database.');</script>";
+                                        }
+                                        mysqli_stmt_close($stmt);
+
+                                    } else {
+                                        echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
+                                    }
+
+                                } else {
+                                    echo "<script>alert('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');</script>";
+                                }
+                            }
+
+                            ?>
+
 
                             <hr class="my-4">
                             <ul class="list-group list-group-flush">
@@ -143,6 +220,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="col-lg-8">
                     <div class="card">
                         <h4 class="mt-3 text-center text-primary">User Profile</h4>
@@ -153,8 +231,8 @@
                                         <h6 class="mb-0">Username</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" class="form-control" value="" name="username" id="username"
-                                            placeholder="Enter Username" required>
+                                        <input type="text" class="form-control" value="<?php echo $username; ?>"
+                                            name="username" id="username" placeholder="Please Enter Username" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -162,8 +240,8 @@
                                         <h6 class="mb-0">Email</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="email" class="form-control" value="" name="email" id="email"
-                                            placeholder="Enter Email" required>
+                                        <input type="email" class="form-control" value="<?php echo $email; ?>"
+                                            name="email" id="email" placeholder="Please Enter Email" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -171,8 +249,9 @@
                                         <h6 class="mb-0">Phone</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" class="form-control" value="" name="phone" id="phone"
-                                            placeholder="Enter Phone Number" maxlength="10" required>
+                                        <input type="text" class="form-control" value="<?php echo $phone; ?>"
+                                            name="phone" id="phone" placeholder="Please Enter Phone Number"
+                                            maxlength="10" required>
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -180,8 +259,8 @@
                                         <h6 class="mb-0">City</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" class="form-control" value="" name="city" id="city"
-                                            placeholder="Enter City Name" minlength="3" required>
+                                        <input type="text" class="form-control" value="<?php echo $city; ?>" name="city"
+                                            id="city" placeholder="Please Enter City" minlength="3" required>
                                     </div>
                                 </div>
 
@@ -190,8 +269,8 @@
                                         <h6 class="mb-0">Address</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" class="form-control" value="" name="address" id="address"
-                                            placeholder="Enter Address">
+                                        <input type="text" class="form-control" value="<?php echo $address; ?>"
+                                            name="address" id="address" placeholder="Please Enter Address">
                                     </div>
                                 </div>
 
@@ -201,10 +280,13 @@
                                     </div>
                                     <div class="col-sm-9 text-secondary">
                                         <select class="form-control" name="gender" id="gender" required>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="other">Other</option>
+                                            <option value="" disabled>Please Select Gender</option>
+                                            <option value="1" <?php echo ($gender == '1') ? 'selected' : ''; ?>>Male
+                                            </option>
+                                            <option value="2" <?php echo ($gender == '2') ? 'selected' : ''; ?>>Female
+                                            </option>
                                         </select>
+
                                     </div>
                                 </div>
                                 <hr>

@@ -69,11 +69,21 @@ include "db_connect.php";
                         $product_name = $row['product_name'];
                         $product_desc = $row['product_desc'];
                         $product_price = $row['product_price'];
+                        $category_id = $row['categorie_id'];
 
+                        /* static category name  */
+                        if ($category_id == 1) {
+                            $category_id = "Mobile Phones";
+                        } elseif ($category_id == 2) {
+                            $category_id = "Mobile Accessories";
+                        } elseif ($category_id == 3) {
+                            $category_id = "Buds";
+                        }
                         ?>
 
                         <div class="row shadow p-4 rounded align-items-center" id="box-detail">
                             <div class="col-md-4 text-center mb-3 mb-md-0">
+                                <h6><?php echo htmlspecialchars($category_id); ?></h6>
                                 <img src="./admin/images/product_img/<?php echo htmlspecialchars($productimage); ?>"
                                     class="card-img-top img-fluid rounded" alt="<?php echo htmlspecialchars($product_name); ?>"
                                     style="max-height: 250px; object-fit: contain;">
@@ -82,13 +92,13 @@ include "db_connect.php";
                             <div class="col-md-8">
                                 <h4 class="fw-bold mb-2"><?php echo htmlspecialchars($product_name); ?></h4>
                                 <p class="text-muted mb-2">
-                                    <?php echo nl2br(htmlspecialchars(str_replace(', ', "<br>", $product_desc)));?>
+                                    <?php echo nl2br(htmlspecialchars(str_replace(', ', "", $product_desc))); ?>
                                 </p>
 
                                 <h5 class="text-danger mb-3">₹<?php echo number_format((float) $row['product_price']); ?></h5><br>
                                 <div class="mb-3">
                                     <a href="#" class="btn btn-primary me-2">Add to Cart</a>
-                                    <a href="#" class="btn btn-success">Buy Now</a>
+                                    <!-- <a href="#" class="btn btn-success">Buy Now</a> -->
                                 </div>
                             </div>
                         </div>

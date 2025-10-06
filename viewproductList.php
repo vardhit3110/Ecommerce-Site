@@ -78,6 +78,19 @@ include "db_connect.php";
 <body>
 
     <?php require_once "header.php"; ?>
+    <!-- category name -->
+    <?php
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+
+        $sql = "SELECT * FROM categories WHERE categorie_id = '$id'";
+        $result = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_assoc($result);
+
+        $category_name = $row['categorie_name'];
+    }
+    ?>
+
 
     <main class="container py-4">
         <div class="col-lg-2 text-center my-5 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
@@ -85,6 +98,7 @@ include "db_connect.php";
             border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease;">
             <h2 style="color: #0077cc; font-weight: 600; letter-spacing: 1px; font-family: 'Segoe UI', sans-serif;">
                 Product</h2>
+            <h6><?php echo htmlspecialchars($category_name); ?></h6>
         </div>
 
         <!-- product show -->
@@ -187,20 +201,6 @@ include "db_connect.php";
             echo '</div>';
         }
         ?>
-
-        <!-- <div class="d-flex justify-content-center mt-4">
-            <ul class="pagination">
-                <li class="prev-next"><a href="#">« Prev</a></li>
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#" class="active">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li class="prev-next"><a href="#">Next »</a></li>
-            </ul>
-        </div> -->
-
-
         <br>
     </main>
     <?php require_once "footer.php"; ?>

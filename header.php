@@ -23,6 +23,50 @@ require "db_connect.php";
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .categoryname {
+      font-size: 14px;
+    }
+
+    .dropdown-toggle {
+
+      background-color: transparent;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: white;
+      min-width: 160px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+    }
+
+
+    .dropdown-menu a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #f1f1f1;
+    }
+
     header {
       display: flex;
       justify-content: space-between;
@@ -221,6 +265,41 @@ require "db_connect.php";
 
     <nav id="main-nav">
       <a href="home.php">Home</a>
+
+      <?php
+      $showCategories = "SELECT * FROM categories WHERE categorie_status=?";
+      $stmt = mysqli_prepare($conn, $showCategories);
+
+      if ($stmt) {
+        $categorie_status = 1;
+        mysqli_stmt_bind_param($stmt, "i", $categorie_status);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if (mysqli_num_rows($result) > 0) {
+          ?>
+          <div class="dropdown">
+            <a href="index.php" class="dropdown-toggle">Categories</a>
+            <div class="dropdown-menu">
+              <?php
+              while ($row = mysqli_fetch_assoc($result)) {
+                $category_id = $row['categorie_id'];
+                $category_name = htmlspecialchars($row['categorie_name']);
+                ?>
+                <a href="<?php echo "viewproductList.php?id=$category_id"; ?>">
+                  <h6 class="categoryname"><?php echo $category_name; ?></h6>
+                </a>
+                <?php
+              }
+              ?>
+            </div>
+          </div>
+          <?php
+        }
+      }
+      ?>
+
+
       <a href="#">About Us</a>
       <a href="#">Contact Us</a>
     </nav>
@@ -229,14 +308,14 @@ require "db_connect.php";
       <!-- User dropdown when logged in -->
       <div class="user-dropdown" id="user-dropdown">
         <button class="user-dropdown-btn">
-          <img src="store/images/logo.jpg" alt="User" class="user-avatar"
+          <img src="" alt="User" class="user-avatar"
             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAxMmMxLjY1IDAgMy0xLjM1IDMtM3MtMS4zNS0zLTMtMy0zIDEuMzUtMyAzIDEuMzUgMyAzIDN6bTAgMWMtMS42NiAwLTUgLjgzLTUgMi41VjE3aDEwdjEuNWMwLTEuNjctMy4zNC0yLjUtNS0yLjV6Ii8+PC9zdmc+'">
           <span><?php echo $_SESSION['username']; ?></span>
           <i class="fa fa-chevron-down"></i>
         </button>
         <div class="user-dropdown-content">
-          <a href="viewprofile.php"><i class="fa fa-user"></i> Profile</a>
-          <a href="#"><i class="fa-solid fa-heart"></i> Favorite</a>
+          <a href="viewprofile.php?email=<?php echo $_SESSION['email']; ?>"><i class="fa fa-user"></i> Profile</a>
+          <a href="wishlist.php?username=<?php echo $_SESSION['username']; ?>"><i class="fa-solid fa-heart"></i> Wishlist</a>
           <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
         </div>
       </div>

@@ -401,9 +401,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>
     </div>
-
     <script>
-
         document.addEventListener('DOMContentLoaded', function () {
             const toggleSwitches = document.querySelectorAll('.toggle-switch');
 
