@@ -111,9 +111,7 @@ include "db_connect.php";
                 }
                 ?>
             </h6>
-
         </div>
-
         <!-- product show -->
         <?php
         if (isset($_GET['id']) && $is_active_category) {
@@ -156,8 +154,8 @@ include "db_connect.php";
                                         <li class="list-group-item"><b>Price:</b> ₹' . number_format((float) $product_price) . '</li>
                                     </ul>
                                     <div class="card-body text-center">
-                                        <a href="#" class="btn btn-primary me-2">Add to Cart</a>
-                                        <a href="viewproduct.php?id=' . $product_id . '" class="btn btn-success">Quick View</a>
+                                        <a href="#" class="btn btn-primary me-2"><i class="fa-solid fa-cart-plus"></i> Add to Cart</a>
+                                        <a href="viewproduct.php?Productid=' . $product_id . '" class="btn btn-success">Quick View</a>
                                     </div>
                                 </div>
                             </div>';

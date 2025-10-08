@@ -315,7 +315,24 @@ require "db_connect.php";
         </button>
         <div class="user-dropdown-content">
           <a href="viewprofile.php?email=<?php echo $_SESSION['email']; ?>"><i class="fa fa-user"></i> Profile</a>
-          <a href="wishlist.php?username=<?php echo $_SESSION['username']; ?>"><i class="fa-solid fa-heart"></i> Wishlist</a>
+
+          <!-- wishlist Count -->
+          <?php
+          $user_email = $_SESSION['email'];
+          $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
+          $user_res = mysqli_query($conn, $user_query);
+          $user_data = mysqli_fetch_assoc($user_res);
+          $user_id = $user_data['id'];
+
+          $count_query = "SELECT COUNT(*) AS total FROM wishlist WHERE user_id='$user_id'";
+          $count_res = mysqli_query($conn, $count_query);
+          $count_row = mysqli_fetch_assoc($count_res);
+          $wishlist_count = $count_row['total'];
+          ?>
+          <a href="wishlist.php"><i class="fa-solid fa-heart"></i> Wishlist
+            &nbsp; <span class="text-danger"><b>(<?php echo $wishlist_count; ?>)</b></span>
+          </a>
+
           <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
         </div>
       </div>
@@ -549,6 +566,7 @@ if (isset($_POST['login'])) {
     if (password_verify($password, $row['password'])) {
 
       if ($row['status'] == 1) {
+        $_SESSION['id'] = $row['id'];
         $_SESSION['email'] = $row['email'];
         $_SESSION['username'] = $row['username'];
         $_SESSION['status'] = $row['status'];

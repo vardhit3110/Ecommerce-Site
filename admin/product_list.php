@@ -456,7 +456,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
 
                         alert('Product status updated successfully!');
                     } else {
-                        alert('Product status updated successfully!'); window.location.href = "product_list.php";
+                        if (confirm("Do you want to update the category status?")) {
+                            window.location.href = "product_list.php";
+                        }
                     }
                 },
                 error: function (xhr, status, error) {

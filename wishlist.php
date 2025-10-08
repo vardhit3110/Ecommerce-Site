@@ -1,10 +1,20 @@
+<?php
+require "db_connect.php";
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    echo "<script>alert('Please log in to view your wishlist.'); window.location.href='index.php';</script>";
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MobileSite</title>
+    <title>My Wishlist</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -20,17 +30,6 @@
             line-height: 1.6;
         }
 
-        .likeproduct {
-            text-decoration: none;
-        }
-        #like {
-            color: dark;
-        }
-
-        #like:hover {
-            color: #0056b3;
-        }
-
         .container {
             display: flex;
             justify-content: center;
@@ -39,7 +38,6 @@
             gap: 20px;
         }
 
-        /* Wishlist Content Styles */
         .wishlist-content {
             flex: 0 0 80%;
             max-width: 800px;
@@ -73,13 +71,22 @@
             border: 1px solid #eee;
             border-radius: 8px;
             overflow: hidden;
-            /* Removed hover effects */
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .wishlist-item:hover {
+            text-decoration: none;
+            color: inherit;
         }
 
         .item-image {
             width: 150px;
             height: 150px;
-            object-fit: cover;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            padding: 5px;
+            background-color: #fff;
         }
 
         .item-details {
@@ -94,67 +101,34 @@
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 5px;
+            color: #333;
+        }
+
+        .item-description {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 10px;
         }
 
         .item-price {
             font-size: 1.2rem;
             font-weight: 700;
             color: #e74c3c;
-            margin: 10px 0;
-        }
-
-        .item-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .btn {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: background-color 0.3s;
-        }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid #ddd;
-        }
-
-        .btn-outline:hover {
-            background-color: #f8f9fa;
-        }
-
-        .btn-danger {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background-color: #c0392b;
         }
 
         .delete-btn {
             background: none;
             border: none;
             color: #6c757d;
-            /* Secondary color */
             cursor: pointer;
             font-size: 1.2rem;
             padding: 5px;
             margin-left: auto;
             align-self: flex-start;
+        }
+
+        .delete-btn:hover {
+            color: #c0392b;
         }
 
         /* Popup Modal Styles */
@@ -174,8 +148,8 @@
         .modal-content {
             background-color: white;
             border-radius: 8px;
-            width: 400px;
-            max-width: 90%;
+            width: 150px;
+            max-width: 35%;
             padding: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
             text-align: center;
@@ -203,7 +177,33 @@
             gap: 15px;
         }
 
-        /* Responsive Design */
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid #ddd;
+        }
+
+        .btn-outline:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -223,84 +223,75 @@
                 height: 200px;
             }
         }
+
+        .empty-wishlist {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+        }
+
+        .empty-wishlist img {
+            max-width: 350px;
+            height: auto;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .empty-wishlist p {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 
 <body>
     <?php require "header.php"; ?>
+
+    <?php
+    $wishlist_sql = "SELECT product.product_Id, product.product_name, product.product_image, product.product_desc, product.product_price FROM product JOIN wishlist ON product.product_Id = wishlist.prod_id WHERE wishlist.user_id = ?";
+    $stmt = mysqli_prepare($conn, $wishlist_sql);
+    mysqli_stmt_bind_param($stmt, "i", $user_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $wishlist_count = mysqli_num_rows($result);
+    ?>
+
     <div class="container">
-        <!-- Wishlist Content -->
         <div class="wishlist-content">
             <div class="wishlist-header">
-                <h1>My Wishlist (3 items)</h1>
+                <h1>My Wishlist (<?php echo $wishlist_count; ?>)</h1>
             </div>
-
             <div class="wishlist-items">
-                <!-- Wishlist Item 1 -->
-                <a href="#" class="likeproduct">
-                    <div class="wishlist-item">
-                        <img src="" alt="Product" class="item-image">
-                        <div class="item-details">
-                            <div>
-                                <h3 class="item-title text-dark " id="like">Wireless Bluetooth Headphones</h3>
-                                <p class="item-description text-dark">High-quality sound with noise cancellation feature
-                                    and
-                                    30-hour
-                                    battery life.
-                                </p>
-                                <div class="item-price">$129.99</div>
+                <?php if ($wishlist_count > 0): ?>
+                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                        <a href="viewproduct.php?Productid=<?php echo $row['product_Id']; ?>" class="wishlist-item">
+                            <img src="./admin/images/product_img/<?php echo htmlspecialchars($row['product_image']); ?>"
+                                alt="Product" class="item-image">
+                            <div class="item-details">
+                                <div>
+                                    <h3 class="item-title">
+                                        <?php echo htmlspecialchars($row['product_name']); ?>
+                                    </h3>
+                                    <p class="item-description">
+                                        <?php echo htmlspecialchars($row['product_desc']); ?>
+                                    </p>
+                                    <div class="item-price">₹<?php echo number_format($row['product_price']); ?></div>
+                                </div>
                             </div>
-                            <div class="item-actions">
-                                <!-- <a href="#" class="btn text-primary-">Move To Cart</a> -->
-                                <!-- <button class="btn btn-outline">Save for Later</button> -->
-                            </div>
-                        </div>
-                        <button class="delete-btn" onclick="openDeleteModal(1)">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>div>
-                </a>
-
-                <!-- Wishlist Item 2 -->
-                <div class="wishlist-item">
-                    <img src="" alt="Product" class="item-image">
-                    <div class="item-details">
-                        <div>
-                            <h3 class="item-title">Smart Fitness Watch</h3>
-                            <p class="item-description">Track your heart rate, steps, and sleep with this advanced
-                                fitness tracker.
-                            </p>
-                            <div class="item-price">$199.99</div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn btn-primary">Move to Cart</button>
-                            <button class="btn btn-outline">Save for Later</button>
-                        </div>
+                            <button class="delete-btn"
+                                onclick="event.preventDefault(); openDeleteModal(<?php echo $row['product_Id']; ?>)">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </a>
+                        <hr class="my-0 text-dark">
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <div class="empty-wishlist">
+                        <img src="./admin/images/product_img/empty-wishlist.png" alt="Empty Wishlist">
+                        <p>Your wishlist is currently empty.</p>
                     </div>
-                    <button class="delete-btn" onclick="openDeleteModal(2)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-
-                <!-- Wishlist Item 3 -->
-                <div class="wishlist-item">
-                    <img src="" alt="Product" class="item-image">
-                    <div class="item-details">
-                        <div>
-                            <h3 class="item-title">Portable Bluetooth Speaker</h3>
-                            <p class="item-description">Waterproof speaker with 360-degree sound and 12-hour battery
-                                life.</p>
-                            <div class="item-price">$79.99</div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="btn btn-primary">Move to Cart</button>
-                            <button class="btn btn-outline">Save for Later</button>
-                        </div>
-                    </div>
-                    <button class="delete-btn" onclick="openDeleteModal(3)">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -315,12 +306,34 @@
             <p>Are you sure you want to remove this item from your wishlist?</p>
             <div class="modal-actions">
                 <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
-                <button class="btn btn-danger" onclick="confirmDelete()">Remove</button>
+                <form method="POST" action="./partials/remove_wishlist.php">
+                    <input type="hidden" id="deleteProductId" name="product_id">
+                    <button type="submit" name="product_id" class="btn btn-danger">Remove</button>
+                </form>
             </div>
         </div>
     </div>
 
+    <script>
+        function openDeleteModal(productId) {
+            document.getElementById('deleteProductId').value = productId;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'none';
+        }
+
+        window.onclick = function (event) {
+            var modal = document.getElementById('deleteModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
     <?php require "footer.php"; ?>
 </body>
+
 
 </html>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 include "db_connect.php";
 ?>
 <!DOCTYPE html>
@@ -46,16 +47,17 @@ include "db_connect.php";
             </h2>
         </div>
 
-
         <?php
-        if (isset($_GET['id'])) {
-            $productid = $_GET['id'];
+        if (isset($_GET['Productid'])) {
+            $productid = $_GET['Productid'];
 
-            $showProduct = "SELECT * FROM product WHERE product_Id=?";
+            $showProduct = "SELECT p.*, c.categorie_name FROM product p 
+                            JOIN categories c ON p.categorie_id = c.categorie_id 
+                            WHERE p.product_Id = ? AND p.product_status = '1' AND c.categorie_status = '1'";
+
             $stmt = mysqli_prepare($conn, $showProduct);
-            if ($stmt) {
 
-                $product_status = 1;
+            if ($stmt) {
                 mysqli_stmt_bind_param($stmt, "i", $productid);
                 mysqli_stmt_execute($stmt);
                 $result = mysqli_stmt_get_result($stmt);
@@ -69,21 +71,12 @@ include "db_connect.php";
                         $product_name = $row['product_name'];
                         $product_desc = $row['product_desc'];
                         $product_price = $row['product_price'];
-                        $category_id = $row['categorie_id'];
-
-                        /* static category name  */
-                        if ($category_id == 1) {
-                            $category_id = "Mobile Phones";
-                        } elseif ($category_id == 2) {
-                            $category_id = "Mobile Accessories";
-                        } elseif ($category_id == 3) {
-                            $category_id = "Buds";
-                        }
+                        $category_name = $row['categorie_name'];
                         ?>
 
                         <div class="row shadow p-4 rounded align-items-center" id="box-detail">
                             <div class="col-md-4 text-center mb-3 mb-md-0">
-                                <h6><?php echo htmlspecialchars($category_id); ?></h6>
+                                <h6><?php echo htmlspecialchars($category_name); ?></h6>
                                 <img src="./admin/images/product_img/<?php echo htmlspecialchars($productimage); ?>"
                                     class="card-img-top img-fluid rounded" alt="<?php echo htmlspecialchars($product_name); ?>"
                                     style="max-height: 250px; object-fit: contain;">
@@ -92,28 +85,40 @@ include "db_connect.php";
                             <div class="col-md-8">
                                 <h4 class="fw-bold mb-2"><?php echo htmlspecialchars($product_name); ?></h4>
                                 <p class="text-muted mb-2">
-                                    <?php echo nl2br(htmlspecialchars(str_replace(', ', "", $product_desc))); ?>
+                                    <?php echo nl2br(htmlspecialchars($product_desc)); ?>
                                 </p>
 
-                                <h5 class="text-danger mb-3">₹<?php echo number_format((float) $row['product_price']); ?></h5><br>
+                                <h5 class="text-danger mb-3">₹<?php echo number_format((float) $product_price); ?></h5><br>
                                 <div class="mb-3">
                                     <a href="#" class="btn btn-primary me-2">Add to Cart</a>
-                                    <!-- <a href="#" class="btn btn-success">Buy Now</a> -->
+
+                                    <?php if (isset($_SESSION['id'])): ?>
+                                        <form method="POST" action="./partials/Add_wishlist.php" style="display:inline;">
+                                            <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+                                            <button type="submit" class="btn btn-outline-danger">
+                                                <i class="bi bi-heart"></i> Add to Wishlist
+                                            </button>
+                                        </form>
+                                    <?php else: ?>
+                                        <a href="login.php" class="btn btn-outline-danger">
+                                            <i class="bi bi-heart"></i> Login to Wishlist
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
-
                         <?php
                     }
                     echo '</div>';
                 } else {
                     echo '<div class="not-data text-center">
-                    <div class="container">
-                        <p class="display-5" style="font-weight: 500;">Sorry, Product not found.</p><br>
-                        <p class="lead"> We will update soon.</p>
-                    </div>
-                </div><br><br>';
+                <div class="container">
+                    <p class="display-5" style="font-weight: 500;">Sorry, Product not found.</p><br>
+                    <p class="lead"> We will update soon.</p>
+                </div>
+            </div><br><br>';
                 }
+
                 mysqli_stmt_close($stmt);
             } else {
                 echo "<script>alert('Query preparation failed: " . mysqli_error($conn) . "');</script>";
@@ -121,6 +126,7 @@ include "db_connect.php";
         }
         ?>
     </main>
+
     <?php require_once "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 

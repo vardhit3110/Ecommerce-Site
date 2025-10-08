@@ -5,7 +5,7 @@ require "./partials/viewuser.php";
 if (isset($_GET['email'])) {
     $email = $_GET['email'];
 } else {
-    echo "<script>alert('No username provided.');window:location:href='';</script>";
+    echo "<script>alert('Please Login First.');window:location:href='';</script>";
     exit;
 }
 
