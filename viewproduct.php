@@ -11,6 +11,7 @@ include "db_connect.php";
     <title>MobileSite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
         #box-detail {
@@ -30,6 +31,14 @@ include "db_connect.php";
             transform: scale(1.05);
             box-shadow: 0 6px 18px rgba(0, 119, 204, 0.3);
             background: linear-gradient(135deg, #e0f7ff, #cceeff);
+        }
+
+        .wishlist-btn {
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-btn:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -72,6 +81,20 @@ include "db_connect.php";
                         $product_desc = $row['product_desc'];
                         $product_price = $row['product_price'];
                         $category_name = $row['categorie_name'];
+
+                        // Check if product is in user's wishlist
+                        $is_in_wishlist = false;
+                        if (isset($_SESSION['email'])) {
+                            $user_email = $_SESSION['email'];
+                            $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
+                            $user_res = mysqli_query($conn, $user_query);
+                            $user_data = mysqli_fetch_assoc($user_res);
+                            $user_id = $user_data['id'];
+
+                            $wishlist_check = "SELECT * FROM wishlist WHERE user_id='$user_id' AND prod_id='$product_id'";
+                            $wishlist_result = mysqli_query($conn, $wishlist_check);
+                            $is_in_wishlist = (mysqli_num_rows($wishlist_result) > 0);
+                        }
                         ?>
 
                         <div class="row shadow p-4 rounded align-items-center" id="box-detail">
@@ -90,19 +113,20 @@ include "db_connect.php";
 
                                 <h5 class="text-danger mb-3">₹<?php echo number_format((float) $product_price); ?></h5><br>
                                 <div class="mb-3">
-                                    <a href="#" class="btn btn-primary me-2">Add to Cart</a>
+                                    <a href="#" class="btn btn-primary me-2"><i class="fa-solid fa-cart-plus"></i> Add to Cart</a>
 
-                                    <?php if (isset($_SESSION['id'])): ?>
-                                        <form method="POST" action="./partials/Add_wishlist.php" style="display:inline;">
-                                            <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
-                                            <button type="submit" class="btn btn-outline-danger">
-                                                <i class="bi bi-heart"></i> Add to Wishlist
-                                            </button>
-                                        </form>
+                                    <?php if (isset($_SESSION['email'])): ?>
+                                        <button type="button"
+                                            class="btn wishlist-btn <?php echo $is_in_wishlist ? 'btn-danger' : 'btn-outline-danger'; ?>"
+                                            id="wishlistBtn<?php echo $product_id; ?>" onclick="toggleWishlist(<?php echo $product_id; ?>)">
+                                            <i class="bi bi-heart<?php echo $is_in_wishlist ? '-fill' : ''; ?>"></i>
+                                            <?php echo $is_in_wishlist ? 'Already Added' : 'Add to Wishlist'; ?>
+                                        </button>
                                     <?php else: ?>
-                                        <a href="login.php" class="btn btn-outline-danger">
-                                            <i class="bi bi-heart"></i> Login to Wishlist
-                                        </a>
+                                        <button type="button" class="btn btn-outline-danger wishlist-btn" data-bs-toggle="modal"
+                                            data-bs-target="#signInModal">
+                                            <i class="bi bi-heart"></i> Login to Add Wishlist
+                                        </button>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -129,6 +153,41 @@ include "db_connect.php";
 
     <?php require_once "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function toggleWishlist(productId) {
+            $.ajax({
+                url: './partials/wishlist_ajax.php',
+                type: 'POST',
+                data: {
+                    product_id: productId,
+                    action: 'toggle'
+                },
+                success: function (response) {
+                    var result = JSON.parse(response);
+                    if (result.status === 'success') {
+                        var button = $('#wishlistBtn' + productId);
+                        if (result.action === 'added') {
+                            button.removeClass('btn-outline-danger').addClass('btn-danger');
+                            button.html('<i class="bi bi-heart-fill"></i> Already Added');
+                        } else {
+                            button.removeClass('btn-danger').addClass('btn-outline-danger');
+                            button.html('<i class="bi bi-heart"></i> Add to Wishlist');
+                        }
+
+                        if (result.wishlist_count !== undefined) {
+                            $('.wishlist-count').text('(' + result.wishlist_count + ')');
+                        }
+                    } else {
+                        alert(result.message);
+                    }
+                },
+                error: function () {
+                    alert('Error occurred. Please try again.');
+                }
+            });
+        }
+    </script>
 
 </body>
 

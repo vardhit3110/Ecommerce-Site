@@ -257,6 +257,7 @@ if (!isset($_SESSION['username'])) {
     $wishlist_count = mysqli_num_rows($result);
     ?>
 
+    <br><br>
     <div class="container">
         <div class="wishlist-content">
             <div class="wishlist-header">
@@ -279,10 +280,10 @@ if (!isset($_SESSION['username'])) {
                                     <div class="item-price">₹<?php echo number_format($row['product_price']); ?></div>
                                 </div>
                             </div>
-                            <button class="delete-btn"
-                                onclick="event.preventDefault(); openDeleteModal(<?php echo $row['product_Id']; ?>)">
+                            <!-- <button class="delete-btn"
+                                onclick="event.preventDefault(); removeFromWishlist(<?php echo $row['product_Id']; ?>, this)">
                                 <i class="fas fa-trash-alt"></i>
-                            </button>
+                            </button> -->
                         </a>
                         <hr class="my-0 text-dark">
                     <?php endwhile; ?>
@@ -294,7 +295,7 @@ if (!isset($_SESSION['username'])) {
                 <?php endif; ?>
             </div>
         </div>
-    </div>
+    </div><br><br>
 
     <!-- Delete Confirmation Popup -->
     <div id="deleteModal" class="modal">
@@ -333,6 +334,23 @@ if (!isset($_SESSION['username'])) {
     </script>
 
     <?php require "footer.php"; ?>
+    <?php
+    if (isset($_SESSION['success'])) {
+        echo '<div class="alert alert-success alert-dismissible fade show m-0 text-center" role="alert">
+            ' . $_SESSION['success'] . '
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+        unset($_SESSION['success']);
+    }
+
+    if (isset($_SESSION['error'])) {
+        echo '<div class="alert alert-danger alert-dismissible fade show m-0 text-center" role="alert">
+            ' . $_SESSION['error'] . '
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+        unset($_SESSION['error']);
+    }
+    ?>
 </body>
 
 

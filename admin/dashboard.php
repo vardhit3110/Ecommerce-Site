@@ -21,40 +21,47 @@
             margin-top: 20px;
         }
 
-        .dashboard-card1 {
+        .dashboard-card {
+            flex: 1 1 calc(25% - 20px);
+            min-width: 250px;
             height: 130px;
-            width: 300px;
-            flex: 1;
-            background-color: #d4edda;
+            background-color: #ffffff;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
             transition: 0.3s;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .dashboard-card1 {
+            background-color: #d4edda;
         }
 
         .dashboard-card2 {
-            height: 130px;
-            width: 300px;
-            flex: 1;
             background-color: #d1ecf1;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .dashboard-card3 {
-            height: 130px;
-            width: 300px;
-            flex: 1;
             background-color: #f8d7da;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            transition: 0.3s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-card4 {
+            background-color: #fff3cd;
+        }
+
+        .dashboard-card:hover {
+            transform: scale(1.03);
+        }
+
+        @media (max-width: 768px) {
+            .card-container {
+                flex-direction: column;
+            }
+
+            .dashboard-card {
+                flex: 1 1 100%;
+            }
         }
     </style>
 </head>
@@ -80,7 +87,7 @@
         require "db_connect.php";
 
         $counts = [];
-        $tables = ['userdata', 'categories', 'product'];
+        $tables = ['userdata', 'categories', 'product', 'wishlist'];
         foreach ($tables as $table) {
             $existSql = "SELECT * FROM $table";
             $result = mysqli_query($conn, $existSql);
@@ -95,23 +102,21 @@
                 <h2>Dashboard Overview</h2>
 
                 <div class="card-container">
-                    <div class="dashboard-card1">
-                        <div class="text-dark">
-                            <h3 style="font-weight: bold ;">Total Users </h3>
-                            <h4><?php echo $counts['userdata']; ?></h4>
-                        </div>
+                    <div class="dashboard-card dashboard-card1">
+                        <h3><strong>Total Users</strong></h3>
+                        <h4><?php echo $counts['userdata']; ?></h4>
                     </div>
-                    <div class="dashboard-card2">
-                        <div class="text-dark">
-                            <h3 style="font-weight: bold;">Total Categories </h3>
-                            <h4><?php echo $counts['categories']; ?></h4>
-                        </div>
+                    <div class="dashboard-card dashboard-card2">
+                        <h3><strong>Total Categories</strong></h3>
+                        <h4><?php echo $counts['categories']; ?></h4>
                     </div>
-                    <div class="dashboard-card3">
-                        <div class="text-dark">
-                            <h3 style="font-weight: bold;">Total Product</h3>
-                            <h4><?php echo $counts['product']; ?></h4>
-                        </div>
+                    <div class="dashboard-card dashboard-card3">
+                        <h3><strong>Total Products</strong></h3>
+                        <h4><?php echo $counts['product']; ?></h4>
+                    </div>
+                    <div class="dashboard-card dashboard-card4">
+                        <h3><strong>Total Wishlist</strong></h3>
+                        <h4><?php echo $counts['wishlist']; ?></h4>
                     </div>
                 </div>
 

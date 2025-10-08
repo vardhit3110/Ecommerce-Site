@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 07, 2025 at 08:11 AM
+-- Generation Time: Oct 08, 2025 at 06:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -178,6 +178,17 @@ CREATE TABLE `wishlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
+-- Dumping data for table `wishlist`
+--
+
+INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
+(3, 17, 1, '2025-10-07 16:51:48'),
+(6, 4, 6, '2025-10-07 17:07:39'),
+(8, 7, 1, '2025-10-07 17:29:22'),
+(9, 7, 8, '2025-10-07 17:29:22'),
+(10, 7, 15, '2025-10-07 17:29:39');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -217,8 +228,8 @@ ALTER TABLE `userdata`
 --
 ALTER TABLE `wishlist`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `user_id` (`user_id`),
-  ADD UNIQUE KEY `prod_id` (`prod_id`);
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `prod_id` (`prod_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -258,7 +269,7 @@ ALTER TABLE `userdata`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables

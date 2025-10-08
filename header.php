@@ -329,8 +329,9 @@ require "db_connect.php";
           $count_row = mysqli_fetch_assoc($count_res);
           $wishlist_count = $count_row['total'];
           ?>
+          
           <a href="wishlist.php"><i class="fa-solid fa-heart"></i> Wishlist
-            &nbsp; <span class="text-danger"><b>(<?php echo $wishlist_count; ?>)</b></span>
+            &nbsp; <span class="text-danger wishlist-count"><b>(<?php echo $wishlist_count; ?>)</b></span>
           </a>
 
           <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>

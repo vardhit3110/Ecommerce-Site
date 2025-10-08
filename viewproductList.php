@@ -1,5 +1,6 @@
 <?php
 include "db_connect.php";
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,6 +10,8 @@ include "db_connect.php";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MobileSite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         ul.pagination {
             list-style: none;
@@ -60,6 +63,13 @@ include "db_connect.php";
 
         #main-product-div {
             border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        #main-product-div:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .not-data {
@@ -71,6 +81,62 @@ include "db_connect.php";
             transform: scale(1.05);
             box-shadow: 0 6px 18px rgba(0, 119, 204, 0.3);
             background: linear-gradient(135deg, #e0f7ff, #cceeff);
+        }
+
+        .wishlist-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid #e0e0e0;
+            z-index: 10;
+        }
+
+        .wishlist-icon:hover {
+            background: white;
+            border-color: #dc3545;
+            transform: scale(1.1);
+        }
+
+        .wishlist-icon.active {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .wishlist-icon i {
+            font-size: 1.2rem;
+        }
+
+        .login-popup {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-icon:hover .login-popup {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .card-img-container {
+            position: relative;
         }
     </style>
 </head>
@@ -139,13 +205,43 @@ include "db_connect.php";
                         $product_desc = $row['product_desc'];
                         $product_price = $row['product_price'];
 
+                        // Check if product is in user's wishlist
+                        $is_in_wishlist = false;
+                        if (isset($_SESSION['email'])) {
+                            $user_email = $_SESSION['email'];
+                            $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
+                            $user_res = mysqli_query($conn, $user_query);
+                            $user_data = mysqli_fetch_assoc($user_res);
+                            $user_id = $user_data['id'];
+
+                            $wishlist_check = "SELECT * FROM wishlist WHERE user_id='$user_id' AND prod_id='$product_id'";
+                            $wishlist_result = mysqli_query($conn, $wishlist_check);
+                            $is_in_wishlist = (mysqli_num_rows($wishlist_result) > 0);
+                        }
+
                         echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3">
                                 <div class="card h-100 shadow-sm" id="main-product-div">
-                                    <div class="p-3">
-                                        <img src="./admin/images/product_img/' . htmlspecialchars($productimage) . '"
-                                            class="card-img-top img-fluid" alt="Product Image"
-                                            style="height: 250px; object-fit: contain; border-radius: 5px;">
-                                    </div>
+                                    <div class="card-img-container">
+                                        <div class="p-3">
+                                            <img src="./admin/images/product_img/' . htmlspecialchars($productimage) . '"
+                                                class="card-img-top img-fluid" alt="Product Image"
+                                                style="height: 250px; object-fit: contain; border-radius: 5px;">
+                                        </div>';
+
+                        // Wishlist icon
+                        if (isset($_SESSION['email'])) {
+                            echo '<div class="wishlist-icon ' . ($is_in_wishlist ? 'active' : '') . '" 
+                                      onclick="toggleWishlist(' . $product_id . ', this)">
+                                    <i class="bi bi-heart' . ($is_in_wishlist ? '-fill' : '') . '"></i>
+                                  </div>';
+                        } else {
+                            echo '<div class="wishlist-icon" data-bs-toggle="modal" data-bs-target="#signInModal">
+                                    <i class="bi bi-heart"></i>
+                                    <div class="login-popup">Login to Wishlist</div>
+                                  </div>';
+                        }
+
+                        echo '</div>
                                     <div class="card-body">
                                         <h5 class="card-title text-primary">' . htmlspecialchars($product_name) . '</h5>
                                         <p class="card-text">' . substr($product_desc, 0, 90) . '...</p>
@@ -220,6 +316,54 @@ include "db_connect.php";
 
     <?php require_once "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function toggleWishlist(productId, element) {
+            $.ajax({
+                url: 'partials/wishlist_ajax.php',
+                type: 'POST',
+                data: {
+                    product_id: productId,
+                    action: 'toggle'
+                },
+                success: function (response) {
+                    var result = JSON.parse(response);
+                    if (result.status === 'success') {
+                        var icon = $(element).find('i');
+                        if (result.action === 'added') {
+                            $(element).addClass('active');
+                            icon.removeClass('bi-heart').addClass('bi-heart-fill');
+                        } else {
+                            $(element).removeClass('active');
+                            icon.removeClass('bi-heart-fill').addClass('bi-heart');
+                        }
+
+                        // Update wishlist count in header
+                        if (result.wishlist_count !== undefined) {
+                            $('.wishlist-count').text('(' + result.wishlist_count + ')');
+                        }
+                    } else {
+                        alert(result.message);
+                    }
+                },
+                error: function () {
+                    alert('Error occurred. Please try again.');
+                }
+            });
+        }
+
+
+        $(document).ready(function () {
+            $('.wishlist-icon[data-bs-toggle="modal"]').hover(
+                function () {
+                    $(this).addClass('active');
+                },
+                function () {
+                    $(this).removeClass('active');
+                }
+            );
+        });
+    </script>
 
 </body>
 
