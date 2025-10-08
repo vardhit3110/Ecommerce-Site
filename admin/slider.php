@@ -352,6 +352,13 @@ if ($email == true) {
                 </a>
             </li>
 
+            <li>
+                <a href="feedbackList.php">
+                    <i class="fa-solid fa-messages"></i>
+                    <span>Feedback</span>
+                </a>
+            </li>
+
 
             <li class="logout">
                 <a href="partials/_logout.php">

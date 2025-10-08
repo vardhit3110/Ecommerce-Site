@@ -87,7 +87,7 @@
         require "db_connect.php";
 
         $counts = [];
-        $tables = ['userdata', 'categories', 'product', 'wishlist'];
+        $tables = ['userdata', 'categories', 'product', 'wishlist', 'feedback'];
         foreach ($tables as $table) {
             $existSql = "SELECT * FROM $table";
             $result = mysqli_query($conn, $existSql);
@@ -117,6 +117,10 @@
                     <div class="dashboard-card dashboard-card4">
                         <h3><strong>Total Wishlist</strong></h3>
                         <h4><?php echo $counts['wishlist']; ?></h4>
+                    </div>
+                    <div class="dashboard-card dashboard-card4">
+                        <h3><strong>Total Feedback</strong></h3>
+                        <h4><?php echo $counts['feedback']; ?></h4>
                     </div>
                 </div>
 

@@ -101,14 +101,17 @@ require "db_connect.php";
     }
 
     nav a {
-      text-decoration: none;
+      text-decoration: none !important;
       color: #fff;
       font-weight: 500;
       transition: color 0.3s;
+      border-bottom: none !important;
     }
 
     nav a:hover {
       color: #f39c12;
+      text-decoration: none !important;
+      border-bottom: none !important;
     }
 
     .auth-buttons {
@@ -300,8 +303,10 @@ require "db_connect.php";
       ?>
 
 
-      <a href="#">About Us</a>
+      <a href="about.php">About Us</a>
       <a href="#">Contact Us</a>
+      <a href="<?php echo isset($_SESSION['email']) ? 'feedback.php' : '#'; ?>" onclick="<?php if (!isset($_SESSION['email']))
+               echo 'alert(\'Please log in to give feedback.\')'; ?>">Feedback</a>
     </nav>
 
     <?php if (isset($_SESSION['email'])): ?>
@@ -329,7 +334,7 @@ require "db_connect.php";
           $count_row = mysqli_fetch_assoc($count_res);
           $wishlist_count = $count_row['total'];
           ?>
-          
+
           <a href="wishlist.php"><i class="fa-solid fa-heart"></i> Wishlist
             &nbsp; <span class="text-danger wishlist-count"><b>(<?php echo $wishlist_count; ?>)</b></span>
           </a>
@@ -567,7 +572,7 @@ if (isset($_POST['login'])) {
     if (password_verify($password, $row['password'])) {
 
       if ($row['status'] == 1) {
-        $_SESSION['id'] = $row['id'];
+        // $_SESSION['id'] = $row['id'];
         $_SESSION['email'] = $row['email'];
         $_SESSION['username'] = $row['username'];
         $_SESSION['status'] = $row['status'];
