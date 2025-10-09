@@ -218,7 +218,7 @@ if ($email == true) {
         }
 
         .nav-links .logout {
-            bottom: -50vh;
+            bottom: -48vh;
         }
 
         .content-area {

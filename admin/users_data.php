@@ -30,6 +30,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <?php require "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --accent: #7209b7;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         .container {
             background-color: white;
             border-radius: 20px;
@@ -350,8 +365,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     </td>';
 
                                 echo "<td>
-                                    <a href='?id={$row['id']}' class='btn btn-primary  me-2'>Edit</a>
-                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-danger' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                    <a href='?id={$row['id']}' class='btn btn-primary btn-sm me-2'>Edit</a>
+                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
                                   </td>";
                                 echo "</tr>";
                             }

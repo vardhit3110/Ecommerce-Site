@@ -339,6 +339,10 @@ require "db_connect.php";
             &nbsp; <span class="text-danger wishlist-count"><b>(<?php echo $wishlist_count; ?>)</b></span>
           </a>
 
+          <a href="notifications.php"><i class="fa-solid fa-bell"></i> Notification<span
+              class="text-danger wishlist-count"><b>(0)</b></span>
+          </a>
+
           <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
         </div>
       </div>

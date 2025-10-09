@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 08, 2025 at 06:29 AM
+-- Generation Time: Oct 09, 2025 at 01:32 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,6 +64,41 @@ INSERT INTO `categories` (`categorie_id`, `categorie_name`, `categorie_image`, `
 (1, 'Mobile Phones', 'Mobile Phones_1758869905.jpg', 'Latest smartphones from top brands - find your perfect phone today.', '1', '2025-09-26 12:28:25'),
 (2, 'Mobile Accessories', 'Mobile Accessories_1758869947.jpg', 'Screen protectors, stylish back covers, and magnetic phone holders - protect, style.', '1', '2025-09-26 12:29:07'),
 (3, 'Buds', 'Buds_1758870014.jpg', 'Auto pair. Noise cancel. Touch control. Tiny buds, big performance - perfect for work & workouts.', '1', '2025-09-26 12:30:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `feedback`
+--
+
+CREATE TABLE `feedback` (
+  `feedback_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `rating` enum('1','2','3','4','5') NOT NULL COMMENT '1 = Worst, 5 = Best',
+  `comment` varchar(255) NOT NULL,
+  `submision_date` date NOT NULL DEFAULT current_timestamp(),
+  `reply_comment` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `feedback`
+--
+
+INSERT INTO `feedback` (`feedback_id`, `user_id`, `rating`, `comment`, `submision_date`, `reply_comment`) VALUES
+(1, 1, '5', 'Website ka design bohot simple aur fast hai, use karne mein maza aaya!', '2025-10-09', NULL),
+(2, 2, '4', 'Mujhe mobile site ka interface kaafi user-friendly laga. Great job!', '2025-10-09', NULL),
+(3, 3, '5', 'Page load time fast hai, experience kaafi smooth tha.', '2025-10-09', NULL),
+(4, 4, '3', 'Site theek hai lekin thoda aur fast ho sakti hai.', '2025-10-09', NULL),
+(5, 5, '2', 'Website bar bar reload ho rahi thi, please isey fix karein.', '2025-10-09', NULL),
+(6, 6, '4', 'Product images aur zoom option behtar ho sakta hai.', '2025-10-09', NULL),
+(7, 7, '1', 'Checkout mein error aaya, order complete nahi ho saka.', '2025-10-09', NULL),
+(8, 8, '4', 'Mujhe jo chahiye tha, easily mil gaya. Website acchi lagi!', '2025-10-09', NULL),
+(9, 9, '3', 'Thoda aur categories ka filter add karein toh search easy ho jayegi.', '2025-10-09', NULL),
+(10, 10, '5', 'Checkout process asaan aur quick tha. Shukriya!', '2025-10-09', NULL),
+(11, 12, '2', 'Some links mobile pe click nahi ho rahe the, issue check karein.', '2025-10-09', NULL),
+(12, 13, '5', 'Mujhe product ka detail page open karne mein problem hui.', '2025-10-09', NULL),
+(13, 16, '4', 'Chat support ka option add karein, helpful rahega.', '2025-10-09', NULL),
+(14, 17, '3', 'Mobile view thoda aur responsive ho toh maza aa jaye.', '2025-10-09', NULL);
 
 -- --------------------------------------------------------
 
@@ -156,11 +191,10 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 (5, 'anil', 'anil@gmail.com', '$2y$10$PIAUkD3hjhXLPoc9lBCBleLWBNDGVQbbpAUZaN2klpxxGd.v3838C', '9879879872', NULL, 'surat', NULL, '1', '2'),
 (7, 'dixitpatel', 'dixitpatel@gmail.com', '$2y$10$a0XpIEU3korUVQ3U86n5A..A4GW0orTGRzt/UFevoq2lgE7LlAfX.', '9876543210', 'hirabaugh, surat.', 'surat', 'dixitpatel_1759745881.png', '1', '1'),
 (8, 'vardhit', 'vardhit31@gmail.com', '$2y$10$0.Xphxy3/m3nqoM.3j2BAesybkcpxHrXLYHQKY4LJdHqyRN543uYa', '', NULL, '', NULL, '', '1'),
-(9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', NULL, '', NULL, '', '2'),
+(9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', NULL, '', NULL, '', '1'),
 (10, 'dhruv321', 'dhruv321@gmail.com', '$2y$10$GLkGP8f2XraRWU9E.x1WU.sbXMXQCbc6eH3h224jJj0vqFl.yVh2S', '', NULL, '', NULL, '', '1'),
 (12, 'pateldix', 'pateldix@gmail.com', '$2y$10$7kiih7PgCM3zmi68q7.LVOGY6WjoShfHz97IAjd/uPmMh1u6OUs0O', '9876543210', NULL, 'gandhinagar', NULL, '2', '1'),
 (13, 'abc', 'abc@gmail.com', '$2y$10$yu5/obd1ogq2Yf3VQrvaP.wLA7c.XXTjvRud2c/kZXwTvTg6BjIii', '9513578524', NULL, 'bharuch', NULL, '2', '1'),
-(15, 'xyz', 'xyz@gmail.com', '', '1234567890', NULL, 'xyz', NULL, '', '2'),
 (16, 'dev', 'dev@gmail.com', '$2y$10$hPOQSvgt0R4KoRM5U4GhFOBQNJkcc1v5EO/stAlQRc5.aUpRVt2fi', NULL, NULL, NULL, NULL, NULL, '1'),
 (17, 'kishan', 'kishan@gmail.com', '$2y$10$vN9AF1oBXWr0l1kO97qN/OLDClQdqyM6rUjLn2n2RR3jmfemGfnQ6', '9409601795', '32, sarita darshan soc., hirabaugh, surat.', 'surat', 'kishan_1759746626.png', '1', '1');
 
@@ -182,11 +216,38 @@ CREATE TABLE `wishlist` (
 --
 
 INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
-(3, 17, 1, '2025-10-07 16:51:48'),
 (6, 4, 6, '2025-10-07 17:07:39'),
-(8, 7, 1, '2025-10-07 17:29:22'),
 (9, 7, 8, '2025-10-07 17:29:22'),
-(10, 7, 15, '2025-10-07 17:29:39');
+(15, 7, 15, '2025-10-08 11:33:37'),
+(29, 17, 15, '2025-10-08 11:50:01'),
+(40, 7, 5, '2025-10-08 12:01:18'),
+(41, 7, 6, '2025-10-08 12:01:18'),
+(42, 7, 7, '2025-10-08 12:01:19'),
+(43, 7, 12, '2025-10-08 12:01:20'),
+(45, 7, 1, '2025-10-08 14:03:14'),
+(46, 16, 1, '2025-10-08 14:46:00'),
+(47, 16, 2, '2025-10-08 14:46:02'),
+(48, 16, 4, '2025-10-08 14:46:03'),
+(49, 16, 8, '2025-10-08 14:46:07'),
+(50, 16, 16, '2025-10-08 14:46:10'),
+(51, 16, 7, '2025-10-08 14:46:20'),
+(52, 16, 13, '2025-10-08 14:46:24'),
+(53, 12, 3, '2025-10-08 14:48:36'),
+(54, 12, 10, '2025-10-08 14:48:38'),
+(55, 12, 8, '2025-10-08 14:48:41'),
+(56, 12, 18, '2025-10-08 14:48:43'),
+(57, 12, 5, '2025-10-08 14:48:48'),
+(58, 12, 14, '2025-10-08 14:48:50'),
+(59, 9, 1, '2025-10-08 14:50:17'),
+(60, 9, 8, '2025-10-08 14:50:21'),
+(61, 9, 15, '2025-10-08 14:50:22'),
+(62, 9, 5, '2025-10-08 14:50:25'),
+(64, 7, 2, '2025-10-08 15:30:36'),
+(65, 7, 3, '2025-10-08 15:30:37'),
+(66, 7, 4, '2025-10-08 15:30:38'),
+(67, 10, 15, '2025-10-09 10:53:44'),
+(68, 10, 16, '2025-10-09 10:53:45'),
+(69, 10, 17, '2025-10-09 10:53:46');
 
 --
 -- Indexes for dumped tables
@@ -203,6 +264,13 @@ ALTER TABLE `admin`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`categorie_id`);
+
+--
+-- Indexes for table `feedback`
+--
+ALTER TABLE `feedback`
+  ADD PRIMARY KEY (`feedback_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `product`
@@ -248,6 +316,12 @@ ALTER TABLE `categories`
   MODIFY `categorie_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `feedback`
+--
+ALTER TABLE `feedback`
+  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
@@ -269,7 +343,7 @@ ALTER TABLE `userdata`
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- Constraints for dumped tables

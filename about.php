@@ -1,7 +1,7 @@
 <?php
 require "db_connect.php";
 
-// Calculate rating distribution
+
 $totalQuery = "SELECT COUNT(*) AS total FROM feedback";
 $totalResult = mysqli_query($conn, $totalQuery);
 $totalRow = mysqli_fetch_assoc($totalResult);
@@ -122,6 +122,26 @@ for ($i = 5; $i >= 1; $i--) {
             .owner-section img {
                 margin-bottom: 15px;
             }
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
