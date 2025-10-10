@@ -231,7 +231,6 @@ $userRow = mysqli_fetch_assoc($userResult);
             });
         });
 
-        // Go Back Button
         $("#goBackBtn").click(function () {
             $("#thankyouContainer").removeClass('active').hide();
             $("#feedbackForm").fadeIn(400);

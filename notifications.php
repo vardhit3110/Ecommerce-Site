@@ -302,12 +302,23 @@ if ($stmt) {
                                     </div>
                                     <div class="rating">
                                         <?php
-                                        for ($i = 1; $i <= $rating; $i++) {
-                                            echo '<span class="star"><i class="fas fa-star"></i></span>';
+                                        $totalStars = 5;
+                                        for ($i = 1; $i <= $totalStars; $i++) {
+                                            if ($i <= $rating) {
+                                                echo '<span class="star"><i class="fas fa-star"></i></span>';
+                                            } else {
+                                                echo '<span class="star"><i class="far fa-star"></i></span>';
+                                            }
                                         }
                                         ?>
                                     </div>
-                                    <span class="status-badge status-replied">Replied</span>
+                                    <?php
+                                    if (empty($reply_comment)) {
+                                        echo '<span class="status-badge status-pending">Pending</span>';
+                                    } else {
+                                        echo '<span class="status-badge status-replied">Replied</span>';
+                                    }
+                                    ?>
                                 </div>
                                 <div class="notification-body">
                                     <div class="user-comment">
@@ -316,12 +327,11 @@ if ($stmt) {
                                     <div class="admin-reply">
                                         <?php
                                         if (empty($reply_comment)) {
-                                            echo "Soon Admin Reply Your Feedback";
+                                            echo "Soon..!!!";
                                         } else {
                                             echo $reply_comment;
                                         }
                                         ?>
-
                                     </div>
                                 </div>
                             </div>

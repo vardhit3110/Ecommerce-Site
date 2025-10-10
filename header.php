@@ -340,7 +340,7 @@ require "db_connect.php";
           </a>
 
           <a href="notifications.php"><i class="fa-solid fa-bell"></i> Notification<span
-              class="text-danger wishlist-count"><b>(0)</b></span>
+              class="text-danger wishlist-count"></span>
           </a>
 
           <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>

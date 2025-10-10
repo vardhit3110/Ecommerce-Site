@@ -62,6 +62,50 @@ require "db_connect.php";
             text-overflow: ellipsis;
         }
 
+        .pagination {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            padding-left: 0;
+        }
+
+        .page-item {
+            margin: 0 4px;
+        }
+
+        .page-link {
+            display: block;
+            padding: 8px 12px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .page-item.active .page-link {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            cursor: default;
+        }
+
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            cursor: default;
+        }
+
+        .page-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .disabled:hover {
+            cursor: not-allowed;
+        }
+
         @media (max-width: 768px) {
             .desc-size {
                 max-width: 100% !important;
@@ -112,8 +156,11 @@ require "db_connect.php";
                                     </thead>
                                     <tbody>
                                         <?php
+                                        $total_data = 7;
+                                        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+                                        $offset = ($page - 1) * $total_data;
 
-                                        $stmt = mysqli_prepare($conn, "SELECT userdata.username, userdata.email, feedback.* FROM userdata JOIN feedback ON userdata.id = feedback.user_id WHERE feedback.reply_comment IS NULL");
+                                        $stmt = mysqli_prepare($conn, "SELECT userdata.username, userdata.email, feedback.* FROM userdata JOIN feedback ON userdata.id = feedback.user_id WHERE feedback.reply_comment IS NULL LIMIT {$offset}, {$total_data}");
 
                                         if ($stmt) {
                                             mysqli_stmt_execute($stmt);
@@ -141,8 +188,9 @@ require "db_connect.php";
                                                                 style="font-size: 9px; display: flex; color: #dd0016ff;"><?php echo $submisiondate; ?></span>
                                                         </td>
                                                         <td class="text-center">
-                                                            <a href="#" class="btn btn-primary btn-sm"
-                                                                onclick="openReplyModal(<?php echo $user_id; ?>, '<?php echo addslashes($username); ?>', '<?php echo addslashes($comment); ?>')">Reply</a>
+                                                            <a href="feedbackReply.php?user_id=<?php echo $user_id; ?>"
+                                                                class="btn btn-primary btn-sm">Reply</a>
+
                                                             &nbsp;&nbsp;
                                                             <a href="./partials/_feedbackManage.php?user_id=<?php echo $user_id; ?>"
                                                                 class="btn btn-danger btn-sm"
@@ -162,42 +210,42 @@ require "db_connect.php";
                                         ?>
                                     </tbody>
                                 </table>
+                                <br>
+                                <!-- Feedback pagination-->
+                                <?php
+                                $sql = "SELECT * FROM feedback";
+                                $result = mysqli_query($conn, $sql);
+                                if (mysqli_num_rows($result) > 0) {
+
+                                    $total_user = mysqli_num_rows($result);
+                                    $total_page = ceil($total_user / $total_data);
+
+                                    echo '<ul class="pagination">';
+                                    if ($page <= 1) {
+                                        echo '<li class="page-item disabled"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
+                                    } else {
+                                        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
+                                    }
+                                    for ($i = 1; $i <= $total_page; $i++) {
+                                        if ($i == $page) {
+                                            $active = "active";
+                                        } else {
+                                            $active = "";
+                                        }
+                                        echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                                    }
+                                    if ($total_page <= $page) {
+                                        echo '<li class="page-item disabled"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
+                                    } else {
+                                        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
+                                    }
+                                    echo '</ul>';
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- Reply Modal -->
-        <div class="modal fade" id="replyModal" tabindex="-1" aria-labelledby="replyModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <form id="replyForm" method="POST">
-                    <div class="modal-content">
-                        <div class="modal-header bg-success text-white">
-                            <h5 class="modal-title" id="replyModalLabel">Send Reply to <span
-                                    id="user_name_display"></span></h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <input type="hidden" name="user_id" id="modal_user_id">
-                            <div class="mb-3">
-                                <label class="form-label"><strong>User's Comment:</strong></label>
-                                <div class="alert alert-info p-2 mb-3" id="user_comment_display"></div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="reply_message" class="form-label">Your Reply Message</label>
-                                <textarea class="form-control" name="reply_message" id="reply_message" rows="4"
-                                    placeholder="Type your reply here..." required></textarea>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <a href="./partials/_feedbackReply.php?user_id=<?php echo ""; ?>" type="submit"
-                                class="btn btn-success">Send Reply</a>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
 
@@ -209,15 +257,6 @@ require "db_connect.php";
     <script>
         function confirmDelete() {
             return confirm("Are you sure you want to delete this feedback?");
-        }
-
-        function openReplyModal(userId, username, comment) {
-            document.getElementById("modal_user_id").value = userId;
-            document.getElementById("user_name_display").textContent = username;
-            document.getElementById("user_comment_display").textContent = comment;
-
-            var replyModal = new bootstrap.Modal(document.getElementById('replyModal'));
-            replyModal.show();
         }
     </script>
 </body>

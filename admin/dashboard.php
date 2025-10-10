@@ -369,7 +369,7 @@
                                     <h4><?php ?>0</h4>
                                 </div>
                                 <div class="card-icon">
-                                    <i class="fas fa-shopping-cart" style="color: #1abc9;"></i>
+                                    <i class="fas fa-shopping-cart" style="color: #1abc9c;"></i>
                                 </div>
                             </div>
                         </div>
