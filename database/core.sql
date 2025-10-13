@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 09, 2025 at 01:32 PM
+-- Generation Time: Oct 13, 2025 at 03:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -85,13 +85,13 @@ CREATE TABLE `feedback` (
 --
 
 INSERT INTO `feedback` (`feedback_id`, `user_id`, `rating`, `comment`, `submision_date`, `reply_comment`) VALUES
-(1, 1, '5', 'Website ka design bohot simple aur fast hai, use karne mein maza aaya!', '2025-10-09', NULL),
+(1, 1, '5', 'Website ka design bohot simple aur fast hai, use karne mein maza aaya!', '2025-10-09', 'Thanks.!!'),
 (2, 2, '4', 'Mujhe mobile site ka interface kaafi user-friendly laga. Great job!', '2025-10-09', NULL),
 (3, 3, '5', 'Page load time fast hai, experience kaafi smooth tha.', '2025-10-09', NULL),
 (4, 4, '3', 'Site theek hai lekin thoda aur fast ho sakti hai.', '2025-10-09', NULL),
 (5, 5, '2', 'Website bar bar reload ho rahi thi, please isey fix karein.', '2025-10-09', NULL),
 (6, 6, '4', 'Product images aur zoom option behtar ho sakta hai.', '2025-10-09', NULL),
-(7, 7, '1', 'Checkout mein error aaya, order complete nahi ho saka.', '2025-10-09', NULL),
+(7, 7, '1', 'Checkout mein error aaya, order complete nahi ho saka.', '2025-10-09', 'Update Your Application.!!'),
 (8, 8, '4', 'Mujhe jo chahiye tha, easily mil gaya. Website acchi lagi!', '2025-10-09', NULL),
 (9, 9, '3', 'Thoda aur categories ka filter add karein toh search easy ho jayegi.', '2025-10-09', NULL),
 (10, 10, '5', 'Checkout process asaan aur quick tha. Shukriya!', '2025-10-09', NULL),
@@ -201,6 +201,39 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `viewcart`
+--
+
+CREATE TABLE `viewcart` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  `added_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `viewcart`
+--
+
+INSERT INTO `viewcart` (`id`, `user_id`, `product_id`, `quantity`, `added_at`) VALUES
+(1, 7, 3, 1, '2025-10-13 05:31:24'),
+(2, 7, 11, 1, '2025-10-13 05:33:38'),
+(3, 7, 2, 1, '2025-10-13 05:35:16'),
+(4, 7, 4, 1, '2025-10-13 05:39:27'),
+(7, 9, 14, 1, '2025-10-13 05:43:11'),
+(8, 9, 8, 1, '2025-10-13 05:43:31'),
+(9, 9, 6, 1, '2025-10-13 05:46:50'),
+(10, 9, 2, 1, '2025-10-13 06:00:03'),
+(11, 7, 9, 1, '2025-10-13 06:30:02'),
+(12, 7, 15, 1, '2025-10-13 07:20:17'),
+(13, 7, 16, 1, '2025-10-13 09:41:25'),
+(16, 17, 8, 1, '2025-10-13 11:30:01'),
+(17, 17, 15, 1, '2025-10-13 12:07:35');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `wishlist`
 --
 
@@ -217,12 +250,10 @@ CREATE TABLE `wishlist` (
 
 INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (6, 4, 6, '2025-10-07 17:07:39'),
-(9, 7, 8, '2025-10-07 17:29:22'),
 (15, 7, 15, '2025-10-08 11:33:37'),
 (29, 17, 15, '2025-10-08 11:50:01'),
 (40, 7, 5, '2025-10-08 12:01:18'),
 (41, 7, 6, '2025-10-08 12:01:18'),
-(42, 7, 7, '2025-10-08 12:01:19'),
 (43, 7, 12, '2025-10-08 12:01:20'),
 (45, 7, 1, '2025-10-08 14:03:14'),
 (46, 16, 1, '2025-10-08 14:46:00'),
@@ -231,7 +262,6 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (49, 16, 8, '2025-10-08 14:46:07'),
 (50, 16, 16, '2025-10-08 14:46:10'),
 (51, 16, 7, '2025-10-08 14:46:20'),
-(52, 16, 13, '2025-10-08 14:46:24'),
 (53, 12, 3, '2025-10-08 14:48:36'),
 (54, 12, 10, '2025-10-08 14:48:38'),
 (55, 12, 8, '2025-10-08 14:48:41'),
@@ -247,7 +277,17 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (66, 7, 4, '2025-10-08 15:30:38'),
 (67, 10, 15, '2025-10-09 10:53:44'),
 (68, 10, 16, '2025-10-09 10:53:45'),
-(69, 10, 17, '2025-10-09 10:53:46');
+(69, 10, 17, '2025-10-09 10:53:46'),
+(70, 7, 7, '2025-10-10 11:15:21'),
+(71, 17, 3, '2025-10-10 13:42:16'),
+(72, 17, 4, '2025-10-10 13:42:19'),
+(73, 17, 1, '2025-10-10 13:42:22'),
+(74, 17, 2, '2025-10-10 13:42:24'),
+(75, 7, 8, '2025-10-10 15:24:34'),
+(76, 9, 7, '2025-10-13 11:13:02'),
+(77, 9, 14, '2025-10-13 11:13:09'),
+(79, 9, 6, '2025-10-13 11:18:27'),
+(80, 9, 2, '2025-10-13 11:30:01');
 
 --
 -- Indexes for dumped tables
@@ -290,6 +330,14 @@ ALTER TABLE `subcriber`
 --
 ALTER TABLE `userdata`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `viewcart`
+--
+ALTER TABLE `viewcart`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_cart_entry` (`user_id`,`product_id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `wishlist`
@@ -340,10 +388,16 @@ ALTER TABLE `userdata`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
+-- AUTO_INCREMENT for table `viewcart`
+--
+ALTER TABLE `viewcart`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+
+--
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- Constraints for dumped tables
@@ -354,6 +408,13 @@ ALTER TABLE `wishlist`
 --
 ALTER TABLE `product`
   ADD CONSTRAINT `fk_product_category` FOREIGN KEY (`categorie_id`) REFERENCES `categories` (`categorie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `viewcart`
+--
+ALTER TABLE `viewcart`
+  ADD CONSTRAINT `viewcart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `userdata` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `viewcart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

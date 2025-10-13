@@ -163,6 +163,21 @@ session_start();
     ?>
 
     <main class="container py-4">
+
+        <!-- msg -->
+        <?php if (isset($_GET['msg'])): ?>
+            <div class="alert alert-<?php echo $_GET['msg'] === 'addedtocart' ? 'success' : 'warning'; ?> alert-dismissible fade show mt-3"
+                role="alert" id="CartAlert">
+                <?php
+                if ($_GET['msg'] === 'addedtocart')
+                    echo "Product successfully added to cart.";
+                elseif ($_GET['msg'] === 'alreadyincart')
+                    echo "Product already in your cart.";
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
         <div class="col-lg-2 text-center my-5 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
             border-top: 3px solid #0077cc; border-bottom: 3px solid #0077cc;
             border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease;">
@@ -249,9 +264,20 @@ session_start();
                                     <ul class="list-group list-group-flush">
                                         <li class="list-group-item"><b>Price:</b> ₹' . number_format((float) $product_price) . '</li>
                                     </ul>
-                                    <div class="card-body text-center">
-                                        <a href="#" class="btn btn-primary me-2"><i class="fa-solid fa-cart-plus"></i> Add to Cart</a>
-                                        <a href="viewproduct.php?Productid=' . $product_id . '" class="btn btn-success">Quick View</a>
+                                    <div class="card-body text-center">';
+
+                        // Add to Cart button with login check
+                        if (isset($_SESSION['email'])) {
+                            echo '<a href="./partials/productList_add_to_cart.php?product_id=' . $product_id . '" class="btn btn-primary me-2">
+                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                  </a>';
+                        } else {
+                            echo '<button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#signInModal">
+                                    <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                  </button>';
+                        }
+
+                        echo '<a href="viewproduct.php?Productid=' . $product_id . '" class="btn btn-success">Quick View</a>
                                     </div>
                                 </div>
                             </div>';
@@ -362,6 +388,13 @@ session_start();
                     $(this).removeClass('active');
                 }
             );
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $('#CartAlert').slideUp(400);
+            }, 1000);
         });
     </script>
 

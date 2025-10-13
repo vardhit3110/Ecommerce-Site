@@ -12,6 +12,7 @@ include "db_connect.php";
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <style>
         #box-detail {
@@ -48,6 +49,23 @@ include "db_connect.php";
     <?php require_once "header.php"; ?>
 
     <main class="container py-4">
+
+        <!-- msg -->
+        <?php if (isset($_GET['msg'])): ?>
+            <div class="alert alert-<?php echo $_GET['msg'] === 'addedtocart' ? 'success' : 'warning'; ?> alert-dismissible fade show mt-3"
+                role="alert" id="CartAlert">
+                <?php
+                if ($_GET['msg'] === 'addedtocart')
+                    echo "Product successfully added to cart.";
+                elseif ($_GET['msg'] === 'alreadyincart')
+                    echo "Product already in your cart.";
+                ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php endif; ?>
+
+        <!-- msg end -->
+
         <div class="col-lg-2 text-center my-5 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
             border-top: 3px solid #0077cc; border-bottom: 3px solid #0077cc;
             border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease;">
@@ -113,7 +131,18 @@ include "db_connect.php";
 
                                 <h5 class="text-danger mb-3">₹<?php echo number_format((float) $product_price); ?></h5><br>
                                 <div class="mb-3">
-                                    <a href="#" class="btn btn-primary me-2"><i class="fa-solid fa-cart-plus"></i> Add to Cart</a>
+                                    <?php if (isset($_SESSION['email'])): ?>
+                                        <a href="./partials/add_to_cart.php?product_id=<?php echo $product_id; ?>"
+                                            class="btn btn-primary me-2">
+                                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                        </a>
+                                    <?php else: ?>
+                                        <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal"
+                                            data-bs-target="#signInModal">
+                                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                                        </button>
+                                    <?php endif; ?>
+
 
                                     <?php if (isset($_SESSION['email'])): ?>
                                         <button type="button"
@@ -187,6 +216,13 @@ include "db_connect.php";
                 }
             });
         }
+    </script>
+    <script>
+        $(document).ready(function () {
+            setTimeout(function () {
+                $('#CartAlert').slideUp(400);
+            }, 1000);
+        });
     </script>
 
 </body>

@@ -284,13 +284,14 @@ if ($stmt) {
 
             <body>
                 <?php include "header.php"; ?>
+                <br><br>
                 <div class="container">
                     <div class="notifications-content">
                         <div class="notifications-header">
                             <h1><i class="fa-solid fa-comments"></i> My Feedback</h1>
                         </div>
                         <div class="notifications-list">
-                            <!-- Feedback Item 1 - Username -->
+                            <!-- Feedback Item 1 - Username --> <br>
                             <div class="notification-item" data-status="replied">
                                 <div class="notification-header">
                                     <div class="user-info">
@@ -335,6 +336,7 @@ if ($stmt) {
                                     </div>
                                 </div>
                             </div>
+                            <br>
                         </div>
                         <?php
         }
@@ -347,6 +349,7 @@ if ($stmt) {
 ?>
         </div>
     </div>
+    <br><br>
     <?php include "footer.php"; ?>
 </body>
 

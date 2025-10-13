@@ -1,6 +1,8 @@
 <?php
 require "db_connect.php";
-@session_start();
+if (session_status() == PHP_SESSION_NONE) {
+  @session_start();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +11,8 @@ require "db_connect.php";
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MobileSite</title>
-  <?php require "links/icons.html"; ?>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
   <style>
@@ -33,7 +36,6 @@ require "db_connect.php";
     }
 
     .dropdown-toggle {
-
       background-color: transparent;
       color: white;
       text-decoration: none;
@@ -50,7 +52,6 @@ require "db_connect.php";
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       z-index: 1;
     }
-
 
     .dropdown-menu a {
       color: black;
@@ -172,6 +173,7 @@ require "db_connect.php";
     }
 
     .user-dropdown-btn:hover {
+      color: black;
       background-color: #f39c12;
     }
 
@@ -213,6 +215,185 @@ require "db_connect.php";
       display: block;
     }
 
+    /* Enhanced Cart Button Styles */
+    .cart-container {
+      position: relative;
+      margin-right: 15px;
+    }
+
+    .cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: 2px solid #f39c12;
+      border-radius: 30px;
+      padding: 8px 16px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      font-weight: 500;
+      position: relative;
+    }
+
+    .cart-btn:hover {
+      background-color: #f39c12;
+      color: #000;
+      text-decoration: none;
+    }
+
+    .cart-icon {
+      font-size: 18px;
+    }
+
+    .cart-count {
+      background-color: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      position: absolute;
+      top: -8px;
+      right: -5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Cart Dropdown Styles */
+    .cart-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 350px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      z-index: 1001;
+      display: none;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+
+    .cart-container:hover .cart-dropdown {
+      display: block;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .cart-dropdown-header {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      background-color: #f8f9fa;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-dropdown-header .view-all {
+      font-size: 14px;
+      color: #3498db;
+      text-decoration: none;
+      font-weight: normal;
+    }
+
+    .cart-dropdown-body {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      padding: 12px 15px;
+      border-bottom: 1px solid #f1f1f1;
+      transition: background 0.2s;
+    }
+
+    .cart-item:hover {
+      background-color: #f9f9f9;
+    }
+
+    .cart-item-img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-right: 12px;
+      border: 1px solid #eee;
+    }
+
+    .cart-item-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .cart-item-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 5px;
+      line-height: 1.3;
+    }
+
+    .cart-item-price {
+      font-weight: 600;
+      color: #e74c3c;
+      font-size: 15px;
+    }
+
+    .cart-dropdown-footer {
+      padding: 15px;
+      border-top: 1px solid #eee;
+      background-color: #f8f9fa;
+      text-align: center;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .cart-dropdown-footer .btn {
+      width: 100%;
+      background-color: #f39c12;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    .cart-dropdown-footer .btn:hover {
+      background-color: #e67e22;
+    }
+
+    .empty-cart {
+      padding: 30px 15px;
+      text-align: center;
+      color: #7f8c8d;
+    }
+
+    .empty-cart i {
+      font-size: 40px;
+      margin-bottom: 10px;
+      color: #bdc3c7;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
     @media (max-width: 768px) {
       .menu-toggle {
         display: block;
@@ -220,7 +401,8 @@ require "db_connect.php";
 
       nav,
       .auth-buttons,
-      .user-dropdown {
+      .user-dropdown,
+      .cart-container {
         width: 100%;
         flex-direction: column;
         display: none;
@@ -230,7 +412,8 @@ require "db_connect.php";
 
       nav.active,
       .auth-buttons.active,
-      .user-dropdown.active {
+      .user-dropdown.active,
+      .cart-container.active {
         display: flex;
       }
 
@@ -238,6 +421,25 @@ require "db_connect.php";
         position: static;
         box-shadow: none;
         width: 100%;
+      }
+
+      .cart-dropdown {
+        position: static;
+        width: 100%;
+        margin-top: 10px;
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+
+      .header-right {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .cart-btn {
+        width: 100%;
+        justify-content: center;
       }
 
       header {
@@ -270,6 +472,7 @@ require "db_connect.php";
       <a href="home.php">Home</a>
 
       <?php
+
       $showCategories = "SELECT * FROM categories WHERE categorie_status=?";
       $stmt = mysqli_prepare($conn, $showCategories);
 
@@ -302,7 +505,6 @@ require "db_connect.php";
       }
       ?>
 
-
       <a href="about.php">About Us</a>
       <a href="#">Contact Us</a>
       <a href="<?php echo isset($_SESSION['email']) ? 'feedback.php' : '#'; ?>" onclick="<?php if (!isset($_SESSION['email']))
@@ -310,50 +512,183 @@ require "db_connect.php";
     </nav>
 
     <?php if (isset($_SESSION['email'])): ?>
-      <!-- User dropdown when logged in -->
-      <div class="user-dropdown" id="user-dropdown">
-        <button class="user-dropdown-btn">
-          <img src="" alt="User" class="user-avatar"
-            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAxMmMxLjY1IDAgMy0xLjM1IDMtM3MtMS4zNS0zLTMtMy0zIDEuMzUtMyAzIDEuMzUgMyAzIDN6bTAgMWMtMS42NiAwLTUgLjgzLTUgMi41VjE3aDEwdjEuNWMwLTEuNjctMy4zNC0yLjUtNS0yLjV6Ii8+PC9zdmc+'">
-          <span><?php echo $_SESSION['username']; ?></span>
-          <i class="fa fa-chevron-down"></i>
-        </button>
-        <div class="user-dropdown-content">
-          <a href="viewprofile.php?email=<?php echo $_SESSION['email']; ?>"><i class="fa fa-user"></i> Profile</a>
+      <div class="header-right">
+        <?php
+        // Get user ID
+        $user_email = $_SESSION['email'];
+        $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
+        $user_res = mysqli_query($conn, $user_query);
+        $user_data = mysqli_fetch_assoc($user_res);
+        $user_id = $user_data['id'];
 
-          <!-- wishlist Count -->
-          <?php
-          $user_email = $_SESSION['email'];
-          $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
-          $user_res = mysqli_query($conn, $user_query);
-          $user_data = mysqli_fetch_assoc($user_res);
-          $user_id = $user_data['id'];
+        // Get cart count
+        $cart_count_query = "SELECT COUNT(*) AS total FROM viewcart WHERE user_id='$user_id'";
+        $cart_count_res = mysqli_query($conn, $cart_count_query);
+        $cart_count_row = mysqli_fetch_assoc($cart_count_res);
+        $cart_count = $cart_count_row['total'];
 
-          $count_query = "SELECT COUNT(*) AS total FROM wishlist WHERE user_id='$user_id'";
-          $count_res = mysqli_query($conn, $count_query);
-          $count_row = mysqli_fetch_assoc($count_res);
-          $wishlist_count = $count_row['total'];
-          ?>
 
-          <a href="wishlist.php"><i class="fa-solid fa-heart"></i> Wishlist
-            &nbsp; <span class="text-danger wishlist-count"><b>(<?php echo $wishlist_count; ?>)</b></span>
+        $product_table_name = null;
+        $table_check_query = "SHOW TABLES LIKE 'product'";
+        $table_res = mysqli_query($conn, $table_check_query);
+
+        if (mysqli_num_rows($table_res) > 0) {
+          $product_table_name = 'product';
+        } else {
+          // Try other possible table names
+          $possible_tables = ['produc'];
+          foreach ($possible_tables as $table) {
+            $table_check_query = "SHOW TABLES LIKE '$table'";
+            $table_res = mysqli_query($conn, $table_check_query);
+            if (mysqli_num_rows($table_res) > 0) {
+              $product_table_name = $table;
+              break;
+            }
+          }
+        }
+
+        $cart_items = [];
+        $cart_total = 0;
+
+        if ($product_table_name) {
+
+          $cart_items_query = "SELECT vc.*, p.product_name, p.product_price, p.product_image FROM viewcart vc JOIN $product_table_name p ON vc.product_id = p. product_id WHERE vc.user_id = '$user_id'";
+        } else {
+
+          $cart_items_query = "SELECT * FROM viewcart WHERE user_id = '$user_id'";
+        }
+
+        $cart_items_res = mysqli_query($conn, $cart_items_query);
+
+        if ($cart_items_res && mysqli_num_rows($cart_items_res) > 0) {
+          while ($item = mysqli_fetch_assoc($cart_items_res)) {
+
+            $product_id = $item['product_id'];
+            $product_name = isset($item['product_name']) ? $item['product_name'] : 'Product ' . $product_id;
+            $product_price = isset($item['product_price']) ? floatval($item['product_price']) : 0;
+            $quantity = isset($item['quantity']) ? intval($item['quantity']) : 1;
+
+            $product_image = 'https://via.placeholder.com/60?text=No+Image';
+
+            // if (isset($item['product_image']) && !empty($item['product_image'])) {
+            //   $img_path = $item['product_image'];
+      
+            //   if (filter_var($img_path, FILTER_VALIDATE_URL)) {
+            //     $product_image = $img_path;
+            //   } else if (strpos($img_path, '/') === 0) {
+            //     $product_image = 'http://' . $_SERVER['HTTP_HOST'] . $img_path;
+            //   } else {
+            //     $product_image = 'http://' . $_SERVER['HTTP_HOST'] . '/' . $img_path;
+            //   }
+            // }
+      
+            $item_total = $product_price * $quantity;
+            $platform_fee = 20;
+            $cart_total += $item_total;
+
+            $cart_items[] = [
+              'product_id' => $product_id,
+              'product_name' => $product_name,
+              'product_price' => $product_price,
+              'product_image' => $product_image,
+              'quantity' => $quantity,
+              'item_total' => $item_total
+            ];
+          }
+        }
+        ?>
+
+        <!-- Enhanced Cart Button with Dropdown -->
+        <div class="cart-container" id="cart-container">
+          <a href="viewcart.php" class="cart-btn">
+            <i class="fa fa-shopping-cart cart-icon"></i>
+            Cart
+            <?php if ($cart_count > 0): ?>
+              <span class="cart-count"><?php echo $cart_count; ?></span>
+            <?php endif; ?>
           </a>
 
-          <a href="notifications.php"><i class="fa-solid fa-bell"></i> Notification<span
-              class="text-danger wishlist-count"></span>
-          </a>
+          <!-- Cart Dropdown -->
+          <div class="cart-dropdown">
+            <div class="cart-dropdown-header">
+              <span>Your Cart (<?php echo $cart_count; ?>)</span>
+              <a href="viewcart.php" class="view-all">View All</a>
+            </div>
 
-          <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
+            <div class="cart-dropdown-body">
+              <?php if ($cart_count > 0): ?>
+                <?php foreach ($cart_items as $item): ?>
+                  <div class="cart-item">
+                    <img src="../admin/images/product_img/<?php echo $item['product_image']; ?>"
+                      alt="<?php echo $item['product_name']; ?>" class="cart-item-img">
+                    <div class="cart-item-details">
+                      <div class="cart-item-name"><?php echo $item['product_name']; ?></div>
+                      <div class="cart-item-price">$<?php echo number_format($item['product_price'], 2); ?> x
+                        <?php echo $item['quantity']; ?>
+                      </div>
+                    </div>
+                  </div>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <div class="empty-cart">
+                  <i class="fa fa-shopping-cart"></i>
+                  <p>Your cart is empty</p>
+                </div>
+              <?php endif; ?>
+            </div>
+
+            <?php if ($cart_count > 0): ?>
+              <div class="cart-dropdown-footer">
+                <div class="cart-total">
+                  <span>Total:</span>
+                  <span>$<?php echo number_format($cart_total, 2); ?></span>
+                </div>
+                <!-- <a href="viewcart.php" class="btn">Proceed to Checkout</a> -->
+              </div>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <!-- User Dropdown -->
+        <div class="user-dropdown" id="user-dropdown">
+          <button class="user-dropdown-btn">
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAxMmMxLjY1IDAgMy0xLjM1IDMtM3MtMS4zNS0zLTMtMy0zIDEuMzUtMyAzIDEuMzUgMyAzIDN6bTAgMWMtMS42NiAwLTUgLjgzLTUgMi41VjE3aDEwdjEuNWMwLTEuNjctMy4zNC0yLjUtNS0yLjV6Ii8+PC9zdmc+"
+              alt="User" class="user-avatar">
+            <span><?php echo $_SESSION['username']; ?></span>
+            <i class="fa fa-chevron-down"></i>
+          </button>
+          <div class="user-dropdown-content">
+            <a href="viewprofile.php?email=<?php echo $_SESSION['email']; ?>"><i class="fa fa-user"></i> Profile</a>
+
+            <!-- wishlist Count -->
+            <?php
+            $count_query = "SELECT COUNT(*) AS total FROM wishlist WHERE user_id='$user_id'";
+            $count_res = mysqli_query($conn, $count_query);
+            $count_row = mysqli_fetch_assoc($count_res);
+            $wishlist_count = $count_row['total'];
+            ?>
+
+            <a href="wishlist.php"><i class="fa-solid fa-heart"></i> Wishlist
+              &nbsp; <span class="text-danger wishlist-count"><b>(<?php echo $wishlist_count; ?>)</b></span>
+            </a>
+
+            <a href="userfeedback.php"><i class="fa-solid fa-star"></i> Your Feedback<span
+                class="text-danger wishlist-count"></span>
+            </a>
+
+            <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
+          </div>
         </div>
       </div>
     <?php else: ?>
-
       <div class="auth-buttons" id="auth-buttons">
         <button class="sign-in" data-bs-toggle="modal" data-bs-target="#signInModal">Sign In</button>
         <button class="sign-up" data-bs-toggle="modal" data-bs-target="#signUpModal">Sign Up</button>
       </div>
     <?php endif; ?>
   </header>
+
 
   <!-- Sign Up Modal -->
   <div class="modal fade" id="signUpModal" tabindex="-1" aria-labelledby="signUpModalLabel" aria-hidden="true">
@@ -366,7 +701,6 @@ require "db_connect.php";
           </div>
 
           <div class="modal-body">
-
             <div class="mb-3">
               <label for="username"><i class="fa fa-user"></i> User Name</label>
               <input type="text" name="username" id="username" class="form-control" placeholder="Enter Your Name"
@@ -390,9 +724,8 @@ require "db_connect.php";
               I have an Account <a href="#" data-bs-toggle="modal" data-bs-target="#signInModal"
                 style="text-decoration: none;">Login</a>
             </p>
-            <button type="submit" class="btn btn-success" name="register" style="font-weight: 600;">
-              Create Account
-            </button>
+            <button type="submit" class="btn btn-success" name="register" style="font-weight: 600;">Create
+              Account</button>
           </div>
         </form>
       </div>
@@ -409,7 +742,6 @@ require "db_connect.php";
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-
             <div class="col-mb-3">
               <label for="email"><i class="fa fa-envelope"></i> Email</label>
               <input type="email" name="email" id="email" class="form-control" placeholder="Enter Your Email" required>
@@ -422,7 +754,6 @@ require "db_connect.php";
                 placeholder="Enter Your Password" required>
               <div id="passwordError" class="error"></div>
             </div>
-
           </div>
           <div class="modal-footer d-flex justify-content-between align-items-center w-100">
             <p class="mb-0" style="font-weight: 600; color: navy;">
@@ -500,12 +831,12 @@ require "db_connect.php";
         }
       });
     });
-  </script>
-  <script>
+
     function toggleMenu() {
       const nav = document.getElementById("main-nav");
       const auth = document.getElementById("auth-buttons");
       const userDropdown = document.getElementById("user-dropdown");
+      const cartContainer = document.getElementById("cart-container");
 
       nav.classList.toggle("active");
 
@@ -515,6 +846,10 @@ require "db_connect.php";
 
       if (userDropdown) {
         userDropdown.classList.toggle("active");
+      }
+
+      if (cartContainer) {
+        cartContainer.classList.toggle("active");
       }
     }
   </script>
@@ -531,7 +866,6 @@ if (isset($_POST['register'])) {
   $email = trim($_POST['email']);
   $password = $_POST['password'];
 
-
   $check_email = "SELECT * FROM userdata WHERE email = ?";
   $stmt = mysqli_prepare($conn, $check_email);
   mysqli_stmt_bind_param($stmt, "s", $email);
@@ -541,7 +875,6 @@ if (isset($_POST['register'])) {
   if (mysqli_num_rows($result_email) > 0) {
     echo "<script>alert('Email Already Registered');</script>";
   } else {
-
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
     $reg_query = "INSERT INTO userdata (username, email, password) VALUES (?, ?, ?)";
@@ -558,12 +891,9 @@ if (isset($_POST['register'])) {
 }
 
 /* sign in model */
-
 if (isset($_POST['login'])) {
-
   $email = trim($_POST['email']);
   $password = trim($_POST['password']);
-
 
   $stmt = mysqli_prepare($conn, "SELECT username, email, password, status FROM userdata WHERE email = ?");
   mysqli_stmt_bind_param($stmt, "s", $email);
@@ -574,9 +904,7 @@ if (isset($_POST['login'])) {
     $row = mysqli_fetch_assoc($result);
 
     if (password_verify($password, $row['password'])) {
-
       if ($row['status'] == 1) {
-        // $_SESSION['id'] = $row['id'];
         $_SESSION['email'] = $row['email'];
         $_SESSION['username'] = $row['username'];
         $_SESSION['status'] = $row['status'];
@@ -586,11 +914,9 @@ if (isset($_POST['login'])) {
       } else {
         echo "<script>alert('Login failed. This account has been blocked.');</script>";
       }
-
     } else {
       echo "<script>alert('Incorrect password.');</script>";
     }
-
   } else {
     echo "<script>alert('Email not registered.');</script>";
   }
