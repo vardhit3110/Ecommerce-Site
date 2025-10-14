@@ -1,42 +1,53 @@
 <?php
-session_start();
-include "db_connect.php";
-
-if (!isset($_SESSION['username'])) {
-    echo json_encode(['success' => false, 'message' => 'User not logged in']);
-    exit();
+require "db_connect.php";
+if (session_status() == PHP_SESSION_NONE) {
+    @session_start();
 }
 
-if (isset($_POST['cart_id']) && isset($_POST['change'])) {
+header('Content-Type: application/json');
+
+if (!isset($_SESSION['email'])) {
+    echo json_encode(['success' => false, 'message' => 'Not logged in']);
+    exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $cart_id = $_POST['cart_id'];
-    $change = intval($_POST['change']);
-    
-    // Get current quantity
-    $query = "SELECT quantity FROM viewcart WHERE id = ?";
-    $stmt = mysqli_prepare($conn, $query);
-    mysqli_stmt_bind_param($stmt, "i", $cart_id);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-    $cart_item = mysqli_fetch_assoc($result);
-    
-    $new_quantity = $cart_item['quantity'] + $change;
-    
+    $new_quantity = intval($_POST['quantity']);
+
+    $user_email = $_SESSION['email'];
+    $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
+    $user_res = mysqli_query($conn, $user_query);
+    $user_data = mysqli_fetch_assoc($user_res);
+    $user_id = $user_data['id'];
+
     if ($new_quantity < 1) {
-        echo json_encode(['success' => false, 'message' => 'Quantity cannot be less than 1']);
-        exit();
+        echo json_encode(['success' => false, 'message' => 'Invalid quantity', 'old_quantity' => $current_quantity]);
+        exit;
     }
-    
-    // Update quantity
-    $update_query = "UPDATE viewcart SET quantity = ? WHERE id = ?";
-    $update_stmt = mysqli_prepare($conn, $update_query);
-    mysqli_stmt_bind_param($update_stmt, "ii", $new_quantity, $cart_id);
-    
-    if (mysqli_stmt_execute($update_stmt)) {
-        echo json_encode(['success' => true]);
+
+    $update_query = "UPDATE viewcart SET quantity = '$new_quantity' WHERE id = '$cart_id' AND user_id = '$user_id'";
+
+    if (mysqli_query($conn, $update_query)) {
+        $cart_total_query = "SELECT SUM(vc.quantity * p.product_price) as total FROM viewcart vc JOIN product p ON vc.product_id = p.product_Id WHERE vc.user_id = '$user_id'";
+        $cart_total_res = mysqli_query($conn, $cart_total_query);
+        $cart_total_row = mysqli_fetch_assoc($cart_total_res);
+        $cart_total = number_format($cart_total_row['total'] ?? 0, 2);
+
+        $cart_count_query = "SELECT COUNT(*) as count FROM viewcart WHERE user_id = '$user_id'";
+        $cart_count_res = mysqli_query($conn, $cart_count_query);
+        $cart_count_row = mysqli_fetch_assoc($cart_count_res);
+        $cart_count = $cart_count_row['count'];
+
+        echo json_encode([
+            'success' => true,
+            'cart_total' => $cart_total,
+            'cart_count' => $cart_count
+        ]);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Database update failed']);
+        echo json_encode(['success' => false, 'message' => 'Database error']);
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'Invalid parameters']);
+    echo json_encode(['success' => false, 'message' => 'Invalid request']);
 }
 ?>

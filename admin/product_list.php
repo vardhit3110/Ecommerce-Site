@@ -444,8 +444,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                 </div>
             </div>
         </div>
-
-        <br>
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>

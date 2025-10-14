@@ -3,6 +3,8 @@ require "db_connect.php";
 if (session_status() == PHP_SESSION_NONE) {
   @session_start();
 }
+$base_url = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/";
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -311,6 +313,8 @@ if (session_status() == PHP_SESSION_NONE) {
       padding: 12px 15px;
       border-bottom: 1px solid #f1f1f1;
       transition: background 0.2s;
+      align-items: center;
+      position: relative;
     }
 
     .cart-item:hover {
@@ -458,6 +462,29 @@ if (session_status() == PHP_SESSION_NONE) {
         transform: translateY(0);
       }
     }
+
+    .remove-from-cart-btn {
+      background-color: transparent;
+      color: #fe3636ff;
+      font-weight: 500;
+      border: none;
+      border-radius: 50%;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.3s ease;
+      margin-left: 10px;
+      flex-shrink: 0;
+    }
+
+    .remove-from-cart-btn:hover {
+      /* background-color: #c0392b; */
+      transform: scale(1.1);
+    }
   </style>
 </head>
 
@@ -512,93 +539,51 @@ if (session_status() == PHP_SESSION_NONE) {
     </nav>
 
     <?php if (isset($_SESSION['email'])): ?>
+      <?php
+
+      $user_email = $_SESSION['email'];
+
+      $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
+      $user_res = mysqli_query($conn, $user_query);
+      $user_data = mysqli_fetch_assoc($user_res);
+      $user_id = $user_data['id'];
+
+      $cart_count_query = "SELECT COUNT(*) AS total FROM viewcart WHERE user_id='$user_id'";
+      $cart_count_res = mysqli_query($conn, $cart_count_query);
+      $cart_count_row = mysqli_fetch_assoc($cart_count_res);
+      $cart_count = $cart_count_row['total'];
+
+      /* Product Limit Handle  */
+      $cart_items = [];
+      $cart_total = 0;
+
+      $cart_query = "SELECT vc.*, p.product_name, p.product_price, p.product_image FROM viewcart vc JOIN product p ON vc.product_id = p.product_Id WHERE vc.user_id = '$user_id'";
+
+      $cart_result = mysqli_query($conn, $cart_query);
+
+      if ($cart_result && mysqli_num_rows($cart_result) > 0) {
+        while ($item = mysqli_fetch_assoc($cart_result)) {
+
+          $product_image = "admin/images/product_img/" . $item['product_image'];
+
+          if (!file_exists($product_image)) {
+            $product_image = "https://via.placeholder.com/60x60?text=No+Image";
+          }
+
+          $item_total = $item['product_price'] * $item['quantity'];
+          $cart_total += $item_total;
+          $cart_items[] = [
+            'product_id' => $item['product_id'],
+            'product_name' => $item['product_name'],
+            'product_price' => $item['product_price'],
+            'product_image' => $product_image,
+            'quantity' => $item['quantity']
+          ];
+        }
+      }
+      ?>
+
       <div class="header-right">
-        <?php
-        // Get user ID
-        $user_email = $_SESSION['email'];
-        $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
-        $user_res = mysqli_query($conn, $user_query);
-        $user_data = mysqli_fetch_assoc($user_res);
-        $user_id = $user_data['id'];
-
-        // Get cart count
-        $cart_count_query = "SELECT COUNT(*) AS total FROM viewcart WHERE user_id='$user_id'";
-        $cart_count_res = mysqli_query($conn, $cart_count_query);
-        $cart_count_row = mysqli_fetch_assoc($cart_count_res);
-        $cart_count = $cart_count_row['total'];
-
-
-        $product_table_name = null;
-        $table_check_query = "SHOW TABLES LIKE 'product'";
-        $table_res = mysqli_query($conn, $table_check_query);
-
-        if (mysqli_num_rows($table_res) > 0) {
-          $product_table_name = 'product';
-        } else {
-          // Try other possible table names
-          $possible_tables = ['produc'];
-          foreach ($possible_tables as $table) {
-            $table_check_query = "SHOW TABLES LIKE '$table'";
-            $table_res = mysqli_query($conn, $table_check_query);
-            if (mysqli_num_rows($table_res) > 0) {
-              $product_table_name = $table;
-              break;
-            }
-          }
-        }
-
-        $cart_items = [];
-        $cart_total = 0;
-
-        if ($product_table_name) {
-
-          $cart_items_query = "SELECT vc.*, p.product_name, p.product_price, p.product_image FROM viewcart vc JOIN $product_table_name p ON vc.product_id = p. product_id WHERE vc.user_id = '$user_id'";
-        } else {
-
-          $cart_items_query = "SELECT * FROM viewcart WHERE user_id = '$user_id'";
-        }
-
-        $cart_items_res = mysqli_query($conn, $cart_items_query);
-
-        if ($cart_items_res && mysqli_num_rows($cart_items_res) > 0) {
-          while ($item = mysqli_fetch_assoc($cart_items_res)) {
-
-            $product_id = $item['product_id'];
-            $product_name = isset($item['product_name']) ? $item['product_name'] : 'Product ' . $product_id;
-            $product_price = isset($item['product_price']) ? floatval($item['product_price']) : 0;
-            $quantity = isset($item['quantity']) ? intval($item['quantity']) : 1;
-
-            $product_image = 'https://via.placeholder.com/60?text=No+Image';
-
-            // if (isset($item['product_image']) && !empty($item['product_image'])) {
-            //   $img_path = $item['product_image'];
-      
-            //   if (filter_var($img_path, FILTER_VALIDATE_URL)) {
-            //     $product_image = $img_path;
-            //   } else if (strpos($img_path, '/') === 0) {
-            //     $product_image = 'http://' . $_SERVER['HTTP_HOST'] . $img_path;
-            //   } else {
-            //     $product_image = 'http://' . $_SERVER['HTTP_HOST'] . '/' . $img_path;
-            //   }
-            // }
-      
-            $item_total = $product_price * $quantity;
-            $platform_fee = 20;
-            $cart_total += $item_total;
-
-            $cart_items[] = [
-              'product_id' => $product_id,
-              'product_name' => $product_name,
-              'product_price' => $product_price,
-              'product_image' => $product_image,
-              'quantity' => $quantity,
-              'item_total' => $item_total
-            ];
-          }
-        }
-        ?>
-
-        <!-- Enhanced Cart Button with Dropdown -->
         <div class="cart-container" id="cart-container">
           <a href="viewcart.php" class="cart-btn">
             <i class="fa fa-shopping-cart cart-icon"></i>
@@ -608,7 +593,6 @@ if (session_status() == PHP_SESSION_NONE) {
             <?php endif; ?>
           </a>
 
-          <!-- Cart Dropdown -->
           <div class="cart-dropdown">
             <div class="cart-dropdown-header">
               <span>Your Cart (<?php echo $cart_count; ?>)</span>
@@ -619,14 +603,19 @@ if (session_status() == PHP_SESSION_NONE) {
               <?php if ($cart_count > 0): ?>
                 <?php foreach ($cart_items as $item): ?>
                   <div class="cart-item">
-                    <img src="../admin/images/product_img/<?php echo $item['product_image']; ?>"
-                      alt="<?php echo $item['product_name']; ?>" class="cart-item-img">
+                    <img src="<?php echo $item['product_image']; ?>" alt="<?php echo $item['product_name']; ?>"
+                      class="cart-item-img" onerror="this.src='https://via.placeholder.com/60x60?text=No+Image'">
                     <div class="cart-item-details">
                       <div class="cart-item-name"><?php echo $item['product_name']; ?></div>
-                      <div class="cart-item-price">$<?php echo number_format($item['product_price'], 2); ?> x
-                        <?php echo $item['quantity']; ?>
+                      <div class="cart-item-price">
+                        ₹<?php echo number_format($item['product_price'], 2); ?> x <?php echo $item['quantity']; ?>
                       </div>
                     </div>
+
+                    <button class="remove-from-cart-btn" data-product-id="<?php echo $item['product_id']; ?>"
+                      title="Remove from cart">Remove
+                      <!-- <i class="fa fa-times"></i> -->
+                    </button>
                   </div>
                 <?php endforeach; ?>
               <?php else: ?>
@@ -641,9 +630,8 @@ if (session_status() == PHP_SESSION_NONE) {
               <div class="cart-dropdown-footer">
                 <div class="cart-total">
                   <span>Total:</span>
-                  <span>$<?php echo number_format($cart_total, 2); ?></span>
+                  <span>₹<?php echo number_format($cart_total, 2); ?></span>
                 </div>
-                <!-- <a href="viewcart.php" class="btn">Proceed to Checkout</a> -->
               </div>
             <?php endif; ?>
           </div>
@@ -651,6 +639,14 @@ if (session_status() == PHP_SESSION_NONE) {
 
         <!-- User Dropdown -->
         <div class="user-dropdown" id="user-dropdown">
+          <?php
+
+          $wish_count_query = "SELECT COUNT(*) AS total FROM wishlist WHERE user_id='$user_id'";
+          $wish_res = mysqli_query($conn, $wish_count_query);
+          $wish_row = mysqli_fetch_assoc($wish_res);
+          $wishlist_count = $wish_row['total'];
+          ?>
+
           <button class="user-dropdown-btn">
             <img
               src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAxMmMxLjY1IDAgMy0xLjM1IDMtM3MtMS4zNS0zLTMtMy0zIDEuMzUtMyAzIDEuMzUgMyAzIDN6bTAgMWMtMS42NiAwLTUgLjgzLTUgMi41VjE3aDEwdjEuNWMwLTEuNjctMy4zNC0yLjUtNS0yLjV6Ii8+PC9zdmc+"
@@ -659,25 +655,19 @@ if (session_status() == PHP_SESSION_NONE) {
             <i class="fa fa-chevron-down"></i>
           </button>
           <div class="user-dropdown-content">
-            <a href="viewprofile.php?email=<?php echo $_SESSION['email']; ?>"><i class="fa fa-user"></i> Profile</a>
-
-            <!-- wishlist Count -->
-            <?php
-            $count_query = "SELECT COUNT(*) AS total FROM wishlist WHERE user_id='$user_id'";
-            $count_res = mysqli_query($conn, $count_query);
-            $count_row = mysqli_fetch_assoc($count_res);
-            $wishlist_count = $count_row['total'];
-            ?>
-
-            <a href="wishlist.php"><i class="fa-solid fa-heart"></i> Wishlist
-              &nbsp; <span class="text-danger wishlist-count"><b>(<?php echo $wishlist_count; ?>)</b></span>
+            <a href="viewprofile.php?email=<?php echo $_SESSION['email']; ?>">
+              <i class="fa fa-user"></i> Profile
             </a>
-
-            <a href="userfeedback.php"><i class="fa-solid fa-star"></i> Your Feedback<span
-                class="text-danger wishlist-count"></span>
+            <a href="wishlist.php">
+              <i class="fa-solid fa-heart"></i> Wishlist
+              <span class="text-danger">(<?php echo $wishlist_count; ?>)</span>
             </a>
-
-            <a href="logout.php"><i class="fa fa-sign-out"></i> Logout</a>
+            <a href="userfeedback.php">
+              <i class="fa-solid fa-star"></i> Your Feedback
+            </a>
+            <a href="logout.php">
+              <i class="fa fa-sign-out"></i> Logout
+            </a>
           </div>
         </div>
       </div>
@@ -852,6 +842,58 @@ if (session_status() == PHP_SESSION_NONE) {
         cartContainer.classList.toggle("active");
       }
     }
+  </script>
+  <script>
+    $(document).on('click', '.remove-from-cart-btn', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      var productId = $(this).data('product-id');
+      var $cartItem = $(this).closest('.cart-item');
+      var $cartContainer = $(this).closest('.cart-container');
+
+      if (confirm('Are you sure you want to remove this item from cart?')) {
+        $.ajax({
+          url: 'partials/remove_from_cart.php',
+          type: 'POST',
+          data: {
+            product_id: productId
+          },
+          success: function (response) {
+            console.log('Response:', response);
+
+            if (response.success) {
+              $cartItem.remove();
+              var newCount = response.cart_count;
+              var $cartCount = $('.cart-count');
+              if (newCount > 0) {
+                $cartCount.text(newCount).show();
+              } else {
+                $cartCount.hide();
+              }
+              $('.cart-dropdown-header span').text('Your Cart (' + newCount + ')');
+              if (newCount === 0) {
+                $('.cart-dropdown-body').html('<div class="empty-cart"><i class="fa fa-shopping-cart"></i><p>Your cart is empty</p></div>');
+                $('.cart-dropdown-footer').hide();
+              } else {
+
+                if ($('.cart-item').length === 0) {
+                  $('.cart-dropdown-footer').hide();
+                }
+              }
+
+              alert(response.message);
+            } else {
+              alert('Error: ' + response.error);
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error('AJAX Error:', error);
+            alert('Error removing item from cart. Please try again.');
+          }
+        });
+      }
+    });
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 

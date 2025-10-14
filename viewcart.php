@@ -1,30 +1,44 @@
 <?php
-include "db_connect.php";
-session_start();
-
-if (!isset($_SESSION['username'])) {
-    echo "<script>alert('Please log in to view your cart.'); window.location.href='index.php';</script>";
-    exit();
+require "db_connect.php";
+if (session_status() == PHP_SESSION_NONE) {
+    @session_start();
 }
 
-$user_email = $_SESSION['email'];
-$user_query = "SELECT id FROM userdata WHERE email='$user_email'";
-$user_res = mysqli_query($conn, $user_query);
-$user_data = mysqli_fetch_assoc($user_res);
-$user_id = $user_data['id'];
+if (isset($_SESSION['email'])) {
+    $user_email = $_SESSION['email'];
+    $user_query = "SELECT id FROM userdata WHERE email='$user_email'";
+    $user_res = mysqli_query($conn, $user_query);
+    $user_data = mysqli_fetch_assoc($user_res);
+    $user_id = $user_data['id'];
 
-$cart_query = "SELECT vc.*, p.product_name, p.product_image, p.product_price FROM viewcart vc JOIN product p ON vc.product_id = p.product_Id WHERE vc.user_id = '$user_id'";
-$cart_result = mysqli_query($conn, $cart_query);
-$cart_items = mysqli_fetch_all($cart_result, MYSQLI_ASSOC);
-$cart_count = mysqli_num_rows($cart_result);
+    // Remove item
+    if (isset($_GET['remove_id'])) {
+        $remove_id = $_GET['remove_id'];
+        $delete_query = "DELETE FROM viewcart WHERE id = '$remove_id' AND user_id = '$user_id'";
+        mysqli_query($conn, $delete_query);
+        header("Location: viewcart.php");
+        exit();
+    }
 
-// Calculate totals
-$total_price = 0;
-foreach ($cart_items as $item) {
-    $total_price += $item['product_price'] * $item['quantity'];
+    // Update quantity
+    if (isset($_GET['update_quantity'])) {
+        $cart_id = $_GET['cart_id'];
+        $new_quantity = $_GET['quantity'];
+
+        // Validate quantity 
+        if ($new_quantity < 1) {
+            $new_quantity = 1;
+        } elseif ($new_quantity > 7) {
+            $new_quantity = 7;
+        }
+
+
+        $update_query = "UPDATE viewcart SET quantity = '$new_quantity' WHERE id = '$cart_id' AND user_id = '$user_id'";
+        mysqli_query($conn, $update_query);
+        header("Location: viewcart.php");
+        exit();
+    }
 }
-$platform_fee = 20;
-$total_payable = $total_price + $platform_fee;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,364 +46,317 @@ $total_payable = $total_price + $platform_fee;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Cart</title>
-    <?php include "links/icons.html"; ?>
+    <title>Your Cart - MobileSite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        img {
-            max-width: 100%;
-            height: auto;
+        .cart-container {
+            max-width: 1500px;
+            padding: 0 15px;
         }
 
-        .cart {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 60vh;
-        }
-
-        .empty-cart-cls {
-            padding: 30px 15px;
-            color: #333;
-        }
-
-        .empty-cart-cls h3 {
+        h4.cart-heading {
+            text-align: center;
+            font-size: 22px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
 
-        .empty-cart-cls h4 {
-            font-weight: 400;
-            color: #777;
-            margin-bottom: 20px;
+        table.cart-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            padding: 12px;
+            text-align: center;
         }
 
-        .cart-btn-transform {
-            transition: 0.3s ease;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-
-        .cart-btn-transform:hover {
-            transform: translateY(-2px);
-            background-color: #0056b3;
-            color: #fff;
-            text-decoration: none;
-        }
-
-        #header-box {
-            background-color: #ffffffff;
-            height: 60px;
-            width: 200px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-
-        }
-
-        /* .cart-header {
-            background: #f8f9fa;
-            color: #333;
-            padding: 15px 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #dee2e6;
-        } */
-
-        .cart-item {
-            border: 1px solid #dee2e6;
-            background-color: #ffffffff;
-            border-radius: 8px;
+        table.cart-table td {
+            vertical-align: middle;
+            text-align: center;
             padding: 15px;
-            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
 
-        .product-image {
+        .cart-item-img {
             width: 80px;
             height: 80px;
-            object-fit: contain;
-            border-radius: 5px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .remove-icon {
+            color: #000;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .remove-icon:hover {
+            color: #dc3545;
         }
 
         .quantity-controls {
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .quantity-btn {
             width: 30px;
             height: 30px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 4px;
+            border: 1px solid #ccc;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            text-decoration: none;
+            color: #000;
         }
 
         .quantity-btn:hover {
-            background: #f8f9fa;
+            background: #e9ecef;
         }
 
         .quantity-input {
             width: 50px;
             text-align: center;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 4px;
+            border-radius: 5px;
+            height: 30px;
         }
 
-        .price-details-card {
-            background: #fff;
-            border: 1px solid #dee2e6;
+        .cart-actions {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-clear {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .cart-info {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .shipping-box {
+            background-color: #f8f9fa;
             border-radius: 8px;
             padding: 20px;
         }
 
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #e9ecef;
+        .shipping-box h5 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
-        .total-row {
-            font-weight: bold;
-            border-bottom: 2px solid #007bff;
+        .shipping-box input,
+        .shipping-box select {
+            margin-bottom: 12px;
         }
 
-        .payment-option {
-            border: 1px solid #dee2e6;
-            border-radius: 6px;
-            padding: 12px;
-            margin: 8px 0;
-        }
-
-        .checkout-btn {
-            background: #28a745;
-            border: none;
-            padding: 12px;
-            font-size: 1.1em;
-            font-weight: bold;
-            border-radius: 6px;
-            color: white;
-            width: 100%;
+        .payment-methods {
             margin-top: 15px;
         }
 
-        .checkout-btn:hover {
-            background: #218838;
-        }
-
-        .remove-btn {
-            /* background: #dc3545; */
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            color: white;
-            font-size: 0.9em;
-        }
-
-        .remove-btn:hover {
-            /* background: #c82333; */
+        .payment-methods img {
+            width: 45px;
+            margin-right: 8px;
         }
 
         @media (max-width: 768px) {
-            .price-details-card {
-                margin-top: 20px;
+
+            table.cart-table th,
+            table.cart-table td {
+                font-size: 14px;
+                padding: 10px;
             }
 
-            .product-image {
-                width: 60px;
-                height: 60px;
+            .cart-actions {
+                flex-direction: column;
+                gap: 10px;
             }
+
+            .shipping-box {
+                margin-top: 30px;
+            }
+        }
+
+        .text-muted1 {
+            font-style: italic;
+            font-size: 12px;
+        }
+
+        .country-lable,
+        .state-lable,
+        .zip-lable {
+            font-weight: 500;
+            font-size: 14px;
+            color: #000;
         }
     </style>
 </head>
 
 <body>
-    <?php include "header.php"; ?>
+    <?php include 'header.php'; ?>
 
+    <div class="cart-container" style="margin: 50px ;">
+        <h4 class="cart-heading">Your Cart</h4>
 
-    <!-- <div class="cart-header">
-    <div class="container" style="max-width: 800px;">
-        <h2 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>My Cart</h2>
-    </div>
-</div> -->
-    <div class="cart-header mx-auto mt-5">
-        <h2 class="mb-0 mt-2" id="header-box"><i class="fas fa-shopping-cart me-2"></i>My Cart</h2>
-    </div>
+        <?php if (isset($_SESSION['email'])): ?>
+            <?php
+            $cart_query = "SELECT viewcart.*, product.product_name, product.product_price, product.product_image FROM viewcart JOIN product  ON viewcart.product_id = product.product_Id WHERE viewcart.user_id = '$user_id'";
+            $cart_result = mysqli_query($conn, $cart_query);
+            $cart_total = 0;
+            ?>
 
-    <div class="container mb-5 mt-3">
-        <?php if ($cart_count > 0): ?>
-            <div class="row">
-                <!-- Left Side - Cart Items -->
-                <div class="col-lg-8 col-md-7">
-                    <div class="cart-items-container">
-                        <?php foreach ($cart_items as $item): ?>
-                            <div class="cart-item">
-                                <div class="row align-items-center">
-                                    <div class="col-md-2 col-3">
-                                        <img src="./admin/images/product_img/<?php echo htmlspecialchars($item['product_image']); ?>"
-                                            alt="<?php echo htmlspecialchars($item['product_name']); ?>" class="product-image">
-                                    </div>
-                                    <div class="col-md-4 col-9">
-                                        <h6 class="mb-1"><?php echo htmlspecialchars($item['product_name']); ?></h6>
-                                        <p class="text-muted mb-0">₹<?php echo number_format($item['product_price']); ?></p>
-                                    </div>
-                                    <div class="col-md-3 col-6">
-                                        <div class="quantity-controls">
-                                            <button class="quantity-btn"
-                                                onclick="updateQuantity(<?php echo $item['id']; ?>, -1)">-</button>
-                                            <input type="number" class="quantity-input" value="<?php echo $item['quantity']; ?>"
-                                                min="1" max="5" readonly>
-                                            <button class="quantity-btn"
-                                                onclick="updateQuantity(<?php echo $item['id']; ?>, 1)">+</button>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 col-3 text-md-center">
-                                        <strong>₹<?php echo number_format($item['product_price'] * $item['quantity']); ?></strong>
-                                    </div>
-                                    <div class="col-md-1 col-3 text-end">
-                                        <button class="btn btn-outline-danger remove-btn "
-                                            onclick="removeFromCart(<?php echo $item['id']; ?>)">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
+            <?php if (mysqli_num_rows($cart_result) > 0): ?>
+                <div class="row">
+                    <!-- Left Cart Table -->
+                    <div class="col-lg-8">
+                        <table class="table cart-table">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($item = mysqli_fetch_assoc($cart_result)): ?>
+                                    <?php
+                                    $item_total = $item['product_price'] * $item['quantity'];
+                                    $cart_total += $item_total;
+                                    $image_path = "admin/images/product_img/" . $item['product_image'];
+                                    $product_image = file_exists($image_path) ? $image_path : "https://via.placeholder.com/80";
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <a href="viewcart.php?remove_id=<?php echo $item['id']; ?>"
+                                                onclick="return confirm('Remove this item?')" class="remove-icon">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-start">
+                                            <div class="d-flex align-items-center">
+                                                <img src="<?php echo $product_image; ?>" class="cart-item-img me-3" alt="">
+                                                <div>
+                                                    <div><?php echo htmlspecialchars($item['product_name']); ?></div>
+                                                    <small>Qty: <span class="text-danger"><?php echo $item['quantity']; ?></span></small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span style="font-weight: 600;">₹<?php echo number_format($item['product_price'], 2); ?></span></td>
+                                        <td>
+                                            <div class="quantity-controls">
+                                                <a href="viewcart.php?update_quantity=1&cart_id=<?php echo $item['id']; ?>&quantity=<?php echo max(1, $item['quantity'] - 1); ?>"
+                                                    class="quantity-btn">-</a>
+                                                <input type="text" value="<?php echo $item['quantity']; ?>" class="quantity-input"
+                                                    readonly>
+                                                <a href="viewcart.php?update_quantity=1&cart_id=<?php echo $item['id']; ?>&quantity=<?php echo $item['quantity'] + 1; ?>"
+                                                    class="quantity-btn">+</a>
+                                            </div>
+                                        </td>
+                                        <td><span style="font-weight: 600; color: red;">₹<?php echo number_format($item_total, 2); ?></span></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+
+                        <div class="cart-actions">
+                            <a href="index.php" class="btn btn-outline-dark">← Continue Shopping</a>
+                            <button class="btn-clear" disabled>Clear Shopping Cart</button>
+                        </div>
+
+                        <p class="cart-info mt-3">
+                            We process all orders in INR. While the content of your cart is currently displayed in INR,
+                            the checkout will use INR at the most current exchange rate.
+                        </p>
+                    </div>
+
+                    <!-- Right Shipping Box -->
+                    <div class="col-lg-4">
+                        <div class="shipping-box">
+                            <h5>Get Shipping Estimates</h5>
+                            <label for="address_country" class="country-lable">Country</label>
+                            <select class="form-select">
+                                <option selected>Select a country...</option>
+                                <option>India</option>
+                                <option>USA</option>
+                            </select>
+
+                            <label for="address_province" class="state-lable">State</label>
+                            <select class="form-select">
+                                <option selected>Select a state...</option>
+                                <option>Gujarat</option>
+                                <option>Maharashtra</option>
+                            </select>
+
+                            <label for="address_zip" class="zip-lable">Postal/Zip Code</label>
+                            <input type="text" class="form-control" placeholder="Postal / Zip Code">
+
+                            <button class="btn btn-dark w-100 mt-2">Calculate Shipping</button>
+
+                            <hr>
+
+                            <div class="mt-2">
+                                <h6 style="font-weight: 500;">Subtotal : <span
+                                        style="color: green;  float: right; font-weight: 700;">₹<?php echo number_format($cart_total, 2); ?></span>
+                                </h6>
+                                <small class="text-muted1">Shipping & taxes calculated at checkout</small>
                             </div>
-                        <?php endforeach; ?>
+                            <p class="pt-0 m-0 fst-normal freeShipclaim" style="font-size: 14px;"><strong>FREE SHIPPING
+                                </strong>ELIGIBLE <i class="fa fa-truck" aria-hidden="true"></i></p>
+
+                            <div class="mt-3">
+                                <label><input type="radio" name="payment" class="me-2">Cash on Delivery</label><br>
+                                <label><input type="radio" name="payment" class="me-2">Online Payment</label>
+                            </div>
+
+                            <button class="btn btn-primary w-100 mt-3">Proceed to Checkout</button>
+
+                            <div class="payment-methods text-center mt-3">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Mastercard-logo.png">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/American_Express.png?20240915104508"
+                                    alt="">
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Right Side - Price Details -->
-                <div class="col-lg-4 col-md-5">
-                    <div class="price-details-card">
-                        <h5 class="mb-3">Price Details</h5>
-
-                        <div class="price-row">
-                            <span>Total Price:</span>
-                            <span>₹<?php echo number_format($total_price); ?></span>
-                        </div>
-
-                        <div class="price-row">
-                            <span>Platform Fee:</span>
-                            <span>₹<?php echo number_format($platform_fee); ?></span>
-                        </div>
-
-                        <div class="price-row total-row">
-                            <span>Total Payable:</span>
-                            <span>₹<?php echo number_format($total_payable); ?></span>
-                        </div><br>
-
-                        <div class="mt-3">
-                            <h6 class="mb-2">Payment Method:</h6>
-                            <div class="payment-option">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="cod"
-                                        checked>
-                                    <label class="form-check-label" for="cod">
-                                        Cash on Delivery
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="payment-option">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" id="onlinePayment"
-                                        value="online">
-                                    <label class="form-check-label" for="onlinePayment">
-                                        Online Payment
-                                    </label>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <button class="btn btn-primary checkout-btn" onclick="proceedToCheckout()">
-                            Proceed to Checkout
-                        </button>
-                    </div>
+            <?php else: ?>
+                <div class="text-center py-5">
+                    <i class="fa fa-shopping-cart fa-3x text-muted mb-3"></i>
+                    <h5>Your cart is empty</h5>
+                    <a href="index.php" class="btn btn-dark mt-3">Start Shopping</a>
                 </div>
-            </div>
+            <?php endif; ?>
+
         <?php else: ?>
-            <!-- Empty Cart Message -->
-            <center>
-                <div class="col-md-12 my-2">
-                    <div class="card">
-                        <div class="card-body cart">
-                            <div class="col-sm-12 empty-cart-cls text-center">
-                                <img src="https://i.imgur.com/dCdflKN.png" width="130" height="130" class="img-fluid mb-4">
-                                <h3><strong>Your Cart is Empty</strong></h3>
-                                <h4>Add something to make me happy :)</h4>
-                                <a href="index.php" class="btn btn-primary cart-btn-transform m-3">Continue Shopping</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </center>
+            <div class="text-center py-5">
+                <h5>Please login to view your cart</h5>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#signInModal" class="btn btn-dark mt-3">Login</a>
+            </div>
         <?php endif; ?>
     </div>
 
-    <?php include "footer.php"; ?>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function updateQuantity(cartId, change) {
-            fetch('./partials/update_cart_quantity.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `cart_id=${cartId}&change=${change}`
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Error updating quantity: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error updating quantity');
-                });
-        }
-
-        function removeFromCart(cartId) {
-            if (confirm('Are you sure you want to remove this item from cart?')) {
-                fetch('./partials/remove_from_cart.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `cart_id=${cartId}`
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            location.reload();
-                        } else {
-                            alert('Error removing item: ' + data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert('Error removing item');
-                    });
-            }
-        }
-
-        function proceedToCheckout() {
-            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            alert(`Proceeding to checkout with ${paymentMethod === 'online' ? 'Online Payment' : 'Cash on Delivery'}`);
-        }
-    </script>
 </body>
 
 </html>
