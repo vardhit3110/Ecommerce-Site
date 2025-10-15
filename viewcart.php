@@ -49,6 +49,8 @@ if (isset($_SESSION['email'])) {
     <title>Your Cart - MobileSite</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <?php include "links/icons.html"; ?>
     <style>
         .cart-container {
             max-width: 1500px;
@@ -207,6 +209,28 @@ if (isset($_SESSION['email'])) {
             font-size: 14px;
             color: #000;
         }
+
+        .error {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 5px;
+            bottom: 0%;
+        }
+
+        .deliver-to-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .deliver-to-text {
+            flex: 1;
+        }
+
+        .calculate-btn-container {
+            margin-left: 15px;
+        }
     </style>
 </head>
 
@@ -214,7 +238,6 @@ if (isset($_SESSION['email'])) {
     <?php include 'header.php'; ?>
 
     <div class="cart-container" style="margin: 50px ;">
-        <h4 class="cart-heading">Your Cart</h4>
 
         <?php if (isset($_SESSION['email'])): ?>
             <?php
@@ -225,6 +248,18 @@ if (isset($_SESSION['email'])) {
 
             <?php if (mysqli_num_rows($cart_result) > 0): ?>
                 <div class="row">
+
+                    <div class="container my-3">
+                        <div class="row justify-content-center">
+                            <div class="col-md-12 col-sm-10">
+                                <div class="border rounded text-center shadow-sm bg-light py-3">
+                                    <h4 class="cart-heading mb-0 text-success" style="font-weight: 700;"><i
+                                            class="fa-solid fa-cart-plus"></i> Your Cart</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Left Cart Table -->
                     <div class="col-lg-8">
                         <table class="table cart-table">
@@ -257,11 +292,14 @@ if (isset($_SESSION['email'])) {
                                                 <img src="<?php echo $product_image; ?>" class="cart-item-img me-3" alt="">
                                                 <div>
                                                     <div><?php echo htmlspecialchars($item['product_name']); ?></div>
-                                                    <small>Qty: <span class="text-danger"><?php echo $item['quantity']; ?></span></small>
+                                                    <small>Qty: <span
+                                                            class="text-danger"><?php echo $item['quantity']; ?></span></small>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><span style="font-weight: 600;">₹<?php echo number_format($item['product_price'], 2); ?></span></td>
+                                        <td><span
+                                                style="font-weight: 600;">₹<?php echo number_format($item['product_price'], 2); ?></span>
+                                        </td>
                                         <td>
                                             <div class="quantity-controls">
                                                 <a href="viewcart.php?update_quantity=1&cart_id=<?php echo $item['id']; ?>&quantity=<?php echo max(1, $item['quantity'] - 1); ?>"
@@ -272,7 +310,9 @@ if (isset($_SESSION['email'])) {
                                                     class="quantity-btn">+</a>
                                             </div>
                                         </td>
-                                        <td><span style="font-weight: 600; color: red;">₹<?php echo number_format($item_total, 2); ?></span></td>
+                                        <td><span
+                                                style="font-weight: 600; color: red;">₹<?php echo number_format($item_total, 2); ?></span>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             </tbody>
@@ -284,8 +324,9 @@ if (isset($_SESSION['email'])) {
                         </div>
 
                         <p class="cart-info mt-3">
-                            We process all orders in INR. While the content of your cart is currently displayed in INR,
-                            the checkout will use INR at the most current exchange rate.
+                            We process all orders in Indian Rupees (INR). While your cart total is shown in INR, international
+                            prices may vary slightly at checkout based on the latest currency exchange rates provided by your
+                            payment provider. Final charges will always be displayed in INR at the time of payment.
                         </p>
                     </div>
 
@@ -293,25 +334,78 @@ if (isset($_SESSION['email'])) {
                     <div class="col-lg-4">
                         <div class="shipping-box">
                             <h5>Get Shipping Estimates</h5>
-                            <label for="address_country" class="country-lable">Country</label>
-                            <select class="form-select">
-                                <option selected>Select a country...</option>
-                                <option>India</option>
-                                <option>USA</option>
-                            </select>
 
-                            <label for="address_province" class="state-lable">State</label>
-                            <select class="form-select">
-                                <option selected>Select a state...</option>
-                                <option>Gujarat</option>
-                                <option>Maharashtra</option>
-                            </select>
+                            <div class="mb-3">
+                                <label for="address_country" class="form-label">Country</label>
+                                <select id="address_country" class="form-select">
+                                    <option value="" selected>Select a country...</option>
+                                    <option value="India">India</option>
+                                </select>
+                                <div id="countryError" class="error"></div>
+                            </div>
 
-                            <label for="address_zip" class="zip-lable">Postal/Zip Code</label>
-                            <input type="text" class="form-control" placeholder="Postal / Zip Code">
+                            <div class="mb-3">
+                                <label for="address_state" class="form-label">State</label>
+                                <select id="address_state" class="form-select" disabled>
+                                    <option value="" selected>Select a state...</option>
+                                    <!-- States will be populated dynamically -->
 
-                            <button class="btn btn-dark w-100 mt-2">Calculate Shipping</button>
+                                </select>
+                                <div id="stateError" class="error"></div>
+                            </div>
 
+                            <div class="mb-3">
+                                <label for="address_zip" class="form-label">Postal/Zip Code</label>
+                                <input type="text" id="address_zip" class="form-control" maxlength="6"
+                                    placeholder="Postal / Zip Code">
+                                <div id="zipError" class="error"></div>
+                                <div id="zipLoading" class="loading text-primary" style="display: none;">Searching for city
+                                    information...
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="deliver-to-container">
+                                    <div class="deliver-to-text">
+                                        <span>Deliver to: <span id="deliverTo" style="font-weight: 500; font-size: 13px;">Not
+                                                specified</span></span>
+                                    </div>
+                                    <div class="calculate-btn-container">
+                                        <form method="POST" id="locationForm" action="./partials/_order_address.php">
+                                            <input type="hidden" name="country" id="countryField">
+                                            <input type="hidden" name="state" id="stateField">
+                                            <input type="hidden" name="zip" id="zipField">
+                                            <input type="hidden" name="city" id="cityField">
+                                            <input type="hidden" name="save_location" value="1">
+                                            <button type="submit" class="btn btn-outline-primary btn-sm">Add Location</button>
+                                        </form>
+
+                                        <script>
+                                            $('#locationForm').on('submit', function (e) {
+                                                e.preventDefault();
+
+                                                const country = $('#address_country').val();
+                                                const state = $('#address_state').val();
+                                                const zip = $('#address_zip').val();
+                                                const city = $('#deliverTo').text();
+
+                                                if (!country || !state || city === 'Not specified') {
+                                                    alert('Please complete country, state, and zip before saving.');
+                                                    return false;
+                                                }
+
+                                                $('#countryField').val(country);
+                                                $('#stateField').val(state);
+                                                $('#zipField').val(zip);
+                                                $('#cityField').val(city);
+
+                                                this.submit();
+                                            });
+                                        </script>
+
+                                    </div>
+                                </div>
+                            </div>
                             <hr>
 
                             <div class="mt-2">
@@ -322,14 +416,45 @@ if (isset($_SESSION['email'])) {
                             </div>
                             <p class="pt-0 m-0 fst-normal freeShipclaim" style="font-size: 14px;"><strong>FREE SHIPPING
                                 </strong>ELIGIBLE <i class="fa fa-truck" aria-hidden="true"></i></p>
+                            <hr class="mt-2">
 
                             <div class="mt-3">
-                                <label><input type="radio" name="payment" class="me-2">Cash on Delivery</label><br>
-                                <label><input type="radio" name="payment" class="me-2">Online Payment</label>
+                                <label>
+                                    <input type="radio" name="payment" class="me-2" value="cod">Cash on Delivery
+                                    <i class="fa-regular fa-money-bill-1"></i>
+                                </label><br>
+                                <label>
+                                    <input type="radio" name="payment" class="me-2" value="online">Online Payment
+                                    <i class="fa-regular fa-credit-card"></i>
+                                </label>
                             </div>
 
-                            <button class="btn btn-primary w-100 mt-3">Proceed to Checkout</button>
+                            <button id="checkoutBtn" class="btn btn-primary w-100 mt-3">Proceed to Checkout</button>
 
+                            <script>
+                                document.getElementById('checkoutBtn').addEventListener('click', function (e) {
+                                    e.preventDefault();
+                                    const urlParams = new URLSearchParams(window.location.search);
+                                    const status = urlParams.get('status');
+
+                                    if (status !== 'Success') {
+                                        alert('Please add location first!');
+                                        return;
+                                    }
+
+                                    const payment = document.querySelector('input[name="payment"]:checked');
+                                    if (!payment) {
+                                        alert('Please select a payment method.');
+                                        return;
+                                    }
+
+                                    if (payment.value === 'cod') {
+                                        window.location.href = 'cashOnDelivery.php';
+                                    } else if (payment.value === 'online') {
+                                        window.location.href = 'payment_gateway.php';
+                                    }
+                                });
+                            </script>
                             <div class="payment-methods text-center mt-3">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg">
@@ -341,20 +466,34 @@ if (isset($_SESSION['email'])) {
                     </div>
                 </div>
             <?php else: ?>
-                <div class="text-center py-5">
-                    <i class="fa fa-shopping-cart fa-3x text-muted mb-3"></i>
-                    <h5>Your cart is empty</h5>
-                    <a href="index.php" class="btn btn-dark mt-3">Start Shopping</a>
+                <div class="container my-5" style="min-height: 80vh;">
+                    <div class="row justify-content-center align-items-center h-100">
+                        <div class="col-md-8">
+                            <div class="text-center py-5 border rounded bg-light shadow-sm">
+                                <i class="fa fa-shopping-cart fa-4x text-muted mb-3"></i>
+                                <h5>Your cart is empty</h5>
+                                <a href="index.php" class="btn btn-dark mt-3">Start Shopping</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             <?php endif; ?>
 
         <?php else: ?>
-            <div class="text-center py-5">
-                <h5>Please login to view your cart</h5>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#signInModal" class="btn btn-dark mt-3">Login</a>
+            <div class="container my-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-12 col-sm-10">
+                        <div class="border rounded p-4 text-center shadow-sm bg-light">
+                            <h5 class="mb-3">Please login to view your cart</h5>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#signInModal" class="btn btn-dark">Login</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
     </div>
+
+    <script src="./links/viewcart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
