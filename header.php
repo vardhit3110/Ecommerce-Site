@@ -658,13 +658,21 @@ $base_url = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . 
             <a href="viewprofile.php?email=<?php echo $_SESSION['email']; ?>">
               <i class="fa fa-user"></i> Profile
             </a>
+
+            <a href="myorder.php">
+              <i class="fa-duotone fa-solid fa-boxes-stacked"></i> Orders
+              <span class="text-danger"></span>
+            </a>
+
             <a href="wishlist.php">
               <i class="fa-solid fa-heart"></i> Wishlist
               <span class="text-danger">(<?php echo $wishlist_count; ?>)</span>
             </a>
+
             <a href="userfeedback.php">
               <i class="fa-solid fa-star"></i> Your Feedback
             </a>
+
             <a href="logout.php">
               <i class="fa fa-sign-out"></i> Logout
             </a>

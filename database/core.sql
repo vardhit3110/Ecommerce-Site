@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 13, 2025 at 03:38 PM
+-- Generation Time: Oct 16, 2025 at 03:37 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -103,6 +103,36 @@ INSERT INTO `feedback` (`feedback_id`, `user_id`, `rating`, `comment`, `submisio
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `order_date` datetime DEFAULT current_timestamp(),
+  `product_details` text DEFAULT NULL COMMENT 'JSON or text of all products in order',
+  `total_amount` decimal(10,2) DEFAULT NULL,
+  `shipping_charge` decimal(10,2) DEFAULT 0.00,
+  `payment_mode` tinyint(1) DEFAULT NULL COMMENT '1=Cash on Delivery, 2=Online Payment',
+  `payment_status` enum('1','2','3') DEFAULT '1' COMMENT '1=Pending, 2=Success, 3=Failed',
+  `payment_id` varchar(100) DEFAULT NULL,
+  `order_status` enum('1','2','3','4','5') DEFAULT '1' COMMENT '1=Pending, 2=Processing, 3=Shipped, 4=Delivered, 5=Cancelled',
+  `delivery_address` text DEFAULT NULL,
+  `order_code` int(15) NOT NULL,
+  `admin_note` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `total_amount`, `shipping_charge`, `payment_mode`, `payment_status`, `payment_id`, `order_status`, `delivery_address`, `order_code`, `admin_note`) VALUES
+(1, 7, '2025-10-16 16:32:44', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, 1, '1', NULL, '1', 'Umiya bhavan, thakkar nagar, ahmedabad.', 723957, NULL),
+(2, 7, '2025-10-16 16:34:11', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, 1, '1', NULL, '2', 'Umiya bhavan, thakkar nagar, ahmedabad.', 421426, NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `product`
 --
 
@@ -176,27 +206,30 @@ CREATE TABLE `userdata` (
   `city` varchar(100) DEFAULT NULL,
   `image` varchar(255) DEFAULT NULL,
   `gender` enum('1','2') DEFAULT NULL COMMENT 'male = 1,\r\nfemale = 2',
-  `status` enum('1','2') NOT NULL DEFAULT '1' COMMENT 'active = 1, \r\ninactive = 2'
+  `status` enum('1','2') NOT NULL DEFAULT '1' COMMENT 'active = 1, \r\ninactive = 2',
+  `country` varchar(50) DEFAULT NULL,
+  `state` varchar(50) DEFAULT NULL,
+  `zip_city2` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `userdata`
 --
 
-INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address`, `city`, `image`, `gender`, `status`) VALUES
-(1, 'hiten', 'hiten@gmail.com', '$2y$10$ZUA/3jx2MScfwqtYNthgCeDP7kh7LKOLDJqjPB', '9898989898', NULL, 'surat', NULL, '1', '2'),
-(2, 'om', 'om@gmail.com', '$2y$10$azeyEt45SovTnV8hisMxdeNfOdar7hwuw2nCLb', '7894859475', NULL, 'bharuch', NULL, '1', '1'),
-(3, 'prince', 'prince@gmail.com', '$2y$10$.QCLcK9mNYlQrptKR6R8Lus.KGAxWbD/WFfu7k', '7096761516', NULL, 'amreli', NULL, '1', '1'),
-(4, 'admin', 'admin@gmail.com', '$2y$10$0Jg5MUd92.NXOvFsln8cdu/UAxDE1PmMILmA5w', '9638527415', NULL, 'rajakot', NULL, '2', '1'),
-(5, 'anil', 'anil@gmail.com', '$2y$10$PIAUkD3hjhXLPoc9lBCBleLWBNDGVQbbpAUZaN2klpxxGd.v3838C', '9879879872', NULL, 'surat', NULL, '1', '2'),
-(7, 'dixitpatel', 'dixitpatel@gmail.com', '$2y$10$a0XpIEU3korUVQ3U86n5A..A4GW0orTGRzt/UFevoq2lgE7LlAfX.', '9876543210', 'hirabaugh, surat.', 'surat', 'dixitpatel_1759745881.png', '1', '1'),
-(8, 'vardhit', 'vardhit31@gmail.com', '$2y$10$0.Xphxy3/m3nqoM.3j2BAesybkcpxHrXLYHQKY4LJdHqyRN543uYa', '', NULL, '', NULL, '', '1'),
-(9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', NULL, '', NULL, '', '1'),
-(10, 'dhruv321', 'dhruv321@gmail.com', '$2y$10$GLkGP8f2XraRWU9E.x1WU.sbXMXQCbc6eH3h224jJj0vqFl.yVh2S', '', NULL, '', NULL, '', '1'),
-(12, 'pateldix', 'pateldix@gmail.com', '$2y$10$7kiih7PgCM3zmi68q7.LVOGY6WjoShfHz97IAjd/uPmMh1u6OUs0O', '9876543210', NULL, 'gandhinagar', NULL, '2', '1'),
-(13, 'abc', 'abc@gmail.com', '$2y$10$yu5/obd1ogq2Yf3VQrvaP.wLA7c.XXTjvRud2c/kZXwTvTg6BjIii', '9513578524', NULL, 'bharuch', NULL, '2', '1'),
-(16, 'dev', 'dev@gmail.com', '$2y$10$hPOQSvgt0R4KoRM5U4GhFOBQNJkcc1v5EO/stAlQRc5.aUpRVt2fi', NULL, NULL, NULL, NULL, NULL, '1'),
-(17, 'kishan', 'kishan@gmail.com', '$2y$10$vN9AF1oBXWr0l1kO97qN/OLDClQdqyM6rUjLn2n2RR3jmfemGfnQ6', '9409601795', '32, sarita darshan soc., hirabaugh, surat.', 'surat', 'kishan_1759746626.png', '1', '1');
+INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address`, `city`, `image`, `gender`, `status`, `country`, `state`, `zip_city2`) VALUES
+(1, 'hiten', 'hiten@gmail.com', '$2y$10$ZUA/3jx2MScfwqtYNthgCeDP7kh7LKOLDJqjPB', '9898989898', NULL, 'surat', NULL, '1', '2', NULL, NULL, NULL),
+(2, 'om', 'om@gmail.com', '$2y$10$azeyEt45SovTnV8hisMxdeNfOdar7hwuw2nCLb', '7894859475', NULL, 'bharuch', NULL, '1', '1', NULL, NULL, NULL),
+(3, 'prince', 'prince@gmail.com', '$2y$10$.QCLcK9mNYlQrptKR6R8Lus.KGAxWbD/WFfu7k', '7096761516', NULL, 'amreli', NULL, '1', '1', NULL, NULL, NULL),
+(4, 'admin', 'admin@gmail.com', '$2y$10$0Jg5MUd92.NXOvFsln8cdu/UAxDE1PmMILmA5w', '9638527415', NULL, 'rajakot', NULL, '2', '1', NULL, NULL, NULL),
+(5, 'anil', 'anil@gmail.com', '$2y$10$PIAUkD3hjhXLPoc9lBCBleLWBNDGVQbbpAUZaN2klpxxGd.v3838C', '9879879872', NULL, 'surat', NULL, '1', '2', NULL, NULL, NULL),
+(7, 'dixitpatel', 'dixitpatel@gmail.com', '$2y$10$a0XpIEU3korUVQ3U86n5A..A4GW0orTGRzt/UFevoq2lgE7LlAfX.', '9876543210', 'Umiya bhavan, thakkar nagar, ahmedabad.', 'surat', 'dixitpatel_1759745881.png', '1', '1', 'India', 'Gujarat', 'Surat - 395003'),
+(8, 'vardhit', 'vardhit31@gmail.com', '$2y$10$0.Xphxy3/m3nqoM.3j2BAesybkcpxHrXLYHQKY4LJdHqyRN543uYa', '', NULL, '', NULL, '', '1', NULL, NULL, NULL),
+(9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', NULL, '', NULL, '', '1', 'India', 'Gujarat', 'Ahmedabad - 380001'),
+(10, 'dhruv321', 'dhruv321@gmail.com', '$2y$10$GLkGP8f2XraRWU9E.x1WU.sbXMXQCbc6eH3h224jJj0vqFl.yVh2S', '', NULL, '', NULL, '', '1', NULL, NULL, NULL),
+(12, 'pateldix', 'pateldix@gmail.com', '$2y$10$7kiih7PgCM3zmi68q7.LVOGY6WjoShfHz97IAjd/uPmMh1u6OUs0O', '9876543210', NULL, 'gandhinagar', NULL, '2', '1', NULL, NULL, NULL),
+(13, 'abc', 'abc@gmail.com', '$2y$10$yu5/obd1ogq2Yf3VQrvaP.wLA7c.XXTjvRud2c/kZXwTvTg6BjIii', '9513578524', NULL, 'bharuch', NULL, '2', '1', NULL, NULL, NULL),
+(16, 'dev', 'dev@gmail.com', '$2y$10$hPOQSvgt0R4KoRM5U4GhFOBQNJkcc1v5EO/stAlQRc5.aUpRVt2fi', NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL),
+(17, 'kishan', 'kishan@gmail.com', '$2y$10$vN9AF1oBXWr0l1kO97qN/OLDClQdqyM6rUjLn2n2RR3jmfemGfnQ6', '9409601795', '101, opera royal, pasodra gam,kamrej, surat.', 'surat', 'kishan_1759746626.png', '1', '1', 'India', 'Gujarat', 'Surat - 395003');
 
 -- --------------------------------------------------------
 
@@ -217,19 +250,8 @@ CREATE TABLE `viewcart` (
 --
 
 INSERT INTO `viewcart` (`id`, `user_id`, `product_id`, `quantity`, `added_at`) VALUES
-(1, 7, 3, 1, '2025-10-13 05:31:24'),
-(2, 7, 11, 1, '2025-10-13 05:33:38'),
-(3, 7, 2, 1, '2025-10-13 05:35:16'),
-(4, 7, 4, 1, '2025-10-13 05:39:27'),
-(7, 9, 14, 1, '2025-10-13 05:43:11'),
-(8, 9, 8, 1, '2025-10-13 05:43:31'),
-(9, 9, 6, 1, '2025-10-13 05:46:50'),
-(10, 9, 2, 1, '2025-10-13 06:00:03'),
-(11, 7, 9, 1, '2025-10-13 06:30:02'),
-(12, 7, 15, 1, '2025-10-13 07:20:17'),
-(13, 7, 16, 1, '2025-10-13 09:41:25'),
-(16, 17, 8, 1, '2025-10-13 11:30:01'),
-(17, 17, 15, 1, '2025-10-13 12:07:35');
+(43, 9, 8, 2, '2025-10-15 05:14:02'),
+(46, 9, 3, 3, '2025-10-15 12:52:44');
 
 -- --------------------------------------------------------
 
@@ -313,6 +335,13 @@ ALTER TABLE `feedback`
   ADD UNIQUE KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `product`
 --
 ALTER TABLE `product`
@@ -370,6 +399,12 @@ ALTER TABLE `feedback`
   MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
@@ -391,7 +426,7 @@ ALTER TABLE `userdata`
 -- AUTO_INCREMENT for table `viewcart`
 --
 ALTER TABLE `viewcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
@@ -402,6 +437,12 @@ ALTER TABLE `wishlist`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_user` FOREIGN KEY (`user_id`) REFERENCES `userdata` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `product`

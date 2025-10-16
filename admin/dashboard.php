@@ -287,7 +287,7 @@
         require "db_connect.php";
 
         $counts = [];
-        $tables = ['userdata', 'categories', 'product', 'wishlist', 'feedback'];
+        $tables = ['userdata', 'categories', 'product', 'wishlist', 'feedback', 'orders'];
         foreach ($tables as $table) {
             $existSql = "SELECT * FROM $table";
             $result = mysqli_query($conn, $existSql);
@@ -366,7 +366,7 @@
                             <div class="card-header">
                                 <div class="card-content">
                                     <h3>Total Orders</h3>
-                                    <h4><?php ?>0</h4>
+                                    <h4><?php ?><?php echo $counts['orders']; ?></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-shopping-cart" style="color: #1abc9c;"></i>
