@@ -218,7 +218,7 @@ if ($email == true) {
         }
 
         .nav-links .logout {
-            bottom: -48vh;
+            bottom: -40vh;
         }
 
         .content-area {
@@ -307,11 +307,31 @@ if ($email == true) {
         .menu-toggle {
             display: none;
         }
+
+        .dropdown .submenu {
+            display: none;
+            flex-direction: column;
+            padding-left: 60px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .dropdown.open .submenu {
+            display: flex;
+        }
+
+        .dropdown .submenu li a {
+            height: 45px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .dropdown .submenu li a:hover {
+            color: white;
+        }
     </style>
 </head>
 
 <body>
-    <!-- Menu Toggle Button (Mobile Only) -->
     <button class="menu-toggle" id="menuToggle">
         <i class="fas fa-bars"></i>
     </button>
@@ -331,16 +351,21 @@ if ($email == true) {
                 </a>
             </li>
 
-            <li>
-                <a href="users_data.php">
-                    <i class="fas fa-users"></i>
-                    <span>Users</span>
+            <li class="dropdown">
+                <a href="javascript:void(0);" class="dropdown-toggle">
+                    <i class="fa-solid fa-chart-simple"></i>
+                    <span>Orders List</span>
                 </a>
+                <ul class="submenu">
+                    <li><a href="order_list.php">Orders</a></li>
+                    <li><a href="subcategory_list.php">Sub Category</a></li>
+                </ul>
             </li>
+
 
             <li>
                 <a href="category_list.php">
-                    <i class="fa-duotone fa-solid fa-folder-plus"></i>
+                    <i class="fa-solid fa-folder-plus"></i>
                     <span>Category List</span>
                 </a>
             </li>
@@ -349,6 +374,13 @@ if ($email == true) {
                 <a href="product_list.php">
                     <i class="fa-solid fa-square-list"></i>
                     <span>Subcategory</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="users_data.php">
+                    <i class="fas fa-users"></i>
+                    <span>Users</span>
                 </a>
             </li>
 
@@ -370,15 +402,13 @@ if ($email == true) {
     </div>
 
     <script>
-        // Mobile menu toggle functionality
-        const menuToggle = document.getElementById('menuToggle');
+const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
 
         menuToggle.addEventListener('click', function () {
             sidebar.classList.toggle('mobile-open');
         });
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function (event) {
             if (window.innerWidth <= 768 &&
                 !sidebar.contains(event.target) &&
@@ -388,7 +418,6 @@ if ($email == true) {
             }
         });
 
-        // Update active menu item based on current page
         document.addEventListener('DOMContentLoaded', function () {
             const currentPage = window.location.pathname.split('/').pop();
             const menuItems = document.querySelectorAll('.nav-links a');
@@ -402,6 +431,15 @@ if ($email == true) {
                 }
             });
         });
+
+        // Dropdown toggle
+        document.querySelectorAll('.dropdown-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function (e) {
+                const parent = this.parentElement;
+                parent.classList.toggle('open');
+            });
+        });
+
     </script>
 </body>
 

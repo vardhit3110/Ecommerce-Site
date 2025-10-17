@@ -91,6 +91,17 @@ if ($row = mysqli_fetch_assoc($result)) {
             color: #fff;
         }
 
+        .no-orders-container {
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .no-orders-image {
+            width: 180px;
+            height: auto;
+            opacity: 0.9;
+        }
+
         .no-orders {
             text-align: center;
             color: #888;
@@ -122,6 +133,17 @@ if ($row = mysqli_fetch_assoc($result)) {
         .product-row span {
             font-size: 14px;
         }
+
+        .modal-body {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .product-row:hover {
+            transform: scale(1.01);
+            transition: 0.2s;
+            background: #eef8ff;
+        }
     </style>
 </head>
 
@@ -132,8 +154,8 @@ if ($row = mysqli_fetch_assoc($result)) {
         <div class="order-header-bar">
             <h4 class="m-0">My Orders</h4>
             <div>
-                <button class="btn-action me-3" id="refreshBtn" title="Refresh Orders">
-                    <i class="fa-solid fa-arrow-rotate-right fa-spin"></i>
+                <button class="btn-action" id="refreshBtn" title="Refresh Orders">
+                    <i class="fa-solid fa-rotate-right"></i>
                 </button>
                 <button class="btn-action" id="printBtn" title="Print Orders">
                     <i class="fa-solid fa-print"></i>
@@ -170,7 +192,7 @@ if ($row = mysqli_fetch_assoc($result)) {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 $order_id = $row['order_id'];
                                 ?>
-                                <tr>
+                                <tr id="orderRow<?php echo $order_id; ?>">
                                     <td><strong><?php echo htmlspecialchars($row['order_code']); ?></strong></td>
                                     <td style="font-size: 14px;">
                                         <?php echo !empty($row['order_date']) ? date("d M Y, h:i A", strtotime($row['order_date'])) : '—'; ?>
@@ -191,42 +213,58 @@ if ($row = mysqli_fetch_assoc($result)) {
                                         <i class="fa-solid fa-eye view-product" style="color: #4e349d;" data-bs-toggle="modal"
                                             data-bs-target="#productModal<?php echo $order_id; ?>" title="View Products"></i>
 
-                                        <!-- Modal -->
+                                        <!-- Dynamic Modal -->
                                         <div class="modal fade" id="productModal<?php echo $order_id; ?>" tabindex="-1"
                                             aria-labelledby="productModalLabel<?php echo $order_id; ?>" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered">
                                                 <div class="modal-content">
-                                                    <div class="modal-header bg-success">
+                                                    <div class="modal-header bg-success text-white">
                                                         <h5 class="modal-title" id="productModalLabel<?php echo $order_id; ?>">
                                                             Order Products</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
-                                                        <!-- Static product example -->
-                                                        <div class="product-row">
-                                                            <img src="images/sample-product1.jpg" alt="">
-                                                            <span>Name: Sample Product 1</span>
-                                                            <span>Qty: 2</span>
-                                                            <span>Price: ₹500</span>
-                                                        </div>
-                                                        <div class="product-row">
-                                                            <img src="images/sample-product2.jpg" alt="">
-                                                            <span>Name: Sample Product 2</span>
-                                                            <span>Qty: 1</span>
-                                                            <span>Price: ₹300</span>
-                                                        </div>
-                                                        <div class="product-row">
-                                                            <img src="images/sample-product3.jpg" alt="">
-                                                            <span>Name: Sample Product 3</span>
-                                                            <span>Qty: 3</span>
-                                                            <span>Price: ₹700</span>
-                                                        </div>
+
+                                                        <?php
+                                                        $product_json = $row['product_details'];
+                                                        $products = json_decode($product_json, true);
+
+                                                        if (!empty($products) && is_array($products)) {
+                                                            foreach ($products as $prod) {
+                                                                $pname = htmlspecialchars($prod['product_name'] ?? 'Unknown Product');
+                                                                $qty = htmlspecialchars($prod['quantity'] ?? '1');
+                                                                $price = htmlspecialchars($prod['price'] ?? '0');
+                                                                $image = htmlspecialchars($prod['image'] ?? './admin/images/product_img/Product is Empty1.png');
+                                                                $pname;
+                                                                ?>
+                                                                <div class="product-row"
+                                                                    style="display:flex;align-items:flex-start;gap:15px;background:#f9f9f9;border-radius:10px;padding:10px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+                                                                    <img src="<?php echo $image; ?>" alt="<?php echo $pname; ?>"
+                                                                        style="width:70px;height:70px;border-radius:8px;object-fit:cover;">
+                                                                    <div style="display:flex;flex-direction:column;">
+                                                                        <strong
+                                                                            style="font-size:15px;color:#333;"><?php echo $pname; ?></strong>
+                                                                        <span style="font-size:13px;color:#666;margin-top:4px;">Qty:
+                                                                            <?php echo $qty; ?></span>
+                                                                        <span style="font-size:13px;color:#007bff;margin-top:3px;">₹
+                                                                            <?php echo number_format($price, 2); ?></span>
+                                                                    </div>
+                                                                </div>
+                                                                <?php
+                                                            }
+                                                        } else {
+                                                            echo "<p class='text-center text-muted'>No product details available.</p>";
+                                                        }
+                                                        ?>
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </td>
+
+
                                     <td>
                                         <?php
                                         $status = $row['order_status'];
@@ -243,7 +281,10 @@ if ($row = mysqli_fetch_assoc($result)) {
                                         ?>
                                     </td>
                                     <td>
-                                        <a href="#" class="btn btn-outline-danger btn-sm">Cancel</a>
+                                        <?php if ($status >= 1 && $status <= 3) { ?>
+                                            <button class="btn btn-outline-danger btn-sm cancelOrder"
+                                                data-id="<?php echo $order_id; ?>">Cancel</button>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             <?php } ?>
@@ -252,27 +293,45 @@ if ($row = mysqli_fetch_assoc($result)) {
                 </div>
                 <?php
             } else {
-                echo '<p class="no-orders">You have not placed any orders yet.</p>';
+                echo '<div class="no-orders-container">
+  <img src="./admin/images/product_img/Product is Empty.png" alt="No Orders" class="no-orders-image">
+  <p class="no-orders">You have not placed any orders yet.</p>
+</div>';
             }
             ?>
         </div>
     </div>
-
     <?php include "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
+
             $("#refreshBtn").click(function () {
                 $.ajax({
-                    url: 'myorder.php',
-                    type: 'GET',
+                    url: "myorder.php",
+                    type: "GET",
                     success: function (data) {
-                        $("#ordersTable").html(data);
+                        $("#ordersTable").html($(data).find("#ordersTable").html());
                     },
                     error: function () {
                         alert("Unable to refresh orders. Please try again.");
                     }
                 });
+            });
+
+            $(document).on("click", ".cancelOrder", function () {
+                let orderId = $(this).data("id");
+                if (confirm("Are you sure you want to cancel this order?")) {
+                    $.ajax({
+                        url: "./partials/cancel_order.php",
+                        type: "POST",
+                        data: { order_id: orderId },
+                        success: function (response) {
+                            alert(response);
+                            $("#refreshBtn").click();
+                        }
+                    });
+                }
             });
 
             $("#printBtn").click(function () {

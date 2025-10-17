@@ -67,6 +67,43 @@ require "slider.php";
             bottom: 8px;
             width: 70px;
         }
+
+        .view-btn {
+            color: #007bff;
+            cursor: pointer;
+        }
+
+        .view-btn:hover {
+            color: #0056b3;
+        }
+
+        .modal-content {
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #212529;
+            color: white;
+        }
+
+        .order-details-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .product-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #333;
+        }
     </style>
 </head>
 
@@ -141,14 +178,9 @@ require "slider.php";
                             </thead>
                             <tbody>
                                 <?php
-                                // base query
-                                $query = "SELECT userdata.username, orders.* 
-                                          FROM userdata 
-                                          JOIN orders ON userdata.id = orders.user_id 
-                                          WHERE 1";
+                                $query = "SELECT userdata.username, orders.* FROM userdata JOIN orders ON userdata.id = orders.user_id WHERE 1";
                                 $params = [];
 
-                                // apply filters
                                 if (!empty($_GET['username'])) {
                                     $query .= " AND userdata.username LIKE ?";
                                     $params[] = "%" . $_GET['username'] . "%";
@@ -164,7 +196,6 @@ require "slider.php";
                                     $params[] = $_GET['payment_mode'];
                                 }
 
-                                // ORDER BY should come last
                                 $query .= " ORDER BY orders.order_id DESC";
 
                                 $stmt = mysqli_prepare($conn, $query);
@@ -182,7 +213,17 @@ require "slider.php";
                                             $payment_status = $row['payment_status'];
 
                                             $payMode = ($payment_mode == 1) ? "Cash On Delivery" : (($payment_mode == 2) ? "Online Payment" : "Unknown");
-                                            $payStatus = ($payment_status == 1) ? "Pending" : (($payment_status == 2) ? "Success" : (($payment_status == 3) ? "Failed" : "Unknown"));
+                                            $payStatus = "";
+
+                                            if ($payment_status == 1) {
+                                                $payStatus = '<span style="background-color: #ffc107; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Pending</span>';
+                                            } elseif ($payment_status == 2) {
+                                                $payStatus = '<span style="background-color: #28a745; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Success</span>';
+                                            } elseif ($payment_status == 3) {
+                                                $payStatus = '<span style="background-color: #dc3545; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Failed</span>';
+                                            } else {
+                                                $payStatus = '<span style="background-color: #6c757d; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Unknown</span>';
+                                            }
 
                                             echo "<tr class='text-center'>
                                                 <td>{$row['order_code']}</td>
@@ -192,7 +233,7 @@ require "slider.php";
                                                 <td>{$payMode}</td>
                                                 <td>{$payStatus}</td>
                                                 <td>--</td>
-                                                <td>--</td>
+                                                <td><i class='fa-solid fa-eye view-btn' data-bs-toggle='modal' data-bs-target='#orderDetailsModal'></i></td>
                                             </tr>";
                                         }
                                     } else {
@@ -212,6 +253,47 @@ require "slider.php";
 
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
+        </div>
+    </div>
+
+    <!-- Static Popup Modal -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-labelledby="orderDetailsModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fa-solid fa-receipt"></i> Order Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="order-details-card">
+                        <div class="row g-3">
+                            <div class="col-md-4 text-center">
+                                <img src="images/product_img/Product is Empty1.png" class="product-img mb-2"
+                                    alt="Product">
+                                <p class="fw-bold mb-0">Margherita Pizza</p>
+                                <small>Qty: 2 | Price: ₹299 each</small>
+                            </div>
+                            <div class="col-md-8">
+                                <p><span class="info-label">Order Code:</span> ORD123456</p>
+                                <p><span class="info-label">Order Date:</span> 15 Oct 2025</p>
+                                <p><span class="info-label">Shipping Charge:</span> ₹50</p>
+                                <p><span class="info-label">Order Status:</span> Delivered</p>
+                                <p><span class="info-label">Delivery Address:</span> 123, Green Street, Mumbai</p>
+                                <p><span class="info-label">Payment Mode:</span> Online Payment</p>
+                                <p><span class="info-label">Payment Status:</span> Success</p>
+                                <p><span class="info-label">Total Amount:</span> ₹648</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i> Close
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 

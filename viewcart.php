@@ -466,13 +466,13 @@ if (isset($_SESSION['email'])) {
                     </div>
                 </div>
             <?php else: ?>
-                <div class="container my-5" style="min-height: 80vh;">
+                <div class="container my-5" style="min-height: 20vh;">
                     <div class="row justify-content-center align-items-center h-100">
                         <div class="col-md-8">
                             <div class="text-center py-5 border rounded bg-light shadow-sm">
-                                <i class="fa fa-shopping-cart fa-4x text-muted mb-3"></i>
+                                <i class="fa-solid fa-cart-shopping fa-bounce fa-4x mb-3 text-primary-emphasis"></i>
                                 <h5>Your cart is empty</h5>
-                                <a href="index.php" class="btn btn-dark mt-3">Start Shopping</a>
+                                <a href="index.php" class="btn btn-outline-primary mt-3">Start Shopping</a>
                             </div>
                         </div>
                     </div>
@@ -482,10 +482,12 @@ if (isset($_SESSION['email'])) {
         <?php else: ?>
             <div class="container my-5">
                 <div class="row justify-content-center">
-                    <div class="col-md-12 col-sm-10">
-                        <div class="border rounded p-4 text-center shadow-sm bg-light">
-                            <h5 class="mb-3">Please login to view your cart</h5>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#signInModal" class="btn btn-dark">Login</a>
+                    <div class="col-md-10 col-sm-10">
+                        <div class="border rounded p-5 text-center shadow-sm bg-light">
+                            <i class="fa-solid fa-face-smile fa-bounce fa-4x text-primary-emphasis mb-3"></i>
+                            <h5 class="mb-4">Please login to view your cart</h5>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#signInModal"
+                                class="btn btn-primary">Login</a>
                         </div>
                     </div>
                 </div>
@@ -496,7 +498,7 @@ if (isset($_SESSION['email'])) {
     <script src="./links/viewcart.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <?php include "footer.php";?>
+    <?php include "footer.php"; ?>
 </body>
 
 </html>

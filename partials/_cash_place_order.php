@@ -52,7 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $grand_total += $shipping;
-    $randomNumber = random_int(0, 999999);
+    $randomNumber = random_int(111111, 999999);
     $product_details = json_encode($cart_items, JSON_UNESCAPED_UNICODE);
     $insert = "INSERT INTO orders (user_id, product_details, total_amount, shipping_charge, payment_mode, payment_status, order_status, delivery_address,order_code)
                VALUES (?, ?, ?, ?, '1', '1', '1', ?, ?)";
