@@ -451,7 +451,7 @@ if (isset($_SESSION['email'])) {
                                     if (payment.value === 'cod') {
                                         window.location.href = 'cashOnDelivery.php';
                                     } else if (payment.value === 'online') {
-                                        window.location.href = 'payment_gateway.php';
+                                        window.location.href = 'onlinePayment.php';
                                     }
                                 });
                             </script>

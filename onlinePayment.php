@@ -283,9 +283,10 @@ mysqli_close($conn);
                         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                         <input type="hidden" name="shipping" value="<?php echo $shipping; ?>">
                         <input type="hidden" name="total_amount" value="<?php echo $grand_total; ?>">
-                        <button type="submit" class="btn btn-success w-100 fw-semibold">
+                        <button type="button" id="rzpButton" class="btn btn-success w-100 fw-semibold">
                             <i class="fa-solid fa-credit-card me-2"></i>Confirm Order & Pay Online
                         </button>
+
 
                     </form>
 

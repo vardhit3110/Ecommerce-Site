@@ -183,9 +183,7 @@ $userRow = mysqli_fetch_assoc($userResult);
                 <div class="feedback-display">
                     <h2 class="text-center mb-4">Recent Feedback</h2>
                     <?php
-                    $sql = "SELECT f.*, u.email FROM feedback f 
-                            JOIN userdata u ON f.user_id = u.id 
-                            ORDER BY f.submision_date DESC LIMIT 10";
+                    $sql = "SELECT f.*, u.email FROM feedback f JOIN userdata u ON f.user_id = u.id ORDER BY f.submision_date DESC LIMIT 10";
                     $result = mysqli_query($conn, $sql);
 
                     if (mysqli_num_rows($result) > 0) {

@@ -217,9 +217,6 @@ if ($email == true) {
             font-size: 14px;
         }
 
-        .nav-links .logout {
-            bottom: -40vh;
-        }
 
         .content-area {
             background: white;
@@ -308,25 +305,51 @@ if ($email == true) {
             display: none;
         }
 
-        .dropdown .submenu {
-            display: none;
-            flex-direction: column;
-            padding-left: 60px;
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle::after {
+            content: '\f078';
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 12px;
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown.open .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .submenu {
             background: rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
         }
 
         .dropdown.open .submenu {
-            display: flex;
+            max-height: 300px;
+            opacity: 1;
         }
 
-        .dropdown .submenu li a {
-            height: 45px;
+        .submenu li a {
+            padding-left: 65px;
             font-size: 14px;
             color: rgba(255, 255, 255, 0.7);
+            height: 45px;
+            display: flex;
+            align-items: center;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        .dropdown .submenu li a:hover {
-            color: white;
+        .submenu li a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-left: 3px solid var(--primary-color);
         }
     </style>
 </head>
@@ -339,8 +362,7 @@ if ($email == true) {
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="logo">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iI2ZmZiI+PHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4em0tMS00aDJ2NEgxMXYtNHptMS0xMGMtLjU1IDAtMSAuNDUtMSAxdjZjMCAuNTUuNDUgMSAxIDFzMS0uNDUgMS0xVjZjMC0uNTUtLjQ1LTEtMS0xeiIvPjwvc3ZnPg=="
-                alt="Logo">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Logo">
             <span>Admin Panel</span>
         </div>
         <ul class="nav-links">
@@ -357,8 +379,8 @@ if ($email == true) {
                     <span>Orders List</span>
                 </a>
                 <ul class="submenu">
-                    <li><a href="order_list.php">Orders</a></li>
-                    <li><a href="subcategory_list.php">Sub Category</a></li>
+                    <li><a href="order_list.php">All Orders</a></li>
+                    <li><a href="#">Cancelled Orders</a></li>
                 </ul>
             </li>
 
@@ -400,9 +422,8 @@ if ($email == true) {
             </li>
         </ul>
     </div>
-
     <script>
-const menuToggle = document.getElementById('menuToggle');
+        const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
 
         menuToggle.addEventListener('click', function () {
@@ -439,7 +460,6 @@ const menuToggle = document.getElementById('menuToggle');
                 parent.classList.toggle('open');
             });
         });
-
     </script>
 </body>
 

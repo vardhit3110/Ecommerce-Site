@@ -235,20 +235,25 @@ if ($row = mysqli_fetch_assoc($result)) {
                                                                 $pname = htmlspecialchars($prod['product_name'] ?? 'Unknown Product');
                                                                 $qty = htmlspecialchars($prod['quantity'] ?? '1');
                                                                 $price = htmlspecialchars($prod['price'] ?? '0');
-                                                                $image = htmlspecialchars($prod['image'] ?? './admin/images/product_img/Product is Empty1.png');
-                                                                $pname;
+
+                                                                // Fetch product image from product table
+                                                                $imgQuery = mysqli_query($conn, "SELECT product_image FROM product WHERE product_name = '" . mysqli_real_escape_string($conn, $pname) . "' LIMIT 1");
+                                                                $imgRow = mysqli_fetch_assoc($imgQuery);
+                                                                $image = !empty($imgRow['product_image'])
+                                                                    ? "./admin/images/product_img/" . htmlspecialchars($imgRow['product_image'])
+                                                                    : "./admin/images/product_img/Product is Empty.png";
                                                                 ?>
                                                                 <div class="product-row"
                                                                     style="display:flex;align-items:flex-start;gap:15px;background:#f9f9f9;border-radius:10px;padding:10px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
                                                                     <img src="<?php echo $image; ?>" alt="<?php echo $pname; ?>"
-                                                                        style="width:70px;height:70px;border-radius:8px;object-fit:cover;">
+                                                                        style="width:90px;height:90px;border-radius:8px;object-fit:cover;">
                                                                     <div style="display:flex;flex-direction:column;">
                                                                         <strong
                                                                             style="font-size:15px;color:#333;"><?php echo $pname; ?></strong>
                                                                         <span style="font-size:13px;color:#666;margin-top:4px;">Qty:
                                                                             <?php echo $qty; ?></span>
-                                                                        <span style="font-size:13px;color:#007bff;margin-top:3px;">₹
-                                                                            <?php echo number_format($price, 2); ?></span>
+                                                                        <span
+                                                                            style="font-size:13px;color:#007bff;margin-top:3px;">₹<?php echo number_format($price, 2); ?></span>
                                                                     </div>
                                                                 </div>
                                                                 <?php
@@ -257,6 +262,7 @@ if ($row = mysqli_fetch_assoc($result)) {
                                                             echo "<p class='text-center text-muted'>No product details available.</p>";
                                                         }
                                                         ?>
+
 
                                                     </div>
                                                 </div>
