@@ -221,12 +221,12 @@ include "db_connect.php";
                                                     : '<span class="badge bg-secondary">Unknown</span>');
 
                                             $payStatus = ($payment_status == 1)
-                                                ? '<span class="badge bg-warning text-dark">Pending</span>'
+                                                ? '<span class="badge text-warning" style="background-color: hsla(43, 100%, 95%, 1.00);">Pending</span>'
                                                 : (($payment_status == 2)
-                                                    ? '<span class="badge bg-success">Success</span>'
+                                                    ? '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Success</span>'
                                                     : (($payment_status == 3)
-                                                        ? '<span class="badge bg-danger">Failed</span>'
-                                                        : '<span class="badge bg-secondary">Unknown</span>'));
+                                                        ? '<span class="badge text-danger" style="background-color: hsla(3, 60%, 93%, 1.00);">Failed</span>'
+                                                        : '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 88%, 1.00);">Unknown</span>'));
 
                                             echo "<tr class='text-center'>
                                                 <td>{$row['order_code']}</td>
