@@ -172,6 +172,7 @@ include "db_connect.php";
                                     <th>Username</th>
                                     <th>Delivery Address</th>
                                     <th>Amount</th>
+                                    <th>Order Status</th>
                                     <th>Payment Mode</th>
                                     <th>Payment Status</th>
                                     <th>View Product</th>
@@ -211,15 +212,32 @@ include "db_connect.php";
 
                                     if (mysqli_num_rows($result) > 0) {
                                         while ($row = mysqli_fetch_assoc($result)) {
+                                            $order_status = $row['order_status'];
                                             $payment_mode = $row['payment_mode'];
                                             $payment_status = $row['payment_status'];
 
-                                            $payMode = ($payment_mode == 1)
-                                                ? '<span class="badge bg-warning text-dark">Cash On Delivery</span>'
-                                                : (($payment_mode == 2)
-                                                    ? '<span class="badge bg-primary">Online Payment</span>'
-                                                    : '<span class="badge bg-secondary">Unknown</span>');
+                                            /* order status */
+                                            $orderMode = ($order_status == 1)
+                                                ? '<span class="badge text-warning" style="background-color: hsla(43, 100%, 95%, 1.00);">Pending</span>'
+                                                : (($order_status == 2)
+                                                    ? '<span class="badge text-primary" style="background-color: hsla(200, 85%, 92%, 1.00);">Processing</span>'
+                                                    : (($order_status == 3)
+                                                        ? '<span class="badge" style="background-color: hsla(260, 70%, 92%, 1.00); color: purple;">Shipped</span>'
+                                                        : (($order_status == 4)
+                                                            ? '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Delivered</span>'
+                                                            : (($order_status == 5)
+                                                                ? '<span class="badge text-danger" style="background-color: hsla(0, 75%, 92%, 1.00);">Cancelled</span>'
+                                                                : '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 85%, 1.00);">Unknown</span>'))));
 
+
+                                            /* payment mode */
+                                            $payMode = ($payment_mode == 1)
+                                                ? '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Cash On Delivery</span>'
+                                                : (($payment_mode == 2)
+                                                    ? '<span class="badge text-primary" style="background-color: hsla(200, 85%, 92%, 1.00);">Online Payment</span>'
+                                                    : '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 88%, 1.00);">Unknown</span>');
+
+                                            /* payment status */
                                             $payStatus = ($payment_status == 1)
                                                 ? '<span class="badge text-warning" style="background-color: hsla(43, 100%, 95%, 1.00);">Pending</span>'
                                                 : (($payment_status == 2)
@@ -233,6 +251,7 @@ include "db_connect.php";
                                                 <td>{$row['username']}</td>
                                                 <td>{$row['delivery_address']}</td>
                                                 <td>₹" . number_format($row['total_amount'], 2) . "</td>
+                                                 <td>{$orderMode}</td>
                                                 <td>{$payMode}</td>
                                                 <td>{$payStatus}</td>
                                                 <td><i class='fa-solid fa-eye view-btn' data-id='{$row['order_id']}' data-bs-toggle='modal' data-bs-target='#orderDetailsModal'></i></td>
