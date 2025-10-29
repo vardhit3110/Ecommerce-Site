@@ -33,4 +33,3 @@ if (isset($response['error'])) {
     echo "<p style='color: green;'>Success! API credentials are working.</p>";
 }
 ?>
-ok
