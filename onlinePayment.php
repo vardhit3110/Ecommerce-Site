@@ -278,17 +278,86 @@ mysqli_close($conn);
                     </div>
 
 
-                    <!-- Order Button -->
-                    <form method="POST" action="./partials/.php">
-                        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-                        <input type="hidden" name="shipping" value="<?php echo $shipping; ?>">
-                        <input type="hidden" name="total_amount" value="<?php echo $grand_total; ?>">
-                        <button type="button" id="rzpButton" class="btn btn-success w-100 fw-semibold">
-                            <i class="fa-solid fa-credit-card me-2"></i>Confirm Order & Pay Online
-                        </button>
+                   <!-- Order Button -->
+<div class="mb-3 text-center">
+    <button type="button" id="rzpButton" class="btn btn-success w-100 fw-semibold">
+        <i class="fa-solid fa-credit-card me-2"></i>Confirm Order & Pay Online
+    </button>
+</div>
 
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+document.getElementById('rzpButton').addEventListener('click', function() {
+    // Create Razorpay order
+    fetch('create_razorpay_order.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            openRazorpayCheckout(data.order, data.key);
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error creating order: ' + error.message);
+    });
+});
 
-                    </form>
+function openRazorpayCheckout(order, key) {
+    const options = {
+        key: key,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Your Store Name",
+        description: "Order Payment",
+        order_id: order.id,
+        handler: function (response) {
+            verifyPayment(response);
+        },
+        prefill: {
+            name: "<?php echo $_SESSION['username']; ?>",
+            email: "<?php echo $_SESSION['username']; ?>@example.com",
+            contact: "9999999999"
+        },
+        theme: {
+            color: "#528FF0"
+        },
+        modal: {
+            ondismiss: function() {
+                alert('Payment cancelled. Please try again.');
+            }
+        }
+    };
+    
+    const rzp = new Razorpay(options);
+    rzp.open();
+}
+
+function verifyPayment(response) {
+    fetch('verify_razorpay_payment.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(response)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✅ Payment Successful!\nOrder Code: ${data.order_code}\nAmount: ₹${data.amount}\nPayment ID: ${data.payment_id}`);
+            window.location.href = 'index.php?payment=success&order_code=' + data.order_code;
+        } else {
+            alert('Payment Verification Failed: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error verifying payment');
+    });
+}
+</script>
 
                 </div>
             </div>
