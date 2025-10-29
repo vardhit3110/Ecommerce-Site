@@ -108,6 +108,57 @@ include "db_connect.php";
         .info-icon:hover .info-tooltip {
             display: block;
         }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            justify-content: flex-end;
+            padding-left: 0;
+        }
+
+        .page-item {
+            margin: 0 4px;
+        }
+
+        .page-link {
+            display: block;
+            padding: 8px 12px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .page-item.active .page-link {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+            cursor: default;
+        }
+
+        .page-item.disabled .page-link {
+            color: #6c757d;
+            pointer-events: none;
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            cursor: default;
+        }
+
+        .page-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .disabled:hover {
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #333;
+            text-align: right;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
@@ -181,6 +232,10 @@ include "db_connect.php";
                             </thead>
                             <tbody>
                                 <?php
+                                $total_data = 8;
+                                $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+                                $offset = ($page - 1) * $total_data;
+
                                 $query = "SELECT userdata.username, orders.* FROM userdata JOIN orders ON userdata.id = orders.user_id WHERE 1";
                                 $params = [];
 
@@ -199,7 +254,7 @@ include "db_connect.php";
                                     $params[] = $_GET['payment_mode'];
                                 }
 
-                                $query .= " ORDER BY orders.order_id DESC";
+                                $query .= " ORDER BY orders.order_id DESC LIMIT $offset, $total_data";
 
                                 $stmt = mysqli_prepare($conn, $query);
                                 if ($stmt) {
@@ -266,6 +321,61 @@ include "db_connect.php";
                                 ?>
                             </tbody>
                         </table>
+                        <br>
+                        <?php
+                        $sql = "SELECT COUNT(*) AS total FROM orders";
+                        $result = mysqli_query($conn, $sql);
+                        $row = mysqli_fetch_assoc($result);
+                        $total_user = $row['total'];
+                        $total_page = ceil($total_user / $total_data);
+
+                        $start = ($page - 1) * $total_data + 1;
+                        $end = min($page * $total_data, $total_user);
+
+                        if ($total_user > 0) {
+
+
+                            echo '<ul class="pagination">';
+                            // Prev button
+                            if ($page > 1) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
+                            } else {
+                                echo '<li class="page-item disabled"><a class="page-link" href="#">« Prev</a></li>';
+                            }
+
+                            // Dynamic pages with ellipses
+                            $visiblePages = 2;
+                            $startPage = max(1, $page - $visiblePages);
+                            $endPage = min($total_page, $page + $visiblePages);
+
+                            if ($startPage > 1) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>';
+                                if ($startPage > 2)
+                                    echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                            }
+
+                            for ($i = $startPage; $i <= $endPage; $i++) {
+                                $active = ($i == $page) ? 'active' : '';
+                                echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                            }
+
+                            if ($endPage < $total_page) {
+                                if ($endPage < $total_page - 1)
+                                    echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . $total_page . '">' . $total_page . '</a></li>';
+                            }
+
+                            // Next button
+                            if ($page < $total_page) {
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
+                            } else {
+                                echo '<li class="page-item disabled"><a class="page-link" href="#">Next »</a></li>';
+                            }
+
+                            echo '</ul>';
+                            echo "<div class='pagination-info'>Showing $start to $end of $total_user entries</div>";
+                        }
+                        ?>
                     </div>
                 </div>
             </div>

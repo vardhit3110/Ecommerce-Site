@@ -152,7 +152,7 @@ if ($row = mysqli_fetch_assoc($result)) {
 
     <div class="order-container">
         <div class="order-header-bar">
-            <h4 class="m-0">My Orders</h4>
+            <h4 class="m-0" style="font-weight: 700;">My Orders</h4>
             <div>
                 <button class="btn-action" id="refreshBtn" title="Refresh Orders">
                     <i class="fa-solid fa-rotate-right"></i>
@@ -174,8 +174,9 @@ if ($row = mysqli_fetch_assoc($result)) {
             if (mysqli_num_rows($result) > 0) {
                 ?>
                 <div class="table-responsive">
-                    <table class="table table-bordered align-middle">
-                        <thead>
+                    <table
+                        class="table table-bordered table-responsive table-hover table-bordered border-dark align-middle">
+                        <thead class="table-success table-bordered border-dark">
                             <tr>
                                 <th>Order Code</th>
                                 <th>Order Date</th>
@@ -205,7 +206,7 @@ if ($row = mysqli_fetch_assoc($result)) {
                                         elseif ($row['payment_mode'] == '2')
                                             echo "Online Payment";
                                         else
-                                            echo "—";
+                                            echo "N/A";
                                         ?>
                                     </td>
                                     <td>₹<?php echo number_format($row['total_amount'] ?? 0, 2); ?></td>
@@ -274,16 +275,17 @@ if ($row = mysqli_fetch_assoc($result)) {
                                     <td>
                                         <?php
                                         $status = $row['order_status'];
-                                        if ($status == 1)
-                                            echo "<span class='badge-status bg-success'>Pending</span>";
-                                        elseif ($status == 2)
-                                            echo "<span class='badge-status bg-info'>Processing</span>";
-                                        elseif ($status == 3)
-                                            echo "<span class='badge-status bg-primary'>Shipped</span>";
-                                        elseif ($status == 4)
-                                            echo "<span class='badge-status bg-warning text-dark'>Delivered</span>";
-                                        else
-                                            echo "<span class='badge-status bg-danger'>Cancelled</span>";
+                                        echo $orderMode = ($status == 1)
+                                            ? '<span class="badge text-warning" style="background-color: hsla(43, 100%, 95%, 1.00);">Pending</span>'
+                                            : (($status == 2)
+                                                ? '<span class="badge text-primary" style="background-color: hsla(200, 85%, 92%, 1.00);">Processing</span>'
+                                                : (($status == 3)
+                                                    ? '<span class="badge" style="background-color: hsla(260, 70%, 92%, 1.00); color: purple;">Shipped</span>'
+                                                    : (($status == 4)
+                                                        ? '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Delivered</span>'
+                                                        : (($status == 5)
+                                                            ? '<span class="badge text-danger" style="background-color: hsla(0, 75%, 92%, 1.00);">Cancelled</span>'
+                                                            : '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 85%, 1.00);">Unknown</span>'))));
                                         ?>
                                     </td>
                                     <td>

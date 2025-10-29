@@ -62,7 +62,7 @@ $grand_total = ($total + $shipping) * 100; // Convert to paise
 try {
     // Create order in your database first
     $order_code = random_int(100000, 999999);
-    
+
     // Get cart items for order details
     $cart_items_query = "SELECT product.product_name, product.product_price, viewcart.quantity 
                         FROM product 
@@ -72,7 +72,7 @@ try {
     mysqli_stmt_bind_param($stmt, "i", $user_id);
     mysqli_stmt_execute($stmt);
     $cart_items_result = mysqli_stmt_get_result($stmt);
-    
+
     $cart_items = [];
     while ($row = mysqli_fetch_assoc($cart_items_result)) {
         $cart_items[] = [
@@ -82,27 +82,32 @@ try {
             'subtotal' => $row['product_price'] * $row['quantity']
         ];
     }
-    
+
     $product_details = json_encode($cart_items, JSON_UNESCAPED_UNICODE);
-    
-    // Insert order with pending status
+
+    // Insert order with pending status - include razorpay_payment_id field
     $insert_order = "INSERT INTO orders (user_id, product_details, total_amount, shipping_charge, 
-                    payment_mode, payment_status, order_status, delivery_address, order_code) 
-                    VALUES (?, ?, ?, ?, '2', '1', '1', ?, ?)";
-    
+                    payment_mode, payment_status, order_status, delivery_address, order_code, razorpay_order_id, razorpay_payment_id) 
+                    VALUES (?, ?, ?, ?, '2', '1', '1', ?, ?, ?, ?)";
+
     $stmt = mysqli_prepare($conn, $insert_order);
     $total_amount = $grand_total / 100; // Convert back to rupees for storage
-    mysqli_stmt_bind_param($stmt, "isddsi", $user_id, $product_details, $total_amount, $shipping, $address, $order_code);
-    
+
+    // Initially set razorpay_order_id and razorpay_payment_id as NULL, will be updated after payment
+    $razorpay_order_id_temp = NULL;
+    $razorpay_payment_id_temp = NULL;
+
+    mysqli_stmt_bind_param($stmt, "isddsiss", $user_id, $product_details, $total_amount, $shipping, $address, $order_code, $razorpay_order_id_temp, $razorpay_payment_id_temp);
+
     if (!mysqli_stmt_execute($stmt)) {
         throw new Exception('Failed to create order in database: ' . mysqli_error($conn));
     }
-    
+
     $order_id = mysqli_insert_id($conn);
 
     // Create Razorpay order
     $receipt_id = 'rcpt_' . $order_code;
-    
+
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/orders');
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -114,33 +119,32 @@ try {
         'receipt' => $receipt_id
     ]));
     curl_setopt($ch, CURLOPT_USERPWD, $razorpay_key_id . ':' . $razorpay_key_secret);
-    
+
     $headers = ['Content-Type: application/json'];
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    
+
     $result = curl_exec($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    
+
     if (curl_errno($ch)) {
         throw new Exception('Curl error: ' . curl_error($ch));
     }
     curl_close($ch);
-    
+
     $razorpay_order = json_decode($result, true);
-    
+
     if ($http_code !== 200 || isset($razorpay_order['error'])) {
         throw new Exception($razorpay_order['error']['description'] ?? 'Razorpay order creation failed');
     }
-    
-    // Update order with Razorpay order ID
+
     $update_order = "UPDATE orders SET razorpay_order_id = ? WHERE order_id = ?";
     $stmt = mysqli_prepare($conn, $update_order);
     mysqli_stmt_bind_param($stmt, "si", $razorpay_order['id'], $order_id);
-    
+
     if (!mysqli_stmt_execute($stmt)) {
         throw new Exception('Failed to update order with Razorpay ID: ' . mysqli_error($conn));
     }
-    
+
     echo json_encode([
         'success' => true,
         'order' => $razorpay_order,
@@ -148,7 +152,7 @@ try {
         'amount' => $grand_total,
         'order_id' => $order_id
     ]);
-    
+
 } catch (Exception $e) {
     error_log("Razorpay Order Creation Error: " . $e->getMessage());
     echo json_encode([
