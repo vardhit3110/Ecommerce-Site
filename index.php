@@ -36,7 +36,7 @@ session_start();
 
     <?php require_once "header.php"; ?>
     <main class="container py-4">
-        <div class="col-lg-3 text-center my-5 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+        <div class="col-lg-3 text-center my-5 mt-1 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
             border-top: 3px solid #0077cc; border-bottom: 3px solid #0077cc;
             border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease;">
             <h2 style="color: #0077cc; font-weight: 600; letter-spacing: 1px; font-family: 'Segoe UI', sans-serif;">
@@ -66,7 +66,7 @@ session_start();
                     $catname = $row['categorie_name'];
                     $catdesc = $row['categorie_desc'];
 
-                    echo '<div class="col-12 col-sm-6 col-md-4">
+                    echo '<div class="col-12 mt-1 col-sm-6 col-md-4">
                         <div class="card h-100" id="main-container">
                         <div class="p-3">
                         <img src="./admin/images/' . htmlspecialchars($catImage) . '" class="card-img-top" alt="' . htmlspecialchars($catname) . '" style="height: 370px; object-fit: contain; border-radius: 5px;">

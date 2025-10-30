@@ -178,7 +178,7 @@ session_start();
             </div>
         <?php endif; ?>
 
-        <div class="col-lg-2 text-center my-5 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+        <div class="col-lg-2 text-center mt-1 my-5 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
             border-top: 3px solid #0077cc; border-bottom: 3px solid #0077cc;
             border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease;">
             <h2 style="color: #0077cc; font-weight: 600; letter-spacing: 1px; font-family: 'Segoe UI', sans-serif;">
@@ -234,7 +234,7 @@ session_start();
                             $is_in_wishlist = (mysqli_num_rows($wishlist_result) > 0);
                         }
 
-                        echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        echo '<div class="col-12 mt-1 col-sm-6 col-md-4 col-lg-3">
                                 <div class="card h-100 shadow-sm" id="main-product-div">
                                     <div class="card-img-container">
                                         <div class="p-3">

@@ -66,7 +66,7 @@ include "db_connect.php";
 
         <!-- msg end -->
 
-        <div class="col-lg-2 text-center my-5 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+        <div class="col-lg-2 text-center my-5 mt-1 py-2 detail-box" style="margin: auto; background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
             border-top: 3px solid #0077cc; border-bottom: 3px solid #0077cc;
             border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.3s ease;">
             <h2 style="color: #0077cc; font-weight: 600; letter-spacing: 1px; font-family: 'Segoe UI', sans-serif;">
@@ -78,9 +78,7 @@ include "db_connect.php";
         if (isset($_GET['Productid'])) {
             $productid = $_GET['Productid'];
 
-            $showProduct = "SELECT p.*, c.categorie_name FROM product p 
-                            JOIN categories c ON p.categorie_id = c.categorie_id 
-                            WHERE p.product_Id = ? AND p.product_status = '1' AND c.categorie_status = '1'";
+            $showProduct = "SELECT p.*, c.categorie_name FROM product p JOIN categories c ON p.categorie_id = c.categorie_id WHERE p.product_Id = ? AND p.product_status = '1' AND c.categorie_status = '1'";
 
             $stmt = mysqli_prepare($conn, $showProduct);
 
