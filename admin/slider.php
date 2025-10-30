@@ -17,6 +17,7 @@ if ($email == true) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="shortcut icon" href="../store/images/logo.jpg" type="image/x-icon">
     <style>
         :root {
             --sidebar-width: 70px;
@@ -380,11 +381,10 @@ if ($email == true) {
                 </a>
                 <ul class="submenu">
                     <li><a href="order_list.php">All Orders</a></li>
-                    <li><a href="#">Cancelled Orders</a></li>
+                    <li><a href="cancelled_order.php">Cancelled Orders</a></li>
+                    <li><a href="delivered_order.php">Delivered Orders</a></li>
                 </ul>
             </li>
-
-
             <li>
                 <a href="category_list.php">
                     <i class="fa-solid fa-folder-plus"></i>
@@ -413,6 +413,12 @@ if ($email == true) {
                 </a>
             </li>
 
+            <li>
+                <a href="subscribers-manage.php">
+                    <i class="fa-solid fa-bell"></i>
+                    <span>Subscribers Manage</span>
+                </a>
+            </li>
 
             <li class="logout">
                 <a href="partials/_logout.php">

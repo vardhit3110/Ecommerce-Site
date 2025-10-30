@@ -301,10 +301,10 @@
                 <p>Stay updated with our latest news and offers.</p>
                 <form class="subscribe-form" method="post" id="myForm">
                     <div class="input-wrapper">
-                        <input type="email" placeholder="Enter your email" name="subcriber_email" required>
+                        <input type="email" placeholder="Enter your email" name="subscriber_email" required>
                     </div>
                     <div class="button-wrapper">
-                        <button type="submit" name="sub">subcriber</button>
+                        <button type="submit" name="sub">subscriber</button>
                     </div>
                 </form>
                 <script>
@@ -333,28 +333,28 @@
         <?php include "db_connect.php";
 
         if (isset($_POST['sub'])) {
-            $subcriber_email = trim($_POST['subcriber_email']);
+            $subscriber_email = trim($_POST['subscriber_email']);
 
-            $check_email = "SELECT * FROM subcriber WHERE subcriber_email = ?";
+            $check_email = "SELECT * FROM subscriber WHERE subscriber_email = ?";
             $stmt = mysqli_prepare($conn, $check_email);
-            mysqli_stmt_bind_param($stmt, "s", $subcriber_email);
+            mysqli_stmt_bind_param($stmt, "s", $subscriber_email);
             mysqli_stmt_execute($stmt);
-            $result_subcriber = mysqli_stmt_get_result($stmt);
+            $result_subscriber = mysqli_stmt_get_result($stmt);
 
-            if (mysqli_num_rows($result_subcriber) > 0) {
+            if (mysqli_num_rows($result_subscriber) > 0) {
                 echo "<script>alert('Already Subscribed.');</script>";
                 exit();
             } else {
 
-                $sub_query = "INSERT INTO subcriber (subcriber_email) VALUES (?)";
+                $sub_query = "INSERT INTO subscriber (subscriber_email) VALUES (?)";
                 $stmt = mysqli_prepare($conn, $sub_query);
-                mysqli_stmt_bind_param($stmt, "s", $subcriber_email);
+                mysqli_stmt_bind_param($stmt, "s", $subscriber_email);
                 $result = mysqli_stmt_execute($stmt);
 
                 if ($result) {
-                    echo "<script>alert('Subcriber Successful!');</script>";
+                    echo "<script>alert('Subscriber Successful!');</script>";
                 } else {
-                    echo "<script>alert('Subcriber Failed. Please try again later.');</script>";
+                    echo "<script>alert('Subscriber Failed. Please try again later.');</script>";
                 }
             }
         }

@@ -3,13 +3,12 @@
 $key_id = "rzp_test_RYtAON28p8h21c";
 $key_secret = "5pWoIGnLLlHQEsUcwsbQwt4O";
 
-// Test API call
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://api.razorpay.com/v1/orders');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-    'amount' => 10000, // 100 INR in paise
+    'amount' => 10000,
     'currency' => 'INR',
     'payment_capture' => 1,
     'receipt' => 'test_123'
@@ -33,7 +32,3 @@ if (isset($response['error'])) {
     echo "<p style='color: green;'>Success! API credentials are working.</p>";
 }
 ?>
-<<<<<<< HEAD
-
-=======
->>>>>>> d1d47e158548194637363a7839398ddbca506736

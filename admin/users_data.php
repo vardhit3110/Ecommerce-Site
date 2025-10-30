@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .pagination {
             display: flex;
             list-style: none;
-            justify-content: center;
+            justify-content: flex-end;
             padding-left: 0;
         }
 
@@ -92,6 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
         .disabled:hover {
             cursor: not-allowed;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #333;
+            text-align: right;
+            margin-bottom: 5px;
         }
 
         .status-toggle-container {
@@ -255,6 +262,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <div class="container p-4">
             <!-- Edit Form If ID is set -->
             <?php
+
             if (isset($_GET['id'])) {
                 $id = $_GET['id'];
                 $stmt = mysqli_prepare($conn, "SELECT * FROM userdata WHERE id= ?");
@@ -263,7 +271,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 $result = mysqli_stmt_get_result($stmt);
                 if ($row = mysqli_fetch_assoc($result)) {
                     ?>
-
                     <h4>Edit User</h4>
                     <form action="partials/_edit-user.php" method="POST" class="mb-4">
                         <input type="hidden" name="id" value="<?= $row['id'] ?>">
@@ -304,54 +311,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 }
             }
             ?>
-
             <!-- User Table -->
-            <div class="table-responsive">
-                <table class="table table-hover table-striped table-bordered border-dark  text-center">
-                    <thead class="table-dark">
-                        <tr class="border-warning">
-                            <th>Id</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>City</th>
-                            <th>Gender</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $total_data = 5;
-                        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-                        $offset = ($page - 1) * $total_data;
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="card shadow-sm border-1 h-100">
+                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Users Data</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-striped table-bordered border-dark  text-center">
+                                    <thead class="table-success table-bordered border-dark">
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>City</th>
+                                            <th>Gender</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $total_data = 6;
+                                        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+                                        $offset = ($page - 1) * $total_data;
 
-                        $sql = "SELECT * FROM userdata LIMIT {$offset}, {$total_data}";
-                        $stmt = mysqli_prepare($conn, $sql);
-                        mysqli_stmt_execute($stmt);
-                        $result_email = mysqli_stmt_get_result($stmt);
+                                        $sql = "SELECT * FROM userdata LIMIT {$offset}, {$total_data}";
+                                        $stmt = mysqli_prepare($conn, $sql);
+                                        mysqli_stmt_execute($stmt);
+                                        $result_email = mysqli_stmt_get_result($stmt);
 
-                        if (mysqli_num_rows($result_email) > 0) {
-                            while ($row = mysqli_fetch_assoc($result_email)) {
-                                echo "<tr>";
-                                echo "<td>{$row['id']}</td>";
-                                echo "<td>{$row['username']}</td>";
-                                echo "<td>{$row['email']}</td>";
-                                echo "<td>" . ($row['phone'] ?: 'N/A') . "</td>";
-                                echo "<td>" . ($row['city'] ?: 'N/A') . "</td>";
-                                if ($row['gender'] == 1) {
-                                    $gender = "Male";
-                                } elseif ($row['gender'] == 2) {
-                                    $gender = "Female";
-                                } else {
-                                    $gender = "N/A";
-                                }
-                                echo "<td>" . $gender . "</td>";
-                                /* active inactive */
-                                $status_class = ($row['status'] == 1) ? 'active' : 'inactive';
-                                $status_text = ($row['status'] == 1) ? 'Active' : 'Inactive';
+                                        if (mysqli_num_rows($result_email) > 0) {
+                                            while ($row = mysqli_fetch_assoc($result_email)) {
+                                                echo "<tr>";
+                                                echo "<td>{$row['id']}</td>";
+                                                echo "<td>{$row['username']}</td>";
+                                                echo "<td>{$row['email']}</td>";
+                                                echo "<td>" . ($row['phone'] ?: 'N/A') . "</td>";
+                                                echo "<td>" . ($row['city'] ?: 'N/A') . "</td>";
+                                                if ($row['gender'] == 1) {
+                                                    $gender = "Male";
+                                                } elseif ($row['gender'] == 2) {
+                                                    $gender = "Female";
+                                                } else {
+                                                    $gender = "N/A";
+                                                }
+                                                echo "<td>" . $gender . "</td>";
+                                                /* active inactive */
+                                                $status_class = ($row['status'] == 1) ? 'active' : 'inactive';
+                                                $status_text = ($row['status'] == 1) ? 'Active' : 'Inactive';
 
-                                echo '<td>
+                                                echo '<td>
                                         <div class="status-toggle-container">
                                             <div class="status-indicator ' . $status_class . '" data-user-id="' . $row['id'] . '">' . $status_text . '</div>
                                                 <div class="toggle-switch ' . $status_class . '" data-user-id="' . $row['id'] . '" data-status="' . $row['status'] . '">
@@ -364,52 +377,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                         </div>
                                     </td>';
 
-                                echo "<td>
-                                    <a href='?id={$row['id']}' class='btn btn-primary btn-sm me-2'>Edit</a>
-                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                echo "<td>
+                                    <a href='?id={$row['id']}' class='btn btn-outline-primary btn-sm me-2'>Edit</a>
+                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
                                   </td>";
-                                echo "</tr>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='7' class='text-center'>No records found</td></tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Pagination -->
+                            <?php
+                            $sql = "SELECT COUNT(*) AS total FROM userdata";
+                            $result = mysqli_query($conn, $sql);
+                            $row = mysqli_fetch_assoc($result);
+                            $total_user = $row['total'];
+                            $total_page = ceil($total_user / $total_data);
+
+                            $start = ($page - 1) * $total_data + 1;
+                            $end = min($page * $total_data, $total_user);
+
+                            if ($total_user > 0) {
+
+
+                                echo '<ul class="pagination">';
+                                // Prev button
+                                if ($page > 1) {
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
+                                } else {
+                                    echo '<li class="page-item disabled"><a class="page-link" href="#">« Prev</a></li>';
+                                }
+
+                                // Dynamic pages with ellipses
+                                $visiblePages = 1;
+                                $startPage = max(1, $page - $visiblePages);
+                                $endPage = min($total_page, $page + $visiblePages);
+
+                                if ($startPage > 1) {
+                                    echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>';
+                                    if ($startPage > 2)
+                                        echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                }
+
+                                for ($i = $startPage; $i <= $endPage; $i++) {
+                                    $active = ($i == $page) ? 'active' : '';
+                                    echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
+                                }
+
+                                if ($endPage < $total_page) {
+                                    if ($endPage < $total_page - 1)
+                                        echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . $total_page . '">' . $total_page . '</a></li>';
+                                }
+
+                                // Next button
+                                if ($page < $total_page) {
+                                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
+                                } else {
+                                    echo '<li class="page-item disabled"><a class="page-link" href="#">Next »</a></li>';
+                                }
+
+                                echo '</ul>';
+                                echo "<div class='pagination-info'>Showing $start to $end of $total_user entries</div>";
                             }
-                        } else {
-                            echo "<tr><td colspan='7' class='text-center'>No records found</td></tr>";
-                        }
-                        ?>
-                    </tbody>
-                </table>
+                            ?>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Pagination -->
-            <?php
-            $sql = "SELECT * FROM userdata";
-            $result = mysqli_query($conn, $sql);
-            if (mysqli_num_rows($result) > 0) {
-
-                $total_user = mysqli_num_rows($result);
-                $total_page = ceil($total_user / $total_data);
-
-                echo '<ul class="pagination">';
-                if ($page <= 1) {
-                    echo '<li class="page-item disabled"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
-                } else {
-                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
-                }
-                for ($i = 1; $i <= $total_page; $i++) {
-                    if ($i == $page) {
-                        $active = "active";
-                    } else {
-                        $active = "";
-                    }
-                    echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
-                }
-                if ($total_page <= $page) {
-                    echo '<li class="page-item disabled"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
-                } else {
-                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
-                }
-                echo '</ul>';
-            }
-            ?>
         </div>
+
 
         <br>
         <div class="footer">

@@ -10,7 +10,7 @@ if (!isset($_POST['order_id'])) {
 $order_id = intval($_POST['order_id']);
 $user_id = $_SESSION['user_id'] ?? null;
 
-$query = "UPDATE orders SET order_status = 5 WHERE order_id = ? AND order_status BETWEEN 1 AND 3";
+$query = "UPDATE orders SET order_status = 5 WHERE order_id = ? AND order_status BETWEEN 1 AND 2";
 $stmt = mysqli_prepare($conn, $query);
 mysqli_stmt_bind_param($stmt, "i", $order_id);
 mysqli_stmt_execute($stmt);

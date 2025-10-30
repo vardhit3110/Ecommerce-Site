@@ -166,7 +166,7 @@ include "db_connect.php";
 
     <div class="main-content">
         <div class="header">
-            <h1><i class="fa-solid fa-box"></i> Orders List</h1>
+            <h1><i class="fa-solid fa-box"></i> Delivered Order</h1>
             <div class="user-profile">
                 <i class="fa-solid fa-layer-group fa-2x"></i>
             </div>
@@ -212,7 +212,7 @@ include "db_connect.php";
         <div class="container-fluid py-0">
             <div class="card shadow-sm border-1 h-100">
                 <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fa-solid fa-list"></i> Orders</h5>
+                    <h5 class="mb-0"><i class="fa-solid fa-list"></i> Delivered Order</h5>
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
@@ -236,7 +236,7 @@ include "db_connect.php";
                                 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
                                 $offset = ($page - 1) * $total_data;
 
-                                $query = "SELECT userdata.username, orders.* FROM userdata JOIN orders ON userdata.id = orders.user_id WHERE orders.order_status IN ('1','2','3')";
+                                $query = "SELECT userdata.username, orders.* FROM userdata JOIN orders ON userdata.id = orders.user_id WHERE orders.order_status='4'";
                                 $params = [];
 
                                 if (!empty($_GET['username'])) {
@@ -323,7 +323,7 @@ include "db_connect.php";
                         </table>
                         <br>
                         <?php
-                        $sql = "SELECT COUNT(*) AS total FROM orders WHERE order_status IN ('1','2','3')";
+                        $sql = "SELECT COUNT(*) AS total FROM orders WHERE order_status='4'AND payment_status='2'";
                         $result = mysqli_query($conn, $sql);
                         $row = mysqli_fetch_assoc($result);
                         $total_user = $row['total'];
@@ -387,136 +387,117 @@ include "db_connect.php";
     </div>
 
     <!-- Status Update Modal -->
-    <!-- ==================== STATUS MODAL ==================== -->
-<div class="modal fade" id="statusModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="fa-solid fa-arrows-rotate"></i> Update Order Status</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <!-- ORDER STATUS DROPDOWN -->
-                <div class="mb-3">
-                    <label class="form-label">Select New Order Status :- </label>
-                    <select id="newStatus" class="form-select">
-                        <option value="">-- Select Status --</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Processing</option>
-                        <option value="3">Shipped</option>
-                        <option value="4">Delivered</option>
-                        <option value="5">Cancelled</option>
-                    </select>
+    <div class="modal fade" id="statusModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-arrows-rotate"></i> Update Order Status</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Select New Status :- </label>
+                        <div class="d-flex align-items-center">
 
-                <!-- PAYMENT STATUS DROPDOWN -->
-                <div class="mb-3">
-                    <label class="form-label">Select Payment Status :- </label>
-                    <select id="paymentStatus" class="form-select">
-                        <option value="">-- Select Payment Status --</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Success</option>
-                    </select>
-                </div>
+                            <select id="newStatus" class="form-select">
+                                <option value="">-- Select Status --</option>
+                                <option value="1">Pending</option>
+                                <option value="2">Processing</option>
+                                <option value="3">Shipped</option>
+                                <option value="4">Delivered</option>
+                                <option value="5">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
+                    <p><strong>Username:</strong> <span id="statusUsername"></span></p>
+                    <p><strong>Order ID:</strong> <span id="statusOrderId"></span></p>
 
-                <hr>
-
-                <p><strong>Username:</strong> <span id="statusUsername"></span></p>
-                <p><strong>Order ID:</strong> <span id="statusOrderId"></span></p>
-
-                <div class="text-center">
-                    <button id="updateStatusBtn" class="btn btn-success">
-                        <i class="fa-solid fa-floppy-disk"></i> Update Status
-                    </button>
+                    <div class="text-center">
+                        <button id="updateStatusBtn" class="btn btn-success">
+                            <i class="fa-solid fa-floppy-disk"></i> Update Status
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- ==================== ORDER DETAILS MODAL ==================== -->
-<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white"><i class="fa-solid fa-receipt"></i> Order Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white"><i class="fa-solid fa-receipt"></i> Order Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderDetailsBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-dark"></div>
+                        <p class="mt-2">Loading order details...</p>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body" id="orderDetailsBody">
+        </div>
+    </div>
+
+    <script>
+        // Open Status Modal with data
+        $(document).on('click', '.update-status-btn', function () {
+            let username = $(this).data('username');
+            let orderCode = $(this).data('ordercode');
+            let orderId = $(this).data('id');
+
+            $('#statusUsername').text(username);
+            $('#statusOrderId').text(orderCode);
+            $('#updateStatusBtn').data('id', orderId);
+        });
+
+        // Update Status
+        $('#updateStatusBtn').click(function () {
+            let orderId = $(this).data('id');
+            let newStatus = $('#newStatus').val();
+
+            if (newStatus === "") {
+                alert("Please select a status first.");
+                return;
+            }
+
+            $.ajax({
+                url: './partials/update_order_status.php',
+                type: 'POST',
+                data: { order_id: orderId, status: newStatus },
+                success: function (response) {
+                    alert(response);
+                    location.reload();
+                },
+                error: function () {
+                    alert("Error updating status.");
+                }
+            });
+        });
+
+        $(document).on('click', '.view-btn', function () {
+            let orderId = $(this).data('id');
+            $('#orderDetailsBody').html(`
                 <div class="text-center py-4">
                     <div class="spinner-border text-dark"></div>
                     <p class="mt-2">Loading order details...</p>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ==================== JAVASCRIPT ==================== -->
-<script>
-    // Open Status Modal with data
-    $(document).on('click', '.update-status-btn', function () {
-        let username = $(this).data('username');
-        let orderCode = $(this).data('ordercode');
-        let orderId = $(this).data('id');
-
-        $('#statusUsername').text(username);
-        $('#statusOrderId').text(orderCode);
-        $('#updateStatusBtn').data('id', orderId);
-    });
-
-    // Update both Order & Payment Status
-    $('#updateStatusBtn').click(function () {
-        let orderId = $(this).data('id');
-        let newStatus = $('#newStatus').val();
-        let paymentStatus = $('#paymentStatus').val();
-
-        if (newStatus === "" && paymentStatus === "") {
-            alert("Please select at least one status to update.");
-            return;
-        }
-
-        $.ajax({
-            url: './partials/update_order_status.php',
-            type: 'POST',
-            data: {
-                order_id: orderId,
-                status: newStatus,
-                payment_status: paymentStatus
-            },
-            success: function (response) {
-                alert(response);
-                location.reload();
-            },
-            error: function () {
-                alert("Error updating status.");
-            }
+            `);
+            $.ajax({
+                url: 'fetch_order_details.php',
+                type: 'POST',
+                data: { order_id: orderId },
+                success: function (response) {
+                    $('#orderDetailsBody').html(response);
+                },
+                error: function () {
+                    $('#orderDetailsBody').html('<p class="text-danger text-center">Error loading details.</p>');
+                }
+            });
         });
-    });
-
-    // Fetch Order Details
-    $(document).on('click', '.view-btn', function () {
-        let orderId = $(this).data('id');
-        $('#orderDetailsBody').html(`
-            <div class="text-center py-4">
-                <div class="spinner-border text-dark"></div>
-                <p class="mt-2">Loading order details...</p>
-            </div>
-        `);
-        $.ajax({
-            url: 'fetch_order_details.php',
-            type: 'POST',
-            data: { order_id: orderId },
-            success: function (response) {
-                $('#orderDetailsBody').html(response);
-            },
-            error: function () {
-                $('#orderDetailsBody').html('<p class="text-danger text-center">Error loading details.</p>');
-            }
-        });
-    });
-</script>
-
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>

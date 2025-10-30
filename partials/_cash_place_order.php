@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mysqli_stmt_bind_param($stmt, "i", $user_id);
         mysqli_stmt_execute($stmt);
 
-        echo "<script>alert('Your order has been placed successfully! Order ID: $randomNumber'); window.location.href='../index.php';</script>";
+        echo "<script>alert('Your order has been placed successfully! Order ID: $randomNumber'); window.location.href='../myorder.php';</script>";
     } else {
         echo "<script>alert('Something went wrong while placing the order.'); window.history.back();</script>";
     }

@@ -134,7 +134,7 @@ require "db_connect.php";
 <body>
     <div class="main-content">
         <div class="header">
-            <h1><i class="fa-solid fa-message-lines"></i> Feedback</h1>
+            <h1><i class="fa-solid fa-bell"></i> Subscribers Manage</h1>
             <div class="user-profile">
                 <i class="fa-solid fa-message-smile fa-2x"></i>&nbsp;
             </div>
@@ -145,7 +145,7 @@ require "db_connect.php";
                 <div class="col-12">
                     <div class="card shadow-sm border-1 h-100">
                         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Feedback</h5>
+                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Subscribers</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -154,20 +154,17 @@ require "db_connect.php";
                                     <thead class="">
                                         <tr class="table-success border-dark">
                                             <th>ID</th>
-                                            <th>Username</th>
                                             <th>Email</th>
-                                            <th>Rating</th>
-                                            <th>Comment</th>
+                                            <th>Date & Time</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $total_data = 7;
+                                        $total_data = 8;
                                         $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
                                         $offset = ($page - 1) * $total_data;
-
-                                        $stmt = mysqli_prepare($conn, "SELECT userdata.username, userdata.email, feedback.* FROM userdata JOIN feedback ON userdata.id = feedback.user_id WHERE feedback.reply_comment IS NULL LIMIT {$offset}, {$total_data}");
+                                        $stmt = mysqli_prepare($conn, "SELECT * FROM subscriber LIMIT {$offset}, {$total_data}");
 
                                         if ($stmt) {
                                             mysqli_stmt_execute($stmt);
@@ -175,31 +172,17 @@ require "db_connect.php";
                                             if (mysqli_num_rows($result) > 0) {
 
                                                 while ($row = mysqli_fetch_assoc($result)) {
-                                                    $feedback_id = $row['feedback_id'];
-                                                    $user_id = $row['user_id'];
-                                                    $rating = $row['rating'];
-                                                    $comment = $row['comment'];
-                                                    $submisiondate = $row['submision_date'];
-                                                    $username = $row['username'];
-                                                    $email = $row['email'];
+                                                    $subscriber_id = $row['subscriber_id'];
+                                                    $subscriber_email = $row['subscriber_email'];
+                                                    $subscriber_date = $row['subscriber_date'];
 
                                                     ?>
                                                     <tr>
-                                                        <td><?php echo $feedback_id; ?></td>
-                                                        <td><?php echo $username; ?></td>
-                                                        <td><?php echo $email; ?></td>
-                                                        <td><?php echo $rating; ?>/5</td>
-                                                        <td title="<?php echo $comment; ?>">
-                                                            <?php echo $comment; ?><br>
-                                                            <span
-                                                                style="font-size: 9px; display: flex; color: #dd0016ff;"><?php echo $submisiondate; ?></span>
-                                                        </td>
+                                                        <td><?php echo $subscriber_id; ?></td>
+                                                        <td><?php echo $subscriber_email; ?></td>
+                                                        <td><?php echo $subscriber_date; ?></td>
                                                         <td class="text-center">
-                                                            <a href="feedbackReply.php?user_id=<?php echo $user_id; ?>"
-                                                                class="btn btn-outline-primary btn-sm">Reply</a>
-
-                                                            &nbsp;&nbsp;
-                                                            <a href="./partials/_feedbackManage.php?user_id=<?php echo $user_id; ?>"
+                                                            <a href="./partials/_subscriber-delete.php?subscriber_id=<?php echo $subscriber_id; ?>"
                                                                 class="btn btn-outline-danger btn-sm"
                                                                 onclick="return confirmDelete();">Delete</a>
 
@@ -208,19 +191,20 @@ require "db_connect.php";
                                                     <?php
                                                 }
                                             } else {
-                                                echo "<tr><td colspan='6' class='text-center text-danger'>No records found</td></tr>";
+                                                echo "<tr><td colspan='4' class='text-center text-danger'>No records found</td></tr>";
                                             }
                                             mysqli_stmt_close($stmt);
                                         } else {
-                                            echo "<tr><td colspan='6' class='text-center text-danger'>Query preparation failed</td></tr>";
+                                            echo "<tr><td colspan='4' class='text-center text-danger'>Query preparation failed</td></tr>";
                                         }
                                         ?>
                                     </tbody>
                                 </table>
                                 <br>
-                                <!-- Feedback pagination-->
+
+                                <!-- pagination Code -->
                                 <?php
-                                $sql = "SELECT COUNT(*) AS total FROM feedback";
+                                $sql = "SELECT COUNT(*) AS total FROM subscriber";
                                 $result = mysqli_query($conn, $sql);
                                 $row = mysqli_fetch_assoc($result);
                                 $total_user = $row['total'];

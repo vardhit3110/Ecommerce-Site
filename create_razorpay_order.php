@@ -56,7 +56,7 @@ if ($total == 0) {
     exit();
 }
 
-$shipping = 50;
+$shipping = 60;
 $grand_total = ($total + $shipping) * 100; // Convert to paise
 
 try {
@@ -64,9 +64,7 @@ try {
     $order_code = random_int(100000, 999999);
 
     // Get cart items for order details
-    $cart_items_query = "SELECT product.product_name, product.product_price, viewcart.quantity 
-                        FROM product 
-                        JOIN viewcart ON product.product_Id = viewcart.product_id 
+    $cart_items_query = "SELECT product.product_name, product.product_price, viewcart.quantity FROM product JOIN viewcart ON product.product_Id = viewcart.product_id 
                         WHERE viewcart.user_id = ?";
     $stmt = mysqli_prepare($conn, $cart_items_query);
     mysqli_stmt_bind_param($stmt, "i", $user_id);
@@ -84,16 +82,12 @@ try {
     }
 
     $product_details = json_encode($cart_items, JSON_UNESCAPED_UNICODE);
-
-    // Insert order with pending status - include razorpay_payment_id field
     $insert_order = "INSERT INTO orders (user_id, product_details, total_amount, shipping_charge, 
                     payment_mode, payment_status, order_status, delivery_address, order_code, razorpay_order_id, razorpay_payment_id) 
                     VALUES (?, ?, ?, ?, '2', '1', '1', ?, ?, ?, ?)";
 
     $stmt = mysqli_prepare($conn, $insert_order);
-    $total_amount = $grand_total / 100; // Convert back to rupees for storage
-
-    // Initially set razorpay_order_id and razorpay_payment_id as NULL, will be updated after payment
+    $total_amount = $grand_total / 100; 
     $razorpay_order_id_temp = NULL;
     $razorpay_payment_id_temp = NULL;
 

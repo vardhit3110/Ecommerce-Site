@@ -287,14 +287,26 @@
         require "db_connect.php";
 
         $counts = [];
-        $tables = ['userdata', 'categories', 'product', 'wishlist', 'feedback', 'orders'];
+        $tables = ['userdata', 'categories', 'product', 'wishlist', 'feedback'];
         foreach ($tables as $table) {
             $existSql = "SELECT * FROM $table";
             $result = mysqli_query($conn, $existSql);
             $numExistRows = mysqli_num_rows($result);
             $counts[$table] = $numExistRows;
         }
+
+        /* order Count */
+        $sql = "SELECT COUNT(*) AS total_orders FROM orders WHERE order_status IN ('1', '2', '3')";
+        $result = mysqli_query($conn, $sql);
+        if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            $orders = $row['total_orders'];
+        } else {
+            echo "Error: " . mysqli_error($conn);
+        }
+        mysqli_close($conn);
         ?>
+
         <!-- Content Area -->
         <div class="content-area">
             <div class="dynamic-content">
@@ -366,7 +378,7 @@
                             <div class="card-header">
                                 <div class="card-content">
                                     <h3>Total Orders</h3>
-                                    <h4><?php ?><?php echo $counts['orders']; ?></h4>
+                                    <h4><?php ?><?php echo $orders; ?></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-shopping-cart" style="color: #1abc9c;"></i>

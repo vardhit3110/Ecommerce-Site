@@ -343,8 +343,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                                                     </td>';
 
                                                     echo "<td class='text-center'>
-                                                    <a href='category-edit.php?id={$row['categorie_id']}' class='btn btn-primary btn-sm'>Edit</a>&nbsp;
-                                                         <a href='partials/_categories_add.php?id={$row['categorie_id']}' class='btn btn-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                    <a href='category-edit.php?id={$row['categorie_id']}' class='btn btn-outline-primary btn-sm'>Edit</a>&nbsp;
+                                                         <a href='partials/_categories_add.php?id={$row['categorie_id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
                                                     </td>";
                                                     echo '</tr>';
                                                 }

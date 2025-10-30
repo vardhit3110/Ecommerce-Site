@@ -39,7 +39,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     $cart_items[] = $row;
 }
 
-$shipping = 50;
+$shipping = 60;
 $grand_total = $total + $shipping;
 
 mysqli_close($conn);
@@ -314,7 +314,7 @@ mysqli_close($conn);
                                 currency: order.currency,
                                 name: "MobileSite",
                                 description: "Order Payment",
-                                image: "./store/images/logo.jpg", // Corrected from 'Image' to 'image'
+                                image: "./store/images/logo.jpg",
                                 order_id: order.id,
                                 handler: function (response) {
                                     verifyPayment(response);
@@ -322,7 +322,7 @@ mysqli_close($conn);
                                 prefill: {
                                     name: "<?php echo $_SESSION['username']; ?>",
                                     email: "<?php echo $_SESSION['username']; ?>@example.com",
-                                    contact: "<?php echo isset($phone) ? $phone : '9999999999'; ?>" // Phone number from database
+                                    contact: "<?php echo isset($phone) ? $phone : '9999999999'; ?>"
                                 },
                                 notes: {
                                     address: "MobileSite Office"
@@ -335,7 +335,7 @@ mysqli_close($conn);
                                         alert('Payment cancelled. Please try again.');
                                     }
                                 },
-                                // UPI and other payment methods configuration
+
                                 method: {
                                     upi: true,
                                     card: true,
@@ -347,10 +347,8 @@ mysqli_close($conn);
                             const rzp = new Razorpay(options);
                             rzp.open();
 
-                            // Optional: Focus on mobile number field when modal opens
                             rzp.on('payment.load', function () {
                                 setTimeout(function () {
-                                    // Try to find and focus on mobile input field
                                     const mobileInput = document.querySelector('input[type="tel"]');
                                     if (mobileInput) {
                                         mobileInput.focus();
@@ -360,7 +358,6 @@ mysqli_close($conn);
                         }
 
                         function verifyPayment(response) {
-                            // Show loading state
                             const button = document.getElementById('rzpButton');
                             const originalText = button.innerHTML;
                             button.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Verifying Payment...';
@@ -378,7 +375,7 @@ mysqli_close($conn);
 
                                     if (data.success) {
                                         alert(`Payment Successful!\nOrder Code: ${data.order_code}\nAmount: ₹${data.amount}\nPayment ID: ${data.payment_id}`);
-                                        window.location.href = 'index.php?payment=success&order_code=' + data.order_code;
+                                        window.location.href = 'myorder.php?payment=success&order_code=' + data.order_code;
                                     } else {
                                         alert('Payment Verification Failed: ' + data.message);
                                     }
@@ -400,7 +397,7 @@ mysqli_close($conn);
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-sm">
                     <div class="modal-content rounded-4">
-                        <form method="post" action="./partials/_addressupdate.php">
+                        <form method="post" action="./partials/online_addressupdate.php">
                             <div class="modal-header bg-success text-white py-2 rounded-top">
                                 <h6 class="modal-title" id="editAddressModalLabel">
                                     <i class="fa-solid fa-pen-to-square me-2"></i>Edit Address
@@ -430,7 +427,6 @@ mysqli_close($conn);
             </div>
         </div>
     </div>
-
     <?php include "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
