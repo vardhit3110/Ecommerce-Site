@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2025 at 01:41 PM
+-- Generation Time: Oct 31, 2025 at 02:03 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -217,7 +217,35 @@ INSERT INTO `product` (`product_Id`, `product_name`, `product_image`, `product_d
 (15, 'USB Type C Cable', 'USB Type C Cable_1759471431.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: USB Type A | Connector Two: USB Type C,\r\nCable Speed: 680 Mbps.\r\nMobile, Tablet.', 210, 2, '1', '2025-10-03 11:33:51.784597'),
 (16, 'MarQ Power Bank', 'MarQ Power Bank_1759471631.jpeg', 'Capacity: 10000 mAh,\r\nLithium Polymer Battery | Type-C Connector,\r\nPower Source: DC 5V,9V,12V,\r\nCharging Cable Included.', 3999, 2, '1', '2025-10-03 11:37:11.243206'),
 (17, 'PTron Power Bank', 'PTron Power Bank_1759471796.jpeg', 'Pocket Size Power Bank with Max. Output: 22.5W (Max.),\r\nCharging Protocols: PD 3.0, QC 3.0, VOOC, PPS & Number of Ports: 3 (1 Type-C, 2 USB A),\r\nCompatibility: All iPhones & Android Phones Charging Compatibility,\r\nWeight: 407 g | Capacity: 20000 mAh.', 1199, 2, '1', '2025-10-03 11:39:56.892581'),
-(18, 'PTron Type C', 'PTron Type C_1759471978.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: Type C|Connector Two: Type C,\r\nCable Speed: 480 Mbps,\r\nMobile, Tablet.', 198, 2, '1', '2025-10-03 11:42:58.819258');
+(18, 'PTron Type C', 'PTron Type C_1759471978.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: Type C,\r\nConnector Two: Type C,\r\nCable Speed: 480 Mbps | Mobile | Tablet.', 198, 2, '1', '2025-10-03 11:42:58.819258'),
+(19, 'Noise Buds VS102', 'Noise Buds VS102_1761904945.jpeg', 'Bluetooth version: 5.3,\r\nWireless range: 10 m,\r\nBattery life: 70 hrs,\r\nBattery life: 70 Hour Playtime | Type - C Charging Port,\r\nUnique Flybird Design | ENC with Quad Mic.', 1099, 3, '1', '2025-10-31 15:32:25.099519');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_images`
+--
+
+CREATE TABLE `product_images` (
+  `id` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `uploaded_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `product_images`
+--
+
+INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `uploaded_at`) VALUES
+(1, 19, 'Noise Buds VS102_1761909030_0.jpeg', '2025-10-31 16:40:30'),
+(2, 19, 'Noise Buds VS102_1761909031_1.jpeg', '2025-10-31 16:40:31'),
+(3, 19, 'Noise Buds VS102_1761909031_2.jpeg', '2025-10-31 16:40:31'),
+(4, 19, 'Noise Buds VS102_1761909031_3.jpeg', '2025-10-31 16:40:31'),
+(5, 1, 'realme P4 Pro 5G_1761914281_0.jpeg', '2025-10-31 18:08:01'),
+(6, 1, 'realme P4 Pro 5G_1761914281_1.jpeg', '2025-10-31 18:08:01'),
+(7, 1, 'realme P4 Pro 5G_1761914281_2.jpeg', '2025-10-31 18:08:01'),
+(8, 1, 'realme P4 Pro 5G_1761914281_3.jpeg', '2025-10-31 18:08:01');
 
 -- --------------------------------------------------------
 
@@ -411,7 +439,8 @@ CREATE TABLE `viewcart` (
 --
 
 INSERT INTO `viewcart` (`id`, `user_id`, `product_id`, `quantity`, `added_at`) VALUES
-(64, 18, 15, 1, '2025-10-29 10:02:35');
+(64, 18, 15, 1, '2025-10-29 10:02:35'),
+(81, 16, 1, 1, '2025-10-30 13:08:16');
 
 -- --------------------------------------------------------
 
@@ -438,7 +467,6 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (41, 7, 6, '2025-10-08 12:01:18'),
 (43, 7, 12, '2025-10-08 12:01:20'),
 (45, 7, 1, '2025-10-08 14:03:14'),
-(46, 16, 1, '2025-10-08 14:46:00'),
 (47, 16, 2, '2025-10-08 14:46:02'),
 (48, 16, 4, '2025-10-08 14:46:03'),
 (49, 16, 8, '2025-10-08 14:46:07'),
@@ -482,7 +510,8 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (92, 18, 16, '2025-10-29 15:24:10'),
 (93, 10, 5, '2025-10-29 16:20:34'),
 (94, 8, 18, '2025-10-30 10:10:22'),
-(95, 16, 18, '2025-10-30 12:46:13');
+(95, 16, 18, '2025-10-30 12:46:13'),
+(96, 16, 1, '2025-10-30 18:38:16');
 
 --
 -- Indexes for dumped tables
@@ -520,6 +549,13 @@ ALTER TABLE `orders`
 ALTER TABLE `product`
   ADD PRIMARY KEY (`product_Id`),
   ADD KEY `fk_product_category` (`categorie_id`);
+
+--
+-- Indexes for table `product_images`
+--
+ALTER TABLE `product_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `subscriber`
@@ -581,7 +617,13 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `product_Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `product_images`
+--
+ALTER TABLE `product_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `subscriber`
@@ -599,13 +641,13 @@ ALTER TABLE `userdata`
 -- AUTO_INCREMENT for table `viewcart`
 --
 ALTER TABLE `viewcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- Constraints for dumped tables
@@ -622,6 +664,12 @@ ALTER TABLE `orders`
 --
 ALTER TABLE `product`
   ADD CONSTRAINT `fk_product_category` FOREIGN KEY (`categorie_id`) REFERENCES `categories` (`categorie_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `product_images`
+--
+ALTER TABLE `product_images`
+  ADD CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_Id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `viewcart`

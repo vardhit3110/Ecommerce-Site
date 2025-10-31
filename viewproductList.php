@@ -186,7 +186,7 @@ session_start();
             <h6>
                 <?php
                 if ($is_active_category) {
-                    echo htmlspecialchars($category_name);
+                    echo "<div class='text-success' style='font-size: 13px;'>" . $category_name . "</div>";
                 } else {
                     echo "Unknown Category";
                 }

@@ -2,21 +2,68 @@
 require "slider.php";
 require "db_connect.php";
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
-    $user_id = intval($_POST['user_id']);
-    $status = intval($_POST['status']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['action']) && $_POST['action'] === 'update_status') {
+        $user_id = intval($_POST['user_id']);
+        $status = intval($_POST['status']);
 
-    $stmt = mysqli_prepare($conn, "UPDATE userdata SET status = ? WHERE id = ?");
-    mysqli_stmt_bind_param($stmt, "ii", $status, $user_id);
-    $result = mysqli_stmt_execute($stmt);
+        $stmt = mysqli_prepare($conn, "UPDATE userdata SET status = ? WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "ii", $status, $user_id);
+        $result = mysqli_stmt_execute($stmt);
 
-    if ($result) {
-        echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+        if ($result) {
+            echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to update status']);
+        }
+        exit;
     }
-    exit;
+
+    if (isset($_POST['search'])) {
+        $search = mysqli_real_escape_string($conn, $_POST['search']);
+    }
 }
+
+$search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
+
+$total_data = 6;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+$offset = ($page - 1) * $total_data;
+
+// Build query based on search
+if (!empty($search)) {
+    $search_term = "%$search%";
+    $sql = "SELECT * FROM userdata 
+            WHERE username LIKE ? OR email LIKE ? OR phone LIKE ? OR city LIKE ? 
+            LIMIT {$offset}, {$total_data}";
+    $count_sql = "SELECT COUNT(*) AS total FROM userdata 
+                  WHERE username LIKE ? OR email LIKE ? OR phone LIKE ? OR city LIKE ?";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "ssss", $search_term, $search_term, $search_term, $search_term);
+
+    $count_stmt = mysqli_prepare($conn, $count_sql);
+    mysqli_stmt_bind_param($count_stmt, "ssss", $search_term, $search_term, $search_term, $search_term);
+} else {
+    $sql = "SELECT * FROM userdata LIMIT {$offset}, {$total_data}";
+    $count_sql = "SELECT COUNT(*) AS total FROM userdata";
+
+    $stmt = mysqli_prepare($conn, $sql);
+    $count_stmt = mysqli_prepare($conn, $count_sql);
+}
+
+// Execute queries
+mysqli_stmt_execute($stmt);
+$result_email = mysqli_stmt_get_result($stmt);
+
+mysqli_stmt_execute($count_stmt);
+$count_result = mysqli_stmt_get_result($count_stmt);
+$count_row = mysqli_fetch_assoc($count_result);
+$total_user = $count_row['total'];
+$total_page = ceil($total_user / $total_data);
+
+$start = ($page - 1) * $total_data + 1;
+$end = min($page * $total_data, $total_user);
 ?>
 
 <!DOCTYPE html>
@@ -29,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <?php require "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <style>
         :root {
             --primary: #4361ee;
@@ -48,6 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .container {
             background-color: white;
             border-radius: 20px;
+            min-height: 740px;
         }
 
         .pagination {
@@ -209,7 +258,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             box-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
         }
 
-        /* Add these styles to your existing CSS */
         .status-updating {
             opacity: 0.7;
             pointer-events: none;
@@ -247,6 +295,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         .status-alert.fade-out {
             animation: fadeOut 0.3s ease forwards;
         }
+
+        .search-loading {
+            position: relative;
+        }
+
+        .search-loading::after {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: translateY(-50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
+        .search-info {
+            font-size: 12px;
+            color: #6c757d;
+            font-style: italic;
+        }
     </style>
 </head>
 
@@ -260,9 +343,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         </div>
 
         <div class="container p-4">
-            <!-- Edit Form If ID is set -->
             <?php
-
             if (isset($_GET['id'])) {
                 $id = $_GET['id'];
                 $stmt = mysqli_prepare($conn, "SELECT * FROM userdata WHERE id= ?");
@@ -314,13 +395,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <!-- User Table -->
             <div class="row g-4">
                 <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="position-relative">
+                            Search: <input type="text" id="searchInput"
+                                class="form-control d-inline-block w-auto search-loading" placeholder="Searching..."
+                                value="<?php echo htmlspecialchars($search); ?>">
+                            <?php if (!empty($search)): ?>
+                                <div class="search-info mt-1">Searching for: "<?php echo htmlspecialchars($search); ?>"
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <a href="#" class="btn btn-primary"> <i class="fa-solid fa-plus"></i> Add New</a>
+                    </div>
+
                     <div class="card shadow-sm border-1 h-100">
                         <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
                             <h5 class="mb-0"><i class="fa-solid fa-list"></i> Users Data</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover table-striped table-bordered border-dark  text-center">
+                                <table class="table table-hover table-striped table-bordered border-dark text-center">
                                     <thead class="table-success table-bordered border-dark">
                                         <tr>
                                             <th>Id</th>
@@ -333,17 +427,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="userTableBody">
                                         <?php
-                                        $total_data = 6;
-                                        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-                                        $offset = ($page - 1) * $total_data;
-
-                                        $sql = "SELECT * FROM userdata LIMIT {$offset}, {$total_data}";
-                                        $stmt = mysqli_prepare($conn, $sql);
-                                        mysqli_stmt_execute($stmt);
-                                        $result_email = mysqli_stmt_get_result($stmt);
-
                                         if (mysqli_num_rows($result_email) > 0) {
                                             while ($row = mysqli_fetch_assoc($result_email)) {
                                                 echo "<tr>";
@@ -360,31 +445,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                                     $gender = "N/A";
                                                 }
                                                 echo "<td>" . $gender . "</td>";
+
                                                 /* active inactive */
                                                 $status_class = ($row['status'] == 1) ? 'active' : 'inactive';
                                                 $status_text = ($row['status'] == 1) ? 'Active' : 'Inactive';
 
                                                 echo '<td>
-                                        <div class="status-toggle-container">
-                                            <div class="status-indicator ' . $status_class . '" data-user-id="' . $row['id'] . '">' . $status_text . '</div>
-                                                <div class="toggle-switch ' . $status_class . '" data-user-id="' . $row['id'] . '" data-status="' . $row['status'] . '">
-                                                    <div class="toggle-slider"></div>
-                                                    <div class="toggle-text">
-                                                        <span class="toggle-on">On</span>
-                                                        <span class="toggle-off">Off</span>
+                                                    <div class="status-toggle-container">
+                                                        <div class="status-indicator ' . $status_class . '" data-user-id="' . $row['id'] . '">' . $status_text . '</div>
+                                                        <div class="toggle-switch ' . $status_class . '" data-user-id="' . $row['id'] . '" data-status="' . $row['status'] . '">
+                                                            <div class="toggle-slider"></div>
+                                                            <div class="toggle-text">
+                                                                <span class="toggle-on">On</span>
+                                                                <span class="toggle-off">Off</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                        </div>
-                                    </td>';
+                                                </td>';
 
                                                 echo "<td>
-                                    <a href='?id={$row['id']}' class='btn btn-outline-primary btn-sm me-2'>Edit</a>
-                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
-                                  </td>";
+                                                    <a href='?id={$row['id']}" . (!empty($search) ? "&search=" . urlencode($search) : "") . "' class='btn btn-outline-primary btn-sm me-2'>Edit</a>
+                                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                </td>";
                                                 echo "</tr>";
                                             }
                                         } else {
-                                            echo "<tr><td colspan='7' class='text-center'>No records found</td></tr>";
+                                            echo "<tr><td colspan='8' class='text-center text-danger'>No records found</td></tr>";
                                         }
                                         ?>
                                     </tbody>
@@ -392,124 +478,217 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                             </div>
 
                             <!-- Pagination -->
-                            <?php
-                            $sql = "SELECT COUNT(*) AS total FROM userdata";
-                            $result = mysqli_query($conn, $sql);
-                            $row = mysqli_fetch_assoc($result);
-                            $total_user = $row['total'];
-                            $total_page = ceil($total_user / $total_data);
+                            <?php if ($total_user > 0): ?>
+                                <div id="paginationSection">
+                                    <ul class="pagination">
+                                        <!-- Prev button -->
+                                        <?php if ($page > 1): ?>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?page=<?php echo $page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">«
+                                                    Prev</a>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="page-item disabled"><a class="page-link" href="#">« Prev</a></li>
+                                        <?php endif; ?>
+                                        <?php
+                                        $visiblePages = 1;
+                                        $startPage = max(1, $page - $visiblePages);
+                                        $endPage = min($total_page, $page + $visiblePages);
 
-                            $start = ($page - 1) * $total_data + 1;
-                            $end = min($page * $total_data, $total_user);
+                                        if ($startPage > 1): ?>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?page=1<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">1</a>
+                                            </li>
+                                            <?php if ($startPage > 2): ?>
+                                                <li class="page-item disabled"><a class="page-link">...</a></li>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
 
-                            if ($total_user > 0) {
+                                        <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                                            <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
+                                                <a class="page-link"
+                                                    href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"><?php echo $i; ?></a>
+                                            </li>
+                                        <?php endfor; ?>
 
+                                        <?php if ($endPage < $total_page): ?>
+                                            <?php if ($endPage < $total_page - 1): ?>
+                                                <li class="page-item disabled"><a class="page-link">...</a></li>
+                                            <?php endif; ?>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?page=<?php echo $total_page; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"><?php echo $total_page; ?></a>
+                                            </li>
+                                        <?php endif; ?>
 
-                                echo '<ul class="pagination">';
-                                // Prev button
-                                if ($page > 1) {
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
-                                } else {
-                                    echo '<li class="page-item disabled"><a class="page-link" href="#">« Prev</a></li>';
-                                }
-
-                                // Dynamic pages with ellipses
-                                $visiblePages = 1;
-                                $startPage = max(1, $page - $visiblePages);
-                                $endPage = min($total_page, $page + $visiblePages);
-
-                                if ($startPage > 1) {
-                                    echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>';
-                                    if ($startPage > 2)
-                                        echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
-                                }
-
-                                for ($i = $startPage; $i <= $endPage; $i++) {
-                                    $active = ($i == $page) ? 'active' : '';
-                                    echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
-                                }
-
-                                if ($endPage < $total_page) {
-                                    if ($endPage < $total_page - 1)
-                                        echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . $total_page . '">' . $total_page . '</a></li>';
-                                }
-
-                                // Next button
-                                if ($page < $total_page) {
-                                    echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
-                                } else {
-                                    echo '<li class="page-item disabled"><a class="page-link" href="#">Next »</a></li>';
-                                }
-
-                                echo '</ul>';
-                                echo "<div class='pagination-info'>Showing $start to $end of $total_user entries</div>";
-                            }
-                            ?>
+                                        <!-- Next button -->
+                                        <?php if ($page < $total_page): ?>
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                    href="?page=<?php echo $page + 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">Next
+                                                    »</a>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="page-item disabled"><a class="page-link" href="#">Next »</a></li>
+                                        <?php endif; ?>
+                                    </ul>
+                                    <div class='pagination-info'>Showing <?php echo $start; ?> to <?php echo $end; ?> of
+                                        <?php echo $total_user; ?> entries
+                                    </div>
+                                    <?php if (!empty($search)): ?>
+                                        <div class='pagination-info search-info'>Search results for:
+                                            "<?php echo htmlspecialchars($search); ?>"</div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
         <br>
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const toggleSwitches = document.querySelectorAll('.toggle-switch');
+        $(document).ready(function () {
+            let searchTimeout;
+            $('#searchInput').on('input', function () {
+                const searchTerm = $(this).val();
+                $('.search-loading').css('display', 'block');
 
-            toggleSwitches.forEach(toggle => {
-                toggle.addEventListener('click', function () {
-                    const statusIndicator = this.previousElementSibling;
-                    const userId = this.getAttribute('data-user-id');
-                    let currentStatus = parseInt(this.getAttribute('data-status'));
-                    let newStatus = currentStatus === 1 ? 2 : 1;
+                clearTimeout(searchTimeout);
 
-                    this.classList.add('status-updating');
-                    statusIndicator.classList.add('status-updating');
+                searchTimeout = setTimeout(function () {
+                    performSearch(searchTerm);
+                }, 500);
+            });
 
-                    if (newStatus === 1) {
-                        showAlert('User status set to Active', 'success');
-                    } else {
-                        showAlert('User status set to Inactive', 'warning');
+            function performSearch(searchTerm) {
+                $.ajax({
+                    url: 'users_data.php',
+                    type: 'GET',
+                    data: {
+                        search: searchTerm,
+                        page: 1
+                    },
+                    success: function (response) {
+                        const tempDiv = $('<div>').html(response);
+                        const newTableBody = tempDiv.find('#userTableBody').html();
+                        const newPagination = tempDiv.find('#paginationSection').html();
+
+                        $('#userTableBody').html(newTableBody);
+                        $('#paginationSection').html(newPagination);
+
+                        $('.search-loading').css('display', 'none');
+
+                        // Update URL without reloading
+                        const newUrl = new URL(window.location);
+                        if (searchTerm) {
+                            newUrl.searchParams.set('search', searchTerm);
+                        } else {
+                            newUrl.searchParams.delete('search');
+                        }
+                        newUrl.searchParams.set('page', '1');
+                        window.history.replaceState({}, '', newUrl);
+
+                        // Re-attach event listeners for toggle switches
+                        attachToggleListeners();
+                    },
+                    error: function () {
+                        $('.search-loading').css('display', 'none');
+                        showAlert('Error: Could not perform search', 'error');
                     }
+                });
+            }
 
-                    if (currentStatus === 1) {
-                        this.classList.remove('active');
-                        this.classList.add('inactive');
-                        this.setAttribute('data-status', '2');
-                        statusIndicator.textContent = 'Inactive';
-                        statusIndicator.classList.remove('active');
-                        statusIndicator.classList.add('inactive');
-                    } else {
-                        this.classList.remove('inactive');
-                        this.classList.add('active');
-                        this.setAttribute('data-status', '1');
-                        statusIndicator.textContent = 'Active';
-                        statusIndicator.classList.remove('inactive');
-                        statusIndicator.classList.add('active');
-                    }
+            function attachToggleListeners() {
+                const toggleSwitches = document.querySelectorAll('.toggle-switch');
 
-                    $.ajax({
-                        url: '',
-                        type: 'POST',
-                        data: {
-                            action: 'update_status',
-                            user_id: userId,
-                            status: newStatus
-                        },
-                        success: function (response) {
-                            const result = JSON.parse(response);
-                            if (!result.success) {
-                                // Revert UI changes if update failed
+                toggleSwitches.forEach(toggle => {
+                    // Remove existing event listeners
+                    toggle.replaceWith(toggle.cloneNode(true));
+                });
+
+                // Re-select after clone
+                const newToggleSwitches = document.querySelectorAll('.toggle-switch');
+
+                newToggleSwitches.forEach(toggle => {
+                    toggle.addEventListener('click', function () {
+                        const statusIndicator = this.previousElementSibling;
+                        const userId = this.getAttribute('data-user-id');
+                        let currentStatus = parseInt(this.getAttribute('data-status'));
+                        let newStatus = currentStatus === 1 ? 0 : 1;
+
+                        this.classList.add('status-updating');
+                        statusIndicator.classList.add('status-updating');
+
+                        if (newStatus === 1) {
+                            showAlert('User status set to Active', 'success');
+                        } else {
+                            showAlert('User status set to Inactive', 'warning');
+                        }
+
+                        // Update UI immediately
+                        if (currentStatus === 1) {
+                            this.classList.remove('active');
+                            this.classList.add('inactive');
+                            this.setAttribute('data-status', '0');
+                            statusIndicator.textContent = 'Inactive';
+                            statusIndicator.classList.remove('active');
+                            statusIndicator.classList.add('inactive');
+                        } else {
+                            this.classList.remove('inactive');
+                            this.classList.add('active');
+                            this.setAttribute('data-status', '1');
+                            statusIndicator.textContent = 'Active';
+                            statusIndicator.classList.remove('inactive');
+                            statusIndicator.classList.add('active');
+                        }
+
+                        // Send AJAX request
+                        $.ajax({
+                            url: '',
+                            type: 'POST',
+                            data: {
+                                action: 'update_status',
+                                user_id: userId,
+                                status: newStatus
+                            },
+                            success: function (response) {
+                                const result = JSON.parse(response);
+                                if (!result.success) {
+                                    // Revert UI changes if update failed
+                                    if (newStatus === 1) {
+                                        toggle.classList.remove('active');
+                                        toggle.classList.add('inactive');
+                                        toggle.setAttribute('data-status', '0');
+                                        statusIndicator.textContent = 'Inactive';
+                                        statusIndicator.classList.remove('active');
+                                        statusIndicator.classList.add('inactive');
+                                    } else {
+                                        toggle.classList.remove('inactive');
+                                        toggle.classList.add('active');
+                                        toggle.setAttribute('data-status', '1');
+                                        statusIndicator.textContent = 'Active';
+                                        statusIndicator.classList.remove('inactive');
+                                        statusIndicator.classList.add('active');
+                                    }
+                                    showAlert('Error: ' + result.message, 'error');
+                                }
+
+                                toggle.classList.remove('status-updating');
+                                statusIndicator.classList.remove('status-updating');
+                            },
+                            error: function () {
+                                // Revert UI changes on error
                                 if (newStatus === 1) {
                                     toggle.classList.remove('active');
                                     toggle.classList.add('inactive');
-                                    toggle.setAttribute('data-status', '2');
+                                    toggle.setAttribute('data-status', '0');
                                     statusIndicator.textContent = 'Inactive';
                                     statusIndicator.classList.remove('active');
                                     statusIndicator.classList.add('inactive');
@@ -521,49 +700,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                                     statusIndicator.classList.remove('inactive');
                                     statusIndicator.classList.add('active');
                                 }
-                                showAlert('Error: ' + result.message, 'error');
+
+                                toggle.classList.remove('status-updating');
+                                statusIndicator.classList.remove('status-updating');
+                                showAlert('Error: Could not update status. Please try again.', 'error');
                             }
-
-
-                            toggle.classList.remove('status-updating');
-                            statusIndicator.classList.remove('status-updating');
-                        },
-                        error: function () {
-
-                            if (newStatus === 1) {
-                                toggle.classList.remove('active');
-                                toggle.classList.add('inactive');
-                                toggle.setAttribute('data-status', '2');
-                                statusIndicator.textContent = 'Inactive';
-                                statusIndicator.classList.remove('active');
-                                statusIndicator.classList.add('inactive');
-                            } else {
-                                toggle.classList.remove('inactive');
-                                toggle.classList.add('active');
-                                toggle.setAttribute('data-status', '1');
-                                statusIndicator.textContent = 'Active';
-                                statusIndicator.classList.remove('inactive');
-                                statusIndicator.classList.add('active');
-                            }
-
-
-                            toggle.classList.remove('status-updating');
-                            statusIndicator.classList.remove('status-updating');
-
-                            showAlert('Error: Could not update status. Please try again.', 'error');
-                        }
+                        });
                     });
                 });
-            });
+            }
+
+            attachToggleListeners();
 
             // Function to show alert messages
             function showAlert(message, type) {
-
                 const existingAlert = document.querySelector('.status-alert');
                 if (existingAlert) {
                     existingAlert.remove();
                 }
-
 
                 const alert = document.createElement('div');
                 alert.className = `status-alert alert-${type}`;
@@ -599,7 +753,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     alert.style.opacity = '1';
                 }, 10);
 
-                // Remove after 3 seconds
                 setTimeout(() => {
                     alert.style.opacity = '0';
                     setTimeout(() => {
@@ -609,6 +762,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                     }, 300);
                 }, 3000);
             }
+
+            $(document).on('click', '.pagination a', function (e) {
+            });
         });
     </script>
 </body>

@@ -72,7 +72,7 @@
         }
 
         .card-body {
-            background-color: rgba(238, 238, 238, 1)
+            background-color: rgb(247, 247, 247);
         }
 
         .footer {
@@ -98,7 +98,7 @@
         <div class="main-box">
             <div class="row justify-content-center">
                 <div class="col-lg-8 col-xl-6">
-                    <div class="card shadow-sm border-0">
+                    <div class="card shadow-sm border-0" id="card">
                         <div class="card-header bg-dark text-white">
                             <h5 class="mb-0"><i class="fa-solid fa-box"></i> Product Form</h5>
                         </div>
@@ -141,10 +141,23 @@
                                     </select>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="productimage" class="form-label">Product Image</label>
-                                    <input type="file" class="form-control" name="productimage" id="productimage">
+                                <div class="mb-3 d-flex align-items-start gap-3">
+                                    <div class="flex-grow-1">
+                                        <label for="productimage" class="form-label">Main Product Image</label>
+                                        <input type="file" class="form-control" name="productimage" id="productimage"
+                                            required>
+                                        <small class="text-muted" style="font-size: 11px;">* Main thumbnail
+                                            image</small>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <label for="multipleimages" class="form-label">Additional Images</label>
+                                        <input type="file" class="form-control" name="multipleimages[]"
+                                            id="multipleimages" multiple>
+                                        <small class="text-danger" style="font-size: 11px;">* You can select multiple
+                                            images</small>
+                                    </div>
                                 </div>
+
                                 <hr>&nbsp;
                                 <div class="d-flex justify-content-end">
                                     <a href="product_list.php" id="resetBtn" class="btn btn-danger">
@@ -161,7 +174,6 @@
                 </div>
             </div>
         </div>
-
         <script>
             $(document).ready(function () {
                 $("#productForm").validate({
@@ -222,8 +234,6 @@
                 });
             });
         </script>
-
-
         <!-- Footer -->
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>

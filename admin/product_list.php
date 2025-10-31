@@ -337,13 +337,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         <div class="content-area container-fluid py-4">
             <div class="row g-4">
 
-                <form action="product-add.php">
-                    <div class="col d-flex justify-content-end">
-                        <button class="btn btn-primary">
-                            <i class="fa-solid fa-plus"></i> Add New
-                        </button>
-                    </div>
-                </form>
+                <div class="col d-flex justify-content-end">
+                    <a href="product-add.php" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add New</a>
+                </div>
+
                 <!--  -->
                 <div class="">
                     <!-- <div class="col-lg-7 col-md-8"> -->
