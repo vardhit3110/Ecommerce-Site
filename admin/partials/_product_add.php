@@ -24,15 +24,14 @@ if (isset($_POST['insert'])) {
         exit();
     }
 
-//  insert product
-    $sql = "INSERT INTO product (product_name, product_desc, product_price, categorie_id, product_image)
-            VALUES (?, ?, ?, ?, ?)";
+    //  insert product
+    $sql = "INSERT INTO product (product_name, product_desc, product_price, categorie_id, product_image) VALUES (?, ?, ?, ?, ?)";
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "ssiis", $product_name, $product_desc, $product_price, $category_id, $filename);
     $result = mysqli_stmt_execute($stmt);
     $product_id = mysqli_insert_id($conn);
 
-// multiple image upload
+    // multiple image upload
     if ($result && isset($_FILES['multipleimages']['name'][0]) && !empty($_FILES['multipleimages']['name'][0])) {
         $total_files = count($_FILES['multipleimages']['name']);
         $gallery_folder = "../images/product_gallery/";
@@ -53,7 +52,6 @@ if (isset($_POST['insert'])) {
         }
     }
 
-    // =============== FINAL RESPONSE ===============
     if ($result) {
         echo "<script>alert('Product Added Successfully with Multiple Images!');window.location.href='../product_list.php';</script>";
     } else {

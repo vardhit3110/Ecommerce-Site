@@ -363,7 +363,7 @@ if ($email == true) {
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="logo">
-            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Logo">
+            <img src="../store/images/owner.jpeg" alt="Logo">
             <span>Admin Panel</span>
         </div>
         <ul class="nav-links">
@@ -417,6 +417,20 @@ if ($email == true) {
                 <a href="subscribers-manage.php">
                     <i class="fa-solid fa-bell"></i>
                     <span>Subscribers Manage</span>
+                </a>
+            </li>
+
+             <li>
+                <a href="adminProfile.php">
+                    <i class="fa fa-user-secret" aria-hidden="true"></i>
+                    <span>Admin Profile</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="site_settings.php">
+                    <i class="fa fa-cogs" aria-hidden="true"></i>
+                    <span>Site settings</span>
                 </a>
             </li>
 

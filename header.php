@@ -5,6 +5,17 @@ if (session_status() == PHP_SESSION_NONE) {
 }
 $base_url = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/";
 
+$sql = "SELECT * FROM sitedetail";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+  $row = mysqli_fetch_assoc($result);
+  $systemName = $row['systemName'];
+  $email = $row['email'];
+  $contact = $row['contact'];
+  $address = $row['address'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -491,7 +502,7 @@ $base_url = "http://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . 
 <body>
 
   <header>
-    <div class="logo"><i class="fa fa-mobile" aria-hidden="true"></i> MobileSite</div>
+    <div class="logo"><i class="fa fa-mobile" aria-hidden="true"></i><?php echo $systemName; ?></div>
 
     <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 

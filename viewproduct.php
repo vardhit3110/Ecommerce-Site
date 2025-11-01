@@ -41,10 +41,40 @@ include "db_connect.php";
             transform: scale(1.05);
         }
 
-        /* ===== Slider and Thumbnails ===== */
-        .carousel-item img {
-            max-height: 350px;
+        .main-image-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            overflow: hidden;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            cursor: zoom-in;
+            margin: 0 auto;
+            padding: 5px;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .zoom-floating {
+            position: fixed;
+            top: 100px;
+            right: 50px;
+            width: 700px;
+            height: 83%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 180%;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            display: none;
+            z-index: 9999;
+            background-color: #fff;
         }
 
         .thumb-row {
@@ -78,6 +108,10 @@ include "db_connect.php";
             .col-md-8.details-box {
                 padding-left: 15px;
                 margin-top: 20px;
+            }
+
+            .zoom-floating {
+                display: none !important;
             }
         }
     </style>
@@ -155,38 +189,18 @@ include "db_connect.php";
                         ?>
 
                         <div class="row shadow p-4 rounded align-items-center" id="box-detail">
-                            <!-- LEFT: IMAGE SLIDER -->
+                            <!-- left: image -->
                             <div class="col-md-4 text-center mb-3 mb-md-0">
                                 <h6 class="text-primary mb-3"><?php echo htmlspecialchars($category_name); ?></h6>
 
-                                <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-inner">
-                                        <?php
-                                        $active = 'active';
-                                        foreach ($allImages as $img) {
-                                            $imgPath = ($img === $productimage)
-                                                ? "./admin/images/product_img/$img"
-                                                : "./admin/images/product_gallery/$img";
-
-                                            echo '<div class="carousel-item ' . $active . '">
-                                                    <img src="' . htmlspecialchars($imgPath) . '" class="d-block w-100 rounded" alt="Product Image">
-                                                  </div>';
-                                            $active = '';
-                                        }
-                                        ?>
-                                    </div>
-
-                                    <?php if (count($allImages) > 1): ?>
-                                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
-                                            data-bs-slide="prev">
-                                            <span class="carousel-control-prev-icon"></span>
-                                        </button>
-                                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
-                                            data-bs-slide="next">
-                                            <span class="carousel-control-next-icon"></span>
-                                        </button>
-                                    <?php endif; ?>
+                                <div class="main-image-container position-relative">
+                                    <img id="mainImage"
+                                        src="<?php echo htmlspecialchars('./admin/images/product_img/' . $productimage); ?>"
+                                        class="main-image rounded" alt="Product Image">
                                 </div>
+
+                                <!-- Floating zoom -->
+                                <div class="zoom-floating" id="zoomFloating"></div>
 
                                 <!-- Thumbnails -->
                                 <div class="thumb-row">
@@ -195,13 +209,14 @@ include "db_connect.php";
                                         $thumbPath = ($img === $productimage)
                                             ? "./admin/images/product_img/$img"
                                             : "./admin/images/product_gallery/$img";
-                                        echo '<img src="' . htmlspecialchars($thumbPath) . '" onclick="showSlide(\'' . htmlspecialchars($thumbPath) . '\')" alt="Thumbnail">';
+                                        echo '<img src="' . htmlspecialchars($thumbPath) . '" onclick="changeMainImage(\'' . htmlspecialchars($thumbPath) . '\')" alt="Thumbnail">';
                                     }
                                     ?>
                                 </div>
                             </div>
 
-                            <div class="col-md-8 details-box">
+                            <!-- Right: Details -->
+                            <div class="col-md-8 details-box position-relative">
                                 <h4 class="fw-bold mb-2"><?php echo htmlspecialchars($product_name); ?></h4>
                                 <p class="text-muted mb-2"><?php echo nl2br(htmlspecialchars($product_desc)); ?></p>
                                 <h5 class="text-danger mb-3">₹<?php echo number_format((float) $product_price); ?></h5>
@@ -287,16 +302,28 @@ include "db_connect.php";
             });
         }
 
-        function showSlide(imgSrc) {
-            const carousel = document.querySelector("#productCarousel .carousel-inner");
-            const slides = carousel.querySelectorAll(".carousel-item img");
-            slides.forEach((slide, index) => {
-                if (slide.getAttribute("src") === imgSrc) {
-                    const bsCarousel = bootstrap.Carousel.getInstance(document.getElementById('productCarousel'));
-                    bsCarousel.to(index);
-                }
-            });
+        function changeMainImage(src) {
+            document.getElementById("mainImage").src = src;
         }
+
+        const mainImg = document.getElementById("mainImage");
+        const zoomFloating = document.getElementById("zoomFloating");
+
+        mainImg.addEventListener("mouseenter", function () {
+            zoomFloating.style.display = "block";
+            zoomFloating.style.backgroundImage = `url('${mainImg.src}')`;
+        });
+
+        mainImg.addEventListener("mouseleave", function () {
+            zoomFloating.style.display = "none";
+        });
+
+        mainImg.addEventListener("mousemove", function (e) {
+            const { left, top, width, height } = mainImg.getBoundingClientRect();
+            const x = ((e.pageX - left - window.scrollX) / width) * 100;
+            const y = ((e.pageY - top - window.scrollY) / height) * 100;
+            zoomFloating.style.backgroundPosition = `${x}% ${y}%`;
+        });
 
         $(document).ready(function () {
             setTimeout(function () {

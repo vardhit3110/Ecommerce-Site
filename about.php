@@ -1,6 +1,24 @@
 <?php
 require "db_connect.php";
 
+$sql = "SELECT * FROM admin";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $fname = $row['fname'];
+    $lname = $row['lname'];
+    $email = $row['email'];
+    $phone = $row['phone'];
+    $bio = $row['bio'];
+}
+$sql = "SELECT * FROM sitedetail ";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+   $systemName=$row['systemName'];
+}
 
 $totalQuery = "SELECT COUNT(*) AS total FROM feedback";
 $totalResult = mysqli_query($conn, $totalQuery);
@@ -154,8 +172,8 @@ for ($i = 5; $i >= 1; $i--) {
         <div class="row">
             <!-- About Text -->
             <div class="col-md-6 about-text">
-                <h2>Welcome to <span style="color:#4f46e5;">MobileSite</span></h2>
-                <p><b>MobileSite</b> is a leading platform for premium smartphones, accessories, and repair services.
+                <h2>Welcome to <span style="color:#4f46e5;"><?php echo $systemName ;?></span></h2>
+                <p><b><?php echo $systemName ;?></b> is a leading platform for premium smartphones, accessories, and repair services.
                     We’re passionate about providing users with high-quality devices and top-notch support that redefine
                     the mobile shopping experience.</p>
 
@@ -190,8 +208,8 @@ for ($i = 5; $i >= 1; $i--) {
         <div class="owner-section mt-5">
             <img src="./store/images/owner.jpeg" alt="Owner">
             <div class="owner-info">
-                <h4>Arjun Verma</h4>
-                <p><strong>Founder & CEO, MobileSite</strong></p>
+                <h4><?php echo $lname . " " . $fname; ?></h4>
+                <p><strong>Founder & CEO, <?php echo $systemName; ?></strong></p>
                 <p>“We’re not just selling phones — we’re delivering innovation in your hands.”</p>
                 <p>Under Arjun’s leadership, MobileSite has become a trusted name in mobile e-commerce, offering the
                     best prices, authentic products, and a seamless digital experience to customers across India.</p>

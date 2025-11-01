@@ -1,4 +1,17 @@
-<?php require_once "header.php"; ?>
+<?php
+require_once "header.php";
+$sql = "SELECT * FROM sitedetail";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $systemName = $row['systemName'];
+    $email = $row['email'];
+    $contact = $row['contact'];
+    $address = $row['address'];
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -249,13 +262,15 @@
                 max-width: 350px;
             }
         }
-        .gotoweb{
+
+        .gotoweb {
             text-decoration: none;
             font-weight: 700;
             font-size: 15px;
             color: #0056b3;
         }
-        .gotoweb:hover{
+
+        .gotoweb:hover {
             color: red;
         }
     </style>
@@ -268,7 +283,7 @@
         <div class="overlay"></div>
         <div class="hero-content"><br><br><br>
             <img src="./store/images/logo.jpg" alt="Logo">
-            <h1>Welcome to MobileSite</h1>
+            <h1>Welcome to <?php echo $systemName; ?></h1>
             <h2>Explore the Future of Mobility</h2>
             <button onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">Explore
                 Products</button><br><br><br><br>

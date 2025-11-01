@@ -287,7 +287,7 @@
         require "db_connect.php";
 
         $counts = [];
-        $tables = ['userdata', 'categories', 'product', 'wishlist', 'feedback'];
+        $tables = ['userdata', 'categories', 'product', 'wishlist', 'feedback', 'subscriber'];
         foreach ($tables as $table) {
             $existSql = "SELECT * FROM $table";
             $result = mysqli_query($conn, $existSql);
@@ -388,11 +388,11 @@
                         <div class="dashboard-card dashboard-card7">
                             <div class="card-header">
                                 <div class="card-content">
-                                    <h3>Total Reviews</h3>
-                                    <h4><?php ?>0</h4>
+                                    <h3>Total Subscribers</h3>
+                                    <h4><?php echo $counts['subscriber']; ?></h4>
                                 </div>
                                 <div class="card-icon">
-                                    <i class="fas fa-star" style="color: #34495e;"></i>
+                                    <i class="fas fa-bell" style="color: #34495e;"></i>
                                 </div>
                             </div>
                         </div>

@@ -1,3 +1,18 @@
+<?php
+include "db_connect.php";
+
+$sql = "SELECT * FROM sitedetail";
+$result = mysqli_query($conn, $sql);
+
+if (mysqli_num_rows($result) > 0) {
+    $row = mysqli_fetch_assoc($result);
+    $systemName = $row['systemName'];
+    $email = $row['email'];
+    $contact = $row['contact'];
+    $address = $row['address'];
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -289,9 +304,9 @@
             <div class="footer-section">
                 <h3>Contact Info</h3>
                 <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i> 123 Mobile Street, City</li>
-                    <li><i class="fas fa-phone"></i> +1 234 567 8900</li>
-                    <li><i class="fas fa-envelope"></i> info@mobilesite.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i><?php echo $address; ?></li>
+                    <li><i class="fas fa-phone"></i> <?php echo $contact; ?></li>
+                    <li><i class="fas fa-envelope"></i> <?php echo $email; ?></li>
                 </ul>
             </div>
 
@@ -330,7 +345,7 @@
                 </script>
             </div>
         </div>
-        <?php include "db_connect.php";
+        <?php
 
         if (isset($_POST['sub'])) {
             $subscriber_email = trim($_POST['subscriber_email']);

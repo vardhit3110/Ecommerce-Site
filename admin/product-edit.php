@@ -31,6 +31,10 @@ if (isset($_GET['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <?php include "links/icons.html"; ?>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
     <style>
         body {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -56,13 +60,29 @@ if (isset($_GET['id'])) {
             border-radius: 10px;
         }
 
-        .img-small {
-            width: 48%;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 5px;
+        .gallery-wrapper {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
         }
+
+        .gallery-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 4px;
+        }
+
+        .img-small {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
 
         .footer {
             text-align: center;
@@ -96,7 +116,7 @@ if (isset($_GET['id'])) {
                         <label class="form-label mb-3 fw-bold">Current Main Image</label><br>
                         <?php if (!empty($product['product_image'])): ?>
                             <img src="images/product_img/<?php echo htmlspecialchars($product['product_image']); ?>"
-                                class="img-large mb-5" style="width: 160px;">
+                                class="img-large mb-5" style="width: 160px">
                         <?php else: ?>
                             <p>No image available</p>
                         <?php endif; ?>
@@ -105,13 +125,16 @@ if (isset($_GET['id'])) {
                         <input type="file" class="form-control" name="productimage" id="productimage">
                     </div>
 
-                    <!-- RIGHT SIDE (Multiple Images) -->
+                    <!--Multiple Images-->
                     <div class="col-md-6">
                         <label class="form-label fw-bold">Current Gallery Images</label>
-                        <div class="d-flex flex-wrap justify-content-between">
+                        <div class="gallery-wrapper">
                             <?php if (!empty($images)): ?>
                                 <?php foreach ($images as $img): ?>
-                                    <img src="images/product_gallery/<?php echo htmlspecialchars($img); ?>" class="img-small">
+                                    <div class="gallery-item">
+                                        <img src="images/product_gallery/<?php echo htmlspecialchars($img); ?>"
+                                            class="img-small">
+                                    </div>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <p class="text-muted">No additional images yet.</p>
@@ -122,10 +145,8 @@ if (isset($_GET['id'])) {
                         <input type="file" class="form-control" name="multipleimages[]" id="multipleimages" multiple>
                     </div>
                 </div>
-
                 <hr>
-
-                <!-- PRODUCT DETAILS -->
+                <!-- product Details -->
                 <div class="row">
                     <div class="col-md-6">
                         <label class="form-label">Product Name</label>

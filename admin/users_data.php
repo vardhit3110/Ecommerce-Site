@@ -30,14 +30,10 @@ $total_data = 6;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $total_data;
 
-// Build query based on search
 if (!empty($search)) {
     $search_term = "%$search%";
-    $sql = "SELECT * FROM userdata 
-            WHERE username LIKE ? OR email LIKE ? OR phone LIKE ? OR city LIKE ? 
-            LIMIT {$offset}, {$total_data}";
-    $count_sql = "SELECT COUNT(*) AS total FROM userdata 
-                  WHERE username LIKE ? OR email LIKE ? OR phone LIKE ? OR city LIKE ?";
+    $sql = "SELECT * FROM userdata WHERE username LIKE ? OR email LIKE ? OR phone LIKE ? OR city LIKE ? LIMIT {$offset}, {$total_data}";
+    $count_sql = "SELECT COUNT(*) AS total FROM userdata WHERE username LIKE ? OR email LIKE ? OR phone LIKE ? OR city LIKE ?";
 
     $stmt = mysqli_prepare($conn, $sql);
     mysqli_stmt_bind_param($stmt, "ssss", $search_term, $search_term, $search_term, $search_term);
