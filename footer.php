@@ -7,9 +7,9 @@ $result = mysqli_query($conn, $sql);
 if (mysqli_num_rows($result) > 0) {
     $row = mysqli_fetch_assoc($result);
     $systemName = $row['systemName'];
-    $email = $row['email'];
-    $contact = $row['contact'];
-    $address = $row['address'];
+    $adminemail = $row['email'];
+    $admincontact = $row['contact'];
+    $adminaddress = $row['address'];
 }
 
 ?>
@@ -304,9 +304,9 @@ if (mysqli_num_rows($result) > 0) {
             <div class="footer-section">
                 <h3>Contact Info</h3>
                 <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i><?php echo $address; ?></li>
-                    <li><i class="fas fa-phone"></i> <?php echo $contact; ?></li>
-                    <li><i class="fas fa-envelope"></i> <?php echo $email; ?></li>
+                    <li><i class="fas fa-map-marker-alt"></i><?php echo $adminaddress; ?></li>
+                    <li><i class="fas fa-phone"></i> <?php echo $admincontact; ?></li>
+                    <li><i class="fas fa-envelope"></i> <?php echo $adminemail; ?></li>
                 </ul>
             </div>
 

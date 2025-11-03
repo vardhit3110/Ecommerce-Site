@@ -420,10 +420,17 @@ if ($email == true) {
                 </a>
             </li>
 
-             <li>
+            <li>
                 <a href="adminProfile.php">
                     <i class="fa fa-user-secret" aria-hidden="true"></i>
                     <span>Admin Profile</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="payout.php">
+                    <i class="fa-solid fa-money-check-dollar"></i>
+                    <span>Payouts</span>
                 </a>
             </li>
 

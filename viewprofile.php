@@ -1,12 +1,35 @@
 <?php
 require "db_connect.php";
-require "./partials/viewuser.php";
-
 if (isset($_GET['email'])) {
-    $email = $_GET['email'];
+    $get_email = $_GET['email'];
 } else {
     echo "<script>alert('Please Login First.');window:location:href='';</script>";
     exit;
+}
+
+/* user data show */
+if (isset($_GET['email']) && !empty($_GET['email'])) {
+    $get_email = $_GET['email'];
+
+    $stmt = mysqli_prepare($conn, "SELECT * FROM userdata WHERE email = ?");
+    mysqli_stmt_bind_param($stmt, "s", $get_email);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($row = mysqli_fetch_assoc($result)) {
+        $id = $row['id'];
+        $username = $row['username'];
+        $useremail = $row['email'];
+        $userphone = $row['phone'];
+        $useraddress = $row['address'];
+        $city = $row['city'];
+        $image = $row['image'];
+        $gender = $row['gender'];
+    } else {
+        echo "<script>alert('User not found.');</script>";
+        exit;
+    }
+    mysqli_stmt_close($stmt);
 }
 
 /* update user code */
@@ -112,8 +135,8 @@ mysqli_close($conn);
 
                                     <div class="mt-3">
                                         <h4><?php echo $username; ?></h4>
-                                        <p class="text-secondary mb-1"><?php echo $email; ?></p>
-                                        <p class="text-muted font-size-sm"><?php echo $address; ?></p>
+                                        <p class="text-secondary mb-1"><?php echo $useremail; ?></p>
+                                        <p class="text-muted font-size-sm"><?php echo $useraddress; ?></p>
                                         <button class="btn btn-success" name="change-image">Change Image</button>
                                     </div>
                                 </form>
@@ -155,8 +178,6 @@ mysqli_close($conn);
                             }
 
                             ?>
-
-
                             <hr class="my-4">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
@@ -240,7 +261,7 @@ mysqli_close($conn);
                                         <h6 class="mb-0">Email</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="email" class="form-control" value="<?php echo $email; ?>"
+                                        <input type="email" class="form-control" value="<?php echo $useremail; ?>"
                                             name="email" id="email" placeholder="Please Enter Email" required>
                                     </div>
                                 </div>
@@ -249,7 +270,7 @@ mysqli_close($conn);
                                         <h6 class="mb-0">Phone</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" class="form-control" value="<?php echo $phone; ?>"
+                                        <input type="text" class="form-control" value="<?php echo $userphone; ?>"
                                             name="phone" id="phone" placeholder="Please Enter Phone Number"
                                             maxlength="10" required>
                                     </div>
@@ -269,7 +290,7 @@ mysqli_close($conn);
                                         <h6 class="mb-0">Address</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input type="text" class="form-control" value="<?php echo $address; ?>"
+                                        <input type="text" class="form-control" value="<?php echo $useraddress; ?>"
                                             name="address" id="address" placeholder="Please Enter Address">
                                     </div>
                                 </div>
@@ -286,7 +307,6 @@ mysqli_close($conn);
                                             <option value="2" <?php echo ($gender == '2') ? 'selected' : ''; ?>>Female
                                             </option>
                                         </select>
-
                                     </div>
                                 </div>
                                 <hr>
@@ -386,7 +406,6 @@ mysqli_close($conn);
             }
         });
     </script>
-
 </body>
 
 </html>

@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <?php include "links/icons.html"; ?>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --primary: #4361ee;
@@ -245,6 +246,80 @@
             }
         }
 
+        .analytics-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+            width: 900px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .title {
+            color: #111827;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f3f4f6;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .tab {
+            padding: 8px 20px;
+            cursor: pointer;
+            color: #6b7280;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-right: 1px solid #e5e7eb;
+            user-select: none;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab.active {
+            background: #2563eb;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+        }
+
+        canvas {
+            margin-top: 20px;
+        }
+
+        .profit-box {
+            text-align: center;
+            margin-top: 15px;
+            background-color: #dbffe4ff;
+            color: #16a34a;
+            font-weight: 600;
+            font-size: 13px;
+            width: 160px;
+            border-radius: 7px;
+            display: none;
+        }
+
+        .profit-box.visible {
+            display: block;
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -401,11 +476,138 @@
 
             </div>
         </div>
+
+        <!-- Graph -->
+        <div class="content-area">
+            <div class="header">
+                <div>
+                    <div class="title">Analytics</div>
+                    <div class="subtitle">Visitor analytics of last 12 months</div>
+                </div>
+                <div class="tabs">
+                    <div class="tab active" data-period="12months">12 months</div>
+                    <div class="tab" data-period="30days">30 days</div>
+                    <div class="tab" data-period="7days">7 days</div>
+                    <div class="tab" data-period="24hours">24 hours</div>
+                </div>
+            </div>
+            <canvas id="analyticsChart" height="110"></canvas>
+            <center>
+                <div class="profit-box" id="profitBox"></div>
+            </center>
+        </div>
         <!-- Footer -->
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>
     </div>
+    <script>
+        const ctx = document.getElementById('analyticsChart').getContext('2d');
+        const profitBox = document.getElementById('profitBox');
+
+        // Static Data
+        const chartData = {
+            "12months": {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                data: [120, 168, 90, 280, 150, 170, 260, 95, 190, 360, 270, 100],
+                product: ["Camera", "Headphones", "Watch", "Laptop", "Tablet", "Phone", "Speaker", "Keyboard", "Monitor", "Console", "Earbuds", "Drone"],
+                title: "Visitor analytics of last 12 months",
+                profit: "₹2,253K"
+            },
+            "30days": {
+                labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+                data: [240, 310, 290, 340],
+                product: ["Week 1 Sales", "Week 2 Sales", "Week 3 Sales", "Week 4 Sales"],
+                title: "Visitor analytics of last 30 days",
+                profit: "₹1,180K"
+            },
+            "7days": {
+                labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                data: [120, 180, 100, 250, 200, 300, 220],
+                product: ["Camera", "Laptop", "Tablet", "Speaker", "Console", "Drone", "Phone"],
+                title: "Visitor analytics of last 7 days",
+                profit: "₹450K"
+            },
+            "24hours": {
+                labels: ["1 AM", "4 AM", "7 AM", "10 AM", "1 PM", "4 PM", "7 PM", "10 PM"],
+                data: [5, 10, 15, 22, 30, 20, 18, 12],
+                product: ["Product 1", "Product 2", "Product 3", "Product 4", "Product 5", "Product 6", "Product 7", "Product 8"],
+                title: "Visitor analytics of last 24 hours",
+                profit: "₹22K"
+            }
+        };
+
+        let current = "12months";
+
+        // Create Chart
+        const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData[current].labels,
+                datasets: [{
+                    data: chartData[current].data,
+                    backgroundColor: '#3B82F6',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#e5e7eb' },
+                        ticks: { color: '#374151' }
+                    },
+                    x: {
+                        ticks: { color: '#374151' }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#fff',
+                        titleColor: '#111',
+                        bodyColor: '#111',
+                        borderColor: '#ddd',
+                        borderWidth: 1,
+                        displayColors: false,
+                        callbacks: {
+                            label: (context) => {
+                                const data = chartData[current];
+                                return [`${data.product[context.dataIndex]}`, `Sales: ${data.data[context.dataIndex]}`];
+                            }
+                        }
+                    }
+                },
+                animation: { duration: 800 }
+            }
+        });
+
+        function updateChart(period) {
+            current = period;
+            const data = chartData[period];
+            chart.data.labels = data.labels;
+            chart.data.datasets[0].data = data.data;
+            chart.update();
+
+            document.querySelector('.subtitle').textContent = data.title;
+            profitBox.textContent = `Total Profit: ${data.profit}`;
+            profitBox.classList.add('visible');
+        }
+
+        // Tab Click
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                updateChart(tab.dataset.period);
+            });
+        });
+
+        // Show profit for default tab (12 months)
+        profitBox.textContent = `Total Profit: ${chartData[current].profit}`;
+        profitBox.classList.add('visible');
+    </script>
 </body>
 
 </html>
