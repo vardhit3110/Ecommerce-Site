@@ -767,7 +767,9 @@ if (mysqli_num_rows($result) > 0) {
           <div class="modal-footer d-flex justify-content-between align-items-center w-100">
             <p class="mb-0" style="font-weight: 600; color: navy;">
               Don't have an account? <a href="#" data-bs-toggle="modal" data-bs-target="#signUpModal"
-                style="text-decoration: none;">Create Account</a>
+                style="text-decoration: none;">Create Account</a><br>
+
+              Forgot your password? <a href="ResetPassword.php" style="text-decoration: none;">Reset here</a>
             </p>
             <button type="submit" class="btn btn-success" name="login" style="font-weight: 600;">Login</button>
           </div>

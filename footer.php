@@ -126,6 +126,7 @@ if (mysqli_num_rows($result) > 0) {
         }
 
         .social-links a {
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
