@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 31, 2025 at 02:03 PM
+-- Generation Time: Nov 05, 2025 at 02:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -29,8 +29,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `admin` (
   `id` int(11) NOT NULL,
+  `fname` varchar(21) NOT NULL,
+  `lname` varchar(21) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `phone` varchar(21) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `bio` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -38,8 +42,8 @@ CREATE TABLE `admin` (
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`id`, `email`, `password`, `created_at`) VALUES
-(1, 'admin@gmail.com', '$2y$10$rSEBQr2QAjwUY/eZAK5OF.APuvz4QSDx8VCuKBrqcHwLg0.G1y2PS', '2025-09-16 04:45:06');
+INSERT INTO `admin` (`id`, `fname`, `lname`, `email`, `phone`, `password`, `bio`, `created_at`) VALUES
+(1, 'Rahul', 'Sharma', 'admin@gmail.com', '9846598728', '$2y$10$rSEBQr2QAjwUY/eZAK5OF.APuvz4QSDx8VCuKBrqcHwLg0.G1y2PS', 'Team Manager', '2025-09-15 23:15:06');
 
 -- --------------------------------------------------------
 
@@ -64,6 +68,22 @@ INSERT INTO `categories` (`categorie_id`, `categorie_name`, `categorie_image`, `
 (1, 'Mobile Phones', 'Mobile Phones_1758869905.jpg', 'Latest smartphones from top brands - find your perfect phone today.', '1', '2025-09-26 12:28:25'),
 (2, 'Mobile Accessories', 'Mobile Accessories_1758869947.jpg', 'Screen protectors, stylish back covers, and magnetic phone holders - protect, style.', '1', '2025-09-26 12:29:07'),
 (3, 'Buds', 'Buds_1758870014.jpg', 'Auto pair. Noise cancel. Touch control. Tiny buds, big performance - perfect for work & workouts.', '1', '2025-09-26 12:30:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `coupons`
+--
+
+CREATE TABLE `coupons` (
+  `id` int(5) NOT NULL,
+  `promocode` varchar(20) NOT NULL,
+  `discount` int(5) NOT NULL,
+  `min_bill_price` int(5) NOT NULL,
+  `status` enum('1','2') NOT NULL DEFAULT '1',
+  `description` varchar(255) NOT NULL,
+  `creat_time` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -131,52 +151,54 @@ CREATE TABLE `orders` (
 INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `total_amount`, `shipping_charge`, `payment_mode`, `payment_status`, `payment_id`, `razorpay_order_id`, `razorpay_payment_id`, `order_status`, `delivery_address`, `order_code`, `admin_note`) VALUES
 (1, 7, '2025-10-16 16:32:44', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, NULL, '3', NULL, NULL, NULL, '1', 'Umiya bhavan, thakkar nagar, ahmedabad.', 723957, NULL),
 (2, 7, '2025-10-16 16:34:11', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '1', NULL, NULL, NULL, '5', 'Umiya bhavan, thakkar nagar, ahmedabad.', 421426, NULL),
-(3, 7, '2025-10-17 10:24:10', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '1', NULL, NULL, NULL, '3', '1, Thakkar Nagar, India Colony, Ahmedabad.', 578893, NULL),
+(3, 7, '2025-10-17 10:24:10', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', '1, Thakkar Nagar, India Colony, Ahmedabad.', 578893, NULL),
 (4, 17, '2025-10-17 10:25:59', '[{\"product_name\":\"MarQ Power Bank\",\"price\":3999,\"quantity\":1,\"subtotal\":3999}]', 4049.00, 50.00, '1', NULL, NULL, NULL, NULL, '5', '101, opera royal, pasodra gam,kamrej, surat.', 4318, NULL),
 (5, 9, '2025-10-17 10:30:01', '[{\"product_name\":\"Charger EliteGadgets 67 W\",\"price\":283,\"quantity\":2,\"subtotal\":566}]', 616.00, 50.00, '2', '1', NULL, NULL, NULL, '2', 'Mumbai', 436722, NULL),
 (6, 7, '2025-10-17 11:22:11', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999},{\"product_name\":\"OnePlus Nord Buds 3r\",\"price\":1599,\"quantity\":1,\"subtotal\":1599}]', 2648.00, 50.00, '1', '2', NULL, NULL, NULL, '4', '1, Thakkar Nagar, India Colony, Ahmedabad.', 995211, NULL),
 (7, 8, '2025-10-17 15:32:14', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900},{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 83949.00, 50.00, '2', '1', NULL, NULL, NULL, '5', '1021, raj mall, jaipur, rajesthan', 614236, NULL),
 (8, 10, '2025-10-17 15:33:50', '[{\"product_name\":\"OPPO Enco Buds3 Pro\",\"price\":1399,\"quantity\":1,\"subtotal\":1399}]', 1449.00, 50.00, '1', '1', NULL, NULL, NULL, '3', 'sadar chowk, jetpur.', 376546, NULL),
-(9, 16, '2025-10-17 15:36:28', '[{\"product_name\":\"Charger EliteGadgets 67 W\",\"price\":283,\"quantity\":2,\"subtotal\":566},{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":3,\"subtotal\":630}]', 1246.00, 50.00, '1', '2', NULL, NULL, NULL, '3', 'nasik , mumbai..', 242507, NULL),
-(10, 17, '2025-10-27 10:20:53', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '1', NULL, NULL, NULL, '1', '404, varni, pasodra gam,kamrej, surat.', 363056, NULL),
+(9, 16, '2025-10-17 15:36:28', '[{\"product_name\":\"Charger EliteGadgets 67 W\",\"price\":283,\"quantity\":2,\"subtotal\":566},{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":3,\"subtotal\":630}]', 1246.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'nasik , mumbai..', 242507, NULL),
+(10, 17, '2025-10-27 10:20:53', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', '404, varni, pasodra gam,kamrej, surat.', 363056, NULL),
 (11, 7, '2025-10-29 14:56:11', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '1', NULL, NULL, NULL, '1', '106, Bapunagar, India Colony, Ahmedabad..', 725010, NULL),
-(12, 7, '2025-10-29 15:01:20', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZEyDeKnYUcpIQ', 'pay_RZEyDeKnYUcpIQ', NULL, '2', '106, Bapunagar, India Colony, Ahmedabad..', 348744, NULL),
-(13, 18, '2025-10-29 15:08:08', '[{\"product_name\":\"Noise Aura Buds\",\"price\":1499,\"quantity\":1,\"subtotal\":1499}]', 1549.00, 50.00, '2', '2', 'pay_RZF4aTYSnVMUd1', 'pay_RZF4aTYSnVMUd1', NULL, '2', '403, vraj vihar, jagatnaka, varachha, surat.', 105210, NULL),
+(12, 7, '2025-10-29 15:01:20', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZEyDeKnYUcpIQ', 'pay_RZEyDeKnYUcpIQ', NULL, '4', '106, Bapunagar, India Colony, Ahmedabad..', 348744, NULL),
+(13, 18, '2025-10-29 15:08:08', '[{\"product_name\":\"Noise Aura Buds\",\"price\":1499,\"quantity\":1,\"subtotal\":1499}]', 1549.00, 50.00, '2', '2', 'pay_RZF4aTYSnVMUd1', 'pay_RZF4aTYSnVMUd1', NULL, '4', '403, vraj vihar, jagatnaka, varachha, surat.', 105210, NULL),
 (14, 18, '2025-10-29 15:24:39', '[{\"product_name\":\"MarQ Power Bank\",\"price\":3999,\"quantity\":1,\"subtotal\":3999}]', 4049.00, 50.00, '2', '1', NULL, 'order_RZFLO4z0YJfw7A', NULL, '1', '403, vraj vihar, jagatnaka, varachha, surat.', 919482, NULL),
-(15, 18, '2025-10-29 15:25:29', '[{\"product_name\":\"MarQ Power Bank\",\"price\":3999,\"quantity\":1,\"subtotal\":3999}]', 4049.00, 50.00, '2', '1', NULL, 'order_RZFMGcbD68mGxJ', NULL, '1', '403, vraj vihar, jagatnaka, varachha, surat.', 633778, NULL),
+(15, 18, '2025-10-29 15:25:29', '[{\"product_name\":\"MarQ Power Bank\",\"price\":3999,\"quantity\":1,\"subtotal\":3999}]', 4049.00, 50.00, '2', '2', NULL, 'order_RZFMGcbD68mGxJ', NULL, '4', '403, vraj vihar, jagatnaka, varachha, surat.', 633778, NULL),
 (16, 18, '2025-10-29 15:32:59', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '1', NULL, 'order_RZFUBlSFKTZqQt', NULL, '1', '403, vraj vihar, jagatnaka, varachha, surat.', 741939, NULL),
 (17, 12, '2025-10-29 15:43:37', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '2', '1', NULL, 'order_RZFfQiBPptWy8g', NULL, '1', 'Mota varachha, surat.', 984347, NULL),
-(18, 12, '2025-10-29 16:00:58', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '2', '1', NULL, NULL, NULL, '1', 'Mota varachha, surat.', 419385, NULL),
+(18, 12, '2025-10-29 16:00:58', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '2', '2', NULL, NULL, NULL, '4', 'Mota varachha, surat.', 419385, NULL),
 (19, 12, '2025-10-29 16:02:14', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '2', '1', NULL, NULL, NULL, '1', 'Mota varachha, surat.', 356221, NULL),
-(20, 12, '2025-10-29 16:13:17', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '2', '2', 'pay_RZGArWwUGhOYEn', 'order_RZGAlfOA7sFuc8', 'pay_RZGArWwUGhOYEn', '2', 'Mota varachha, surat.', 730249, NULL),
+(20, 12, '2025-10-29 16:13:17', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '2', '2', 'pay_RZGArWwUGhOYEn', 'order_RZGAlfOA7sFuc8', 'pay_RZGArWwUGhOYEn', '4', 'Mota varachha, surat.', 730249, NULL),
 (21, 10, '2025-10-29 16:21:15', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '1', NULL, 'order_RZGJAw8LOd1o8A', NULL, '1', 'sadar chowk, jetpur.', 682371, NULL),
 (22, 10, '2025-10-29 16:21:48', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '1', NULL, 'order_RZGJkoAfXd002z', NULL, '1', 'sadar chowk, jetpur.', 432676, NULL),
 (23, 10, '2025-10-29 16:24:20', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '1', NULL, 'order_RZGMRCnXDdXuvE', NULL, '1', 'sadar chowk, jetpur.', 549175, NULL),
 (24, 10, '2025-10-29 16:24:38', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '1', NULL, 'order_RZGMkAcwOL6Fuf', NULL, '1', 'sadar chowk, jetpur.', 305247, NULL),
-(25, 10, '2025-10-29 16:27:26', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '1', NULL, 'order_RZGPiOaFDLkjX3', NULL, '1', 'sadar chowk, jetpur.', 439362, NULL),
+(25, 10, '2025-10-29 16:27:26', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '2', NULL, 'order_RZGPiOaFDLkjX3', NULL, '4', 'sadar chowk, jetpur.', 439362, NULL),
 (26, 10, '2025-10-29 16:30:21', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '1', NULL, 'order_RZGSmaA8jOEEgX', NULL, '1', 'sadar chowk, jetpur.', 938789, NULL),
-(27, 10, '2025-10-29 16:31:09', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '2', 'pay_RZGTivOX5dTirM', 'order_RZGTdZcDfsK2P0', 'pay_RZGTivOX5dTirM', '2', 'sadar chowk, jetpur.', 523966, NULL),
-(28, 7, '2025-10-29 17:55:03', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZHutrHkx13XQx', 'order_RZHuGhareHZ8wi', 'pay_RZHutrHkx13XQx', '2', '106, Bapunagar, India Colony, Ahmedabad..', 811918, NULL),
-(29, 7, '2025-10-29 17:57:39', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZHx5gz3wHUmdJ', 'order_RZHx0BzwdE7POi', 'pay_RZHx5gz3wHUmdJ', '2', '106, Bapunagar, India Colony, Ahmedabad..', 548934, NULL),
-(30, 7, '2025-10-29 18:06:36', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '2', '2', 'pay_RZI6YUDY2Ik0Fm', 'order_RZI6SwbFeiej4l', 'pay_RZI6YUDY2Ik0Fm', '2', '106, Bapunagar, India Colony, Ahmedabad..', 792880, NULL),
-(31, 7, '2025-10-29 18:29:54', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 248.00, 50.00, '2', '2', 'pay_RZIVEeA2EueLoI', 'order_RZIV61ZELQpfa2', 'pay_RZIVEeA2EueLoI', '2', '106, Bapunagar, India Colony, Ahmedabad..', 841001, NULL),
-(32, 17, '2025-10-29 18:38:02', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZIdlhg7Q9HmlE', 'order_RZIdeuZ31XdlmG', 'pay_RZIdlhg7Q9HmlE', '2', '404, varni, pasodra gam,kamrej, surat.', 354597, NULL),
+(27, 10, '2025-10-29 16:31:09', '[{\"product_name\":\"realme Buds T200\",\"price\":999,\"quantity\":1,\"subtotal\":999}]', 1049.00, 50.00, '2', '2', 'pay_RZGTivOX5dTirM', 'order_RZGTdZcDfsK2P0', 'pay_RZGTivOX5dTirM', '4', 'sadar chowk, jetpur.', 523966, NULL),
+(28, 7, '2025-10-29 17:55:03', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZHutrHkx13XQx', 'order_RZHuGhareHZ8wi', 'pay_RZHutrHkx13XQx', '4', '106, Bapunagar, India Colony, Ahmedabad..', 811918, NULL),
+(29, 7, '2025-10-29 17:57:39', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZHx5gz3wHUmdJ', 'order_RZHx0BzwdE7POi', 'pay_RZHx5gz3wHUmdJ', '4', '106, Bapunagar, India Colony, Ahmedabad..', 548934, NULL),
+(30, 7, '2025-10-29 18:06:36', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '2', '2', 'pay_RZI6YUDY2Ik0Fm', 'order_RZI6SwbFeiej4l', 'pay_RZI6YUDY2Ik0Fm', '4', '106, Bapunagar, India Colony, Ahmedabad..', 792880, NULL),
+(31, 7, '2025-10-29 18:29:54', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 248.00, 50.00, '2', '2', 'pay_RZIVEeA2EueLoI', 'order_RZIV61ZELQpfa2', 'pay_RZIVEeA2EueLoI', '4', '106, Bapunagar, India Colony, Ahmedabad..', 841001, NULL),
+(32, 17, '2025-10-29 18:38:02', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZIdlhg7Q9HmlE', 'order_RZIdeuZ31XdlmG', 'pay_RZIdlhg7Q9HmlE', '4', '404, varni, pasodra gam,kamrej, surat.', 354597, NULL),
 (33, 17, '2025-10-29 18:42:51', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 248.00, 50.00, '2', '1', NULL, NULL, NULL, '1', '404, varni, pasodra gam,kamrej, surat.', 157128, NULL),
-(34, 17, '2025-10-29 18:43:31', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 248.00, 50.00, '2', '2', 'pay_RZIjYOOPGoRW6W', 'order_RZIjSbsvpbsadV', 'pay_RZIjYOOPGoRW6W', '1', '404, varni, pasodra gam,kamrej, surat.', 794882, NULL),
+(34, 17, '2025-10-29 18:43:31', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 248.00, 50.00, '2', '2', 'pay_RZIjYOOPGoRW6W', 'order_RZIjSbsvpbsadV', 'pay_RZIjYOOPGoRW6W', '4', '404, varni, pasodra gam,kamrej, surat.', 794882, NULL),
 (35, 8, '2025-10-30 10:10:54', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 248.00, 50.00, '2', '2', 'pay_RZYXUEhzf5EXvO', 'order_RZYX5uDStbAaNr', 'pay_RZYXUEhzf5EXvO', '4', '1021, raj mall, jaipur, rajesthan', 665186, NULL),
-(36, 8, '2025-10-30 10:19:46', '[{\"product_name\":\"Charger EliteGadgets 67 W\",\"price\":283,\"quantity\":1,\"subtotal\":283}]', 333.00, 50.00, '2', '2', NULL, 'order_RZYgRorymzZlfQ', NULL, '1', '1021, raj mall, jaipur, rajesthan', 767259, NULL),
+(36, 8, '2025-10-30 10:19:46', '[{\"product_name\":\"Charger EliteGadgets 67 W\",\"price\":283,\"quantity\":1,\"subtotal\":283}]', 333.00, 50.00, '2', '2', NULL, 'order_RZYgRorymzZlfQ', NULL, '4', '1021, raj mall, jaipur, rajesthan', 767259, NULL),
 (37, 8, '2025-10-30 12:31:43', '[{\"product_name\":\"Charger EliteGadgets 67 W\",\"price\":283,\"quantity\":1,\"subtotal\":283}]', 333.00, 50.00, '2', '2', 'pay_RZawBnXMrO7Uxk', 'order_RZavq1ZGMUF4o2', 'pay_RZawBnXMrO7Uxk', '4', '1021, raj mall, jaipur, rajesthan', 908971, NULL),
-(38, 8, '2025-10-30 12:40:15', '[{\"product_name\":\"Samsung Galaxy A35 5G\",\"price\":17999,\"quantity\":1,\"subtotal\":17999}]', 18049.00, 50.00, '2', '1', NULL, 'order_RZb4pr5G8ZPol9', NULL, '1', '1021, raj mall, jaipur, rajesthan', 403498, NULL),
-(39, 8, '2025-10-30 12:41:33', '[{\"product_name\":\"Samsung Galaxy A35 5G\",\"price\":17999,\"quantity\":1,\"subtotal\":17999}]', 18059.00, 60.00, '2', '1', NULL, 'order_RZb6CKDNVXNZj8', NULL, '1', '1021, raj mall, jaipur, rajesthan', 807922, NULL),
+(38, 8, '2025-10-30 12:40:15', '[{\"product_name\":\"Samsung Galaxy A35 5G\",\"price\":17999,\"quantity\":1,\"subtotal\":17999}]', 18049.00, 50.00, '2', '2', NULL, 'order_RZb4pr5G8ZPol9', NULL, '4', '1021, raj mall, jaipur, rajesthan', 403498, NULL),
+(39, 8, '2025-10-30 12:41:33', '[{\"product_name\":\"Samsung Galaxy A35 5G\",\"price\":17999,\"quantity\":1,\"subtotal\":17999}]', 18059.00, 60.00, '2', '2', NULL, 'order_RZb6CKDNVXNZj8', NULL, '4', '1021, raj mall, jaipur, rajesthan', 807922, NULL),
 (40, 8, '2025-10-30 12:43:05', '[{\"product_name\":\"Samsung Galaxy A35 5G\",\"price\":17999,\"quantity\":1,\"subtotal\":17999}]', 18059.00, 60.00, '2', '2', 'pay_RZb8fEPPibZ00J', 'order_RZb7pHINI3tA4t', 'pay_RZb8fEPPibZ00J', '4', '1021, raj mall, jaipur, rajesthan', 748234, NULL),
-(41, 16, '2025-10-30 12:46:37', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 258.00, 60.00, '2', '1', NULL, 'order_RZbBYKUBJx1wP9', NULL, '1', 'nasik , mumbai..', 497671, NULL),
+(41, 16, '2025-10-30 12:46:37', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 258.00, 60.00, '2', '2', NULL, 'order_RZbBYKUBJx1wP9', NULL, '4', 'nasik , mumbai..', 497671, NULL),
 (42, 16, '2025-10-30 13:59:00', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 258.00, 60.00, '2', '1', NULL, 'order_RZcQ1hym4I6mKy', NULL, '1', 'nasik , mumbai..', 543501, NULL),
 (43, 16, '2025-10-30 13:59:30', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 258.00, 60.00, '2', '1', NULL, 'order_RZcQY3azHtlLaY', NULL, '1', 'nasik , mumbai..', 561679, NULL),
-(44, 16, '2025-10-30 14:00:27', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 258.00, 60.00, '2', '2', 'pay_RZcRencXGNfTD7', 'order_RZcRYC5EnxMdid', 'pay_RZcRencXGNfTD7', '1', 'nasik , mumbai..', 109798, NULL),
+(44, 16, '2025-10-30 14:00:27', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 258.00, 60.00, '2', '2', 'pay_RZcRencXGNfTD7', 'order_RZcRYC5EnxMdid', 'pay_RZcRencXGNfTD7', '4', 'nasik , mumbai..', 109798, NULL),
 (45, 16, '2025-10-30 17:41:05', '[{\"product_name\":\"PTron Power Bank\",\"price\":1199,\"quantity\":1,\"subtotal\":1199}]', 1249.00, 50.00, '1', '1', NULL, NULL, NULL, '2', 'nasik , mumbai..', 908334, NULL),
 (46, 16, '2025-10-30 17:47:22', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":1,\"subtotal\":198}]', 258.00, 60.00, '2', '2', 'pay_RZgJLxhNazQLR4', 'order_RZgJEzr9xmweMM', 'pay_RZgJLxhNazQLR4', '5', 'nasik , mumbai..', 762218, NULL),
-(47, 16, '2025-10-30 17:49:56', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":2,\"subtotal\":396}]', 456.00, 60.00, '2', '2', 'pay_RZgM8KLx2PWXnc', 'order_RZgLwR53TgvpQV', 'pay_RZgM8KLx2PWXnc', '1', 'India gat, Taj Hotel, mumbai..', 873800, NULL),
-(48, 16, '2025-10-30 17:59:29', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'India gat, Taj Hotel, mumbai..', 203682, NULL);
+(47, 16, '2025-10-30 17:49:56', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":2,\"subtotal\":396}]', 456.00, 60.00, '2', '2', 'pay_RZgM8KLx2PWXnc', 'order_RZgLwR53TgvpQV', 'pay_RZgM8KLx2PWXnc', '4', 'India gat, Taj Hotel, mumbai..', 873800, NULL),
+(48, 16, '2025-10-30 17:59:29', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'India gat, Taj Hotel, mumbai..', 203682, NULL),
+(49, 19, '2025-11-05 18:29:42', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 82950.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'gujarat', 166327, NULL),
+(50, 20, '2025-11-05 18:45:50', '[{\"product_name\":\"Noise Buds VS102\",\"price\":1099,\"quantity\":6,\"subtotal\":6594}]', 6644.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Raipur, Chhatisagadh.', 603524, NULL);
 
 -- --------------------------------------------------------
 
@@ -246,6 +268,27 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `uploaded_at`) V
 (6, 1, 'realme P4 Pro 5G_1761914281_1.jpeg', '2025-10-31 18:08:01'),
 (7, 1, 'realme P4 Pro 5G_1761914281_2.jpeg', '2025-10-31 18:08:01'),
 (8, 1, 'realme P4 Pro 5G_1761914281_3.jpeg', '2025-10-31 18:08:01');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sitedetail`
+--
+
+CREATE TABLE `sitedetail` (
+  `id` int(100) NOT NULL,
+  `systemName` varchar(21) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `contact` varchar(21) NOT NULL,
+  `address` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sitedetail`
+--
+
+INSERT INTO `sitedetail` (`id`, `systemName`, `email`, `contact`, `address`) VALUES
+(1, 'MobileSite', 'info@mobilesite.com', '9876543210', '123, Rosewood Apartments,MG Road, Near Central Park,New Delhi,India');
 
 -- --------------------------------------------------------
 
@@ -405,7 +448,7 @@ CREATE TABLE `userdata` (
 --
 
 INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address`, `city`, `image`, `gender`, `status`, `country`, `state`, `zip_city2`) VALUES
-(1, 'hiten', 'hiten@gmail.com', '$2y$10$ZUA/3jx2MScfwqtYNthgCeDP7kh7LKOLDJqjPB', '9898989898', NULL, 'surat', NULL, '1', '1', NULL, NULL, NULL),
+(1, 'hiten', 'hiten@gmail.com', '$2y$10$ZUA/3jx2MScfwqtYNthgCeDP7kh7LKOLDJqjPB', '9898989898', NULL, 'surat', NULL, '1', '', NULL, NULL, NULL),
 (2, 'om', 'om@gmail.com', '$2y$10$azeyEt45SovTnV8hisMxdeNfOdar7hwuw2nCLb', '7894859475', NULL, 'bharuch', NULL, '1', '1', NULL, NULL, NULL),
 (3, 'prince', 'prince@gmail.com', '$2y$10$.QCLcK9mNYlQrptKR6R8Lus.KGAxWbD/WFfu7k', '7096761516', NULL, 'amreli', NULL, '1', '1', NULL, NULL, NULL),
 (4, 'admin', 'admin@gmail.com', '$2y$10$0Jg5MUd92.NXOvFsln8cdu/UAxDE1PmMILmA5w', '9638527415', NULL, 'rajakot', NULL, '2', '1', NULL, NULL, NULL),
@@ -418,7 +461,9 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 (13, 'abc', 'abc@gmail.com', '$2y$10$yu5/obd1ogq2Yf3VQrvaP.wLA7c.XXTjvRud2c/kZXwTvTg6BjIii', '9513578524', NULL, 'bharuch', NULL, '2', '1', NULL, NULL, NULL),
 (16, 'dev', 'dev@gmail.com', '$2y$10$hPOQSvgt0R4KoRM5U4GhFOBQNJkcc1v5EO/stAlQRc5.aUpRVt2fi', '9876543210', 'India gat, Taj Hotel, mumbai..', '', NULL, '', '1', 'India', 'Maharashtra', 'Nashik - 422001'),
 (17, 'kishan', 'kishan@gmail.com', '$2y$10$vN9AF1oBXWr0l1kO97qN/OLDClQdqyM6rUjLn2n2RR3jmfemGfnQ6', '9409601795', '404, varni, pasodra gam,kamrej, surat.', 'surat', 'kishan_1759746626.png', '1', '1', 'India', 'Maharashtra', 'Nashik - 422001'),
-(18, 'xyz', 'xyz@gmail.com', '$2y$10$hKDV6ZJzafLX.pAzgNSt6ODAoaXdYTTMhPR7jGonO.Mn7m6kQacBq', '', '403, vraj vihar, jagatnaka, varachha, surat.', '', NULL, '2', '1', 'India', 'Gujarat', 'Surat - 395003');
+(18, 'xyz', 'xyz@gmail.com', '$2y$10$hKDV6ZJzafLX.pAzgNSt6ODAoaXdYTTMhPR7jGonO.Mn7m6kQacBq', '', '403, vraj vihar, jagatnaka, varachha, surat.', '', NULL, '2', '1', 'India', 'Gujarat', 'Surat - 395003'),
+(19, 'neel321', 'neel321@gmail.com', '$2y$10$3w5Th7QXBjkQl22x6qP4vOzBO2QI1XjlqUNCpLp.6c5bkC94.U4Xy', '', 'gujarat', '', NULL, '1', '1', NULL, NULL, NULL),
+(20, 'om987@', 'om987@gmail.com', '$2y$10$//4BIQdh5xqzcoiQvG7XVeW3jfHhSi2eiddQ2JYMtiMWX4gRCdvra', NULL, 'Raipur, Chhatisagadh.', NULL, NULL, NULL, '1', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -439,8 +484,9 @@ CREATE TABLE `viewcart` (
 --
 
 INSERT INTO `viewcart` (`id`, `user_id`, `product_id`, `quantity`, `added_at`) VALUES
-(64, 18, 15, 1, '2025-10-29 10:02:35'),
-(81, 16, 1, 1, '2025-10-30 13:08:16');
+(64, 18, 15, 1, '2025-10-29 04:32:35'),
+(81, 16, 1, 1, '2025-10-30 07:38:16'),
+(83, 19, 7, 1, '2025-11-05 13:02:50');
 
 -- --------------------------------------------------------
 
@@ -511,7 +557,25 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (93, 10, 5, '2025-10-29 16:20:34'),
 (94, 8, 18, '2025-10-30 10:10:22'),
 (95, 16, 18, '2025-10-30 12:46:13'),
-(96, 16, 1, '2025-10-30 18:38:16');
+(96, 16, 1, '2025-10-30 18:38:16'),
+(97, 19, 8, '2025-11-05 18:28:55'),
+(98, 19, 15, '2025-11-05 18:28:56'),
+(99, 19, 17, '2025-11-05 18:28:57'),
+(100, 19, 4, '2025-11-05 18:29:01'),
+(101, 19, 1, '2025-11-05 18:29:02'),
+(102, 20, 1, '2025-11-05 18:43:08'),
+(103, 20, 2, '2025-11-05 18:43:08'),
+(104, 20, 3, '2025-11-05 18:43:09'),
+(105, 20, 4, '2025-11-05 18:43:10'),
+(106, 20, 9, '2025-11-05 18:43:12'),
+(107, 20, 11, '2025-11-05 18:43:13'),
+(108, 20, 15, '2025-11-05 18:43:17'),
+(109, 20, 8, '2025-11-05 18:43:17'),
+(110, 20, 16, '2025-11-05 18:43:18'),
+(111, 20, 18, '2025-11-05 18:43:20'),
+(112, 20, 5, '2025-11-05 18:43:23'),
+(113, 20, 6, '2025-11-05 18:43:23'),
+(114, 20, 19, '2025-11-05 18:43:26');
 
 --
 -- Indexes for dumped tables
@@ -528,6 +592,12 @@ ALTER TABLE `admin`
 --
 ALTER TABLE `categories`
   ADD PRIMARY KEY (`categorie_id`);
+
+--
+-- Indexes for table `coupons`
+--
+ALTER TABLE `coupons`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `feedback`
@@ -556,6 +626,12 @@ ALTER TABLE `product`
 ALTER TABLE `product_images`
   ADD PRIMARY KEY (`id`),
   ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `sitedetail`
+--
+ALTER TABLE `sitedetail`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `subscriber`
@@ -602,6 +678,12 @@ ALTER TABLE `categories`
   MODIFY `categorie_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `coupons`
+--
+ALTER TABLE `coupons`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
@@ -611,7 +693,7 @@ ALTER TABLE `feedback`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -626,6 +708,12 @@ ALTER TABLE `product_images`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
+-- AUTO_INCREMENT for table `sitedetail`
+--
+ALTER TABLE `sitedetail`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `subscriber`
 --
 ALTER TABLE `subscriber`
@@ -635,19 +723,19 @@ ALTER TABLE `subscriber`
 -- AUTO_INCREMENT for table `userdata`
 --
 ALTER TABLE `userdata`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `viewcart`
 --
 ALTER TABLE `viewcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- Constraints for dumped tables
