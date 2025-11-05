@@ -341,7 +341,7 @@ if ($stmt) {
                         <?php
         }
     } else {
-        echo "No feedback found for this user.";
+        echo "<script>alert('You have not given any feedback yet.');window.history.back();</script>";
     }
 } else {
     echo "Failed to prepare statement: " . mysqli_error($conn);

@@ -421,6 +421,13 @@ if ($email == true) {
             </li>
 
             <li>
+                <a href="#.php">
+                    <i class="fas fa-"></i>
+                    <span>Coupons</span>
+                </a>
+            </li>
+
+            <li>
                 <a href="adminProfile.php">
                     <i class="fa fa-user-secret" aria-hidden="true"></i>
                     <span>Admin Profile</span>

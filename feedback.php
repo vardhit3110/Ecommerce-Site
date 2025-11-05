@@ -6,7 +6,7 @@ if (!isset($_SESSION['email'])) {
     echo "<script>alert('Please log in to submit feedback.'); window.location.href='index.php';</script>";
     exit();
 }
-$email = $_SESSION['email'];
+$useremail = $_SESSION['email'];
 
 $stmt = mysqli_prepare($conn, "SELECT * FROM userdata WHERE email = ?");
 mysqli_stmt_bind_param($stmt, "s", $email);
@@ -141,7 +141,7 @@ $userRow = mysqli_fetch_assoc($userResult);
                         <div class="form-group">
                             <label for="email"><b>Email:</b></label>
                             <input type="email" class="form-control" id="email" name="email"
-                                value="<?php echo $email; ?>" readonly>
+                                value="<?php echo $useremail; ?>" readonly>
                         </div>
 
                         <div class="form-group">

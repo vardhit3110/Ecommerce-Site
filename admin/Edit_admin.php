@@ -90,7 +90,7 @@ if (mysqli_num_rows($result) > 0) {
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Phone</label>
-                            <input type="text" class="form-control" name="phone" value="+91 <?php echo $phone; ?>">
+                            <input type="text" class="form-control" name="phone" value="<?php echo $phone; ?>">
                         </div>
                         <!-- <div class="col-12 mb-3">
                             <label class="form-label">Location</label>
