@@ -231,6 +231,11 @@ if (isset($_SESSION['email'])) {
         .calculate-btn-container {
             margin-left: 15px;
         }
+
+        #coupon-input:hover {
+            cursor: pointer;
+        }
+
     </style>
 </head>
 
@@ -328,6 +333,18 @@ if (isset($_SESSION['email'])) {
                             prices may vary slightly at checkout based on the latest currency exchange rates provided by your
                             payment provider. Final charges will always be displayed in INR at the time of payment.
                         </p>
+
+                        <!--  Added Discount Box -->
+                        <div class="col-12 mb-3 cart-col">
+                            <h5 class="fw-semibold mt-4">Discount Codes</h5>
+                            <form action="#" method="post">
+                                <label class="form-label" id="coupon-input">Enter your coupon code if you have one.</label>
+                                <div class="input-group">
+                                    <input class="form-control py-2" type="text" name="coupon" placeholder="Enter Coupon Code">
+                                    <button type="button" class="btn btn-dark px-4" id="coupon-btn">Apply Coupon</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
 
                     <!-- Right Shipping Box -->

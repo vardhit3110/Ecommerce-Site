@@ -72,7 +72,8 @@ $end = min($page * $total_data, $total_user);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <?php require "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root {
             --primary: #4361ee;
@@ -460,8 +461,8 @@ $end = min($page * $total_data, $total_user);
                                                 </td>';
 
                                                 echo "<td>
-                                                    <a href='?id={$row['id']}" . (!empty($search) ? "&search=" . urlencode($search) : "") . "' class='btn btn-outline-primary btn-sm me-2'>Edit</a>
-                                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                    <a href='?id={$row['id']}" . (!empty($search) ? "&search=" . urlencode($search) : "") . "' class='btn btn-outline-primary btn-sm me-2'> <i class='bi bi-pencil-square'></i> Edit</a>
+                                                    <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='bi bi-trash'></i> Delete</a>
                                                 </td>";
                                                 echo "</tr>";
                                             }

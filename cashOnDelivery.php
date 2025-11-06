@@ -221,9 +221,16 @@ mysqli_close($conn);
                                         <?php echo number_format($shipping, 2); ?>
                                     </td>
                                 </tr>
+                                <tr class="table-bordered border-secondary table-light">
+                                    <td colspan="4" class="text-end">Discount</td>
+
+                                    <td style="color: blue;">₹
+                                        
+                                    </td>
+                                </tr>
                                 <tr class="table-bordered border-secondary table-active">
                                     <td colspan="4" class="text-end fw-bolder">Total</td>
-                                    <td class="fw-bolder">₹
+                                    <td class="fw-bolder text-danger">₹
                                         <?php echo number_format($grand_total, 2); ?>
                                     </td>
                                 </tr>

@@ -38,6 +38,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
     <?php include "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root {
             --primary: #4361ee;
@@ -343,8 +345,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                                                     </td>';
 
                                                     echo "<td class='text-center'>
-                                                    <a href='category-edit.php?id={$row['categorie_id']}' class='btn btn-outline-primary btn-sm'>Edit</a>&nbsp;
-                                                         <a href='partials/_categories_add.php?id={$row['categorie_id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\">Delete</a>
+                                                    <a href='category-edit.php?id={$row['categorie_id']}' class='btn btn-outline-primary btn-sm'> <i class='bi bi-pencil-square'></i> Edit</a>&nbsp;
+                                                         <a href='partials/_categories_add.php?id={$row['categorie_id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='bi bi-trash'></i> Delete</a>
                                                     </td>";
                                                     echo '</tr>';
                                                 }

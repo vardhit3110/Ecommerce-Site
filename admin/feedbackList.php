@@ -15,7 +15,8 @@ require "db_connect.php";
     <?php require "links/icons.html"; ?>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         :root {
@@ -196,12 +197,12 @@ require "db_connect.php";
                                                         </td>
                                                         <td class="text-center">
                                                             <a href="feedbackReply.php?user_id=<?php echo $user_id; ?>"
-                                                                class="btn btn-outline-primary btn-sm">Reply</a>
+                                                                class="btn btn-outline-primary btn-sm"><i class="bi bi-pen"></i> Reply</a>
 
                                                             &nbsp;&nbsp;
                                                             <a href="./partials/_feedbackManage.php?user_id=<?php echo $user_id; ?>"
                                                                 class="btn btn-outline-danger btn-sm"
-                                                                onclick="return confirmDelete();">Delete</a>
+                                                                onclick="return confirmDelete();"><i class='bi bi-trash'></i> Delete</a>
 
                                                         </td>
                                                     </tr>

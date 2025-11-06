@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 05, 2025 at 02:18 PM
+-- Generation Time: Nov 06, 2025 at 02:32 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -80,10 +80,21 @@ CREATE TABLE `coupons` (
   `promocode` varchar(20) NOT NULL,
   `discount` int(5) NOT NULL,
   `min_bill_price` int(5) NOT NULL,
-  `status` enum('1','2') NOT NULL DEFAULT '1',
+  `status` enum('1','2') NOT NULL DEFAULT '1' COMMENT '1-active,\r\n2-Inactive',
   `description` varchar(255) NOT NULL,
   `creat_time` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `coupons`
+--
+
+INSERT INTO `coupons` (`id`, `promocode`, `discount`, `min_bill_price`, `status`, `description`, `creat_time`) VALUES
+(1, 'WELCOME12', 5, 1000, '1', 'Get 5% off on your first order', '2025-11-06 17:21:49'),
+(2, 'FEST06', 6, 3000, '1', 'Celebrate the festive season with 6% off', '2025-11-06 17:25:23'),
+(3, 'NEWUSER02', 2, 500, '2', 'Exclusive 2% off for new users only', '2025-11-06 17:27:16'),
+(4, 'BIGSALE11', 11, 70000, '1', 'Mega sale – 11% off on orders above ₹70,000', '2025-11-06 17:28:12'),
+(5, 'S02BIG14', 14, 100000, '1', 'Mega sale – 14% off on orders above ₹1,00,000', '2025-11-06 17:35:24');
 
 -- --------------------------------------------------------
 
@@ -159,7 +170,7 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `t
 (8, 10, '2025-10-17 15:33:50', '[{\"product_name\":\"OPPO Enco Buds3 Pro\",\"price\":1399,\"quantity\":1,\"subtotal\":1399}]', 1449.00, 50.00, '1', '1', NULL, NULL, NULL, '3', 'sadar chowk, jetpur.', 376546, NULL),
 (9, 16, '2025-10-17 15:36:28', '[{\"product_name\":\"Charger EliteGadgets 67 W\",\"price\":283,\"quantity\":2,\"subtotal\":566},{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":3,\"subtotal\":630}]', 1246.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'nasik , mumbai..', 242507, NULL),
 (10, 17, '2025-10-27 10:20:53', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', '404, varni, pasodra gam,kamrej, surat.', 363056, NULL),
-(11, 7, '2025-10-29 14:56:11', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '1', NULL, NULL, NULL, '1', '106, Bapunagar, India Colony, Ahmedabad..', 725010, NULL),
+(11, 7, '2025-10-29 14:56:11', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '1', NULL, NULL, NULL, '5', '106, Bapunagar, India Colony, Ahmedabad..', 725010, NULL),
 (12, 7, '2025-10-29 15:01:20', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '2', '2', 'pay_RZEyDeKnYUcpIQ', 'pay_RZEyDeKnYUcpIQ', NULL, '4', '106, Bapunagar, India Colony, Ahmedabad..', 348744, NULL),
 (13, 18, '2025-10-29 15:08:08', '[{\"product_name\":\"Noise Aura Buds\",\"price\":1499,\"quantity\":1,\"subtotal\":1499}]', 1549.00, 50.00, '2', '2', 'pay_RZF4aTYSnVMUd1', 'pay_RZF4aTYSnVMUd1', NULL, '4', '403, vraj vihar, jagatnaka, varachha, surat.', 105210, NULL),
 (14, 18, '2025-10-29 15:24:39', '[{\"product_name\":\"MarQ Power Bank\",\"price\":3999,\"quantity\":1,\"subtotal\":3999}]', 4049.00, 50.00, '2', '1', NULL, 'order_RZFLO4z0YJfw7A', NULL, '1', '403, vraj vihar, jagatnaka, varachha, surat.', 919482, NULL),
@@ -198,7 +209,9 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `t
 (47, 16, '2025-10-30 17:49:56', '[{\"product_name\":\"PTron Type C\",\"price\":198,\"quantity\":2,\"subtotal\":396}]', 456.00, 60.00, '2', '2', 'pay_RZgM8KLx2PWXnc', 'order_RZgLwR53TgvpQV', 'pay_RZgM8KLx2PWXnc', '4', 'India gat, Taj Hotel, mumbai..', 873800, NULL),
 (48, 16, '2025-10-30 17:59:29', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'India gat, Taj Hotel, mumbai..', 203682, NULL),
 (49, 19, '2025-11-05 18:29:42', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 82950.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'gujarat', 166327, NULL),
-(50, 20, '2025-11-05 18:45:50', '[{\"product_name\":\"Noise Buds VS102\",\"price\":1099,\"quantity\":6,\"subtotal\":6594}]', 6644.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Raipur, Chhatisagadh.', 603524, NULL);
+(50, 20, '2025-11-05 18:45:50', '[{\"product_name\":\"Noise Buds VS102\",\"price\":1099,\"quantity\":6,\"subtotal\":6594}]', 6644.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Raipur, Chhatisagadh.', 603524, NULL),
+(51, 21, '2025-11-06 11:04:23', '[{\"product_name\":\"realme P4 Pro 5G\",\"price\":24999,\"quantity\":1,\"subtotal\":24999},{\"product_name\":\"MarQ Power Bank\",\"price\":3999,\"quantity\":1,\"subtotal\":3999}]', 29058.00, 60.00, '2', '2', 'pay_RcLBj3ngS7Ho49', 'order_RcLBPazwBtl1zL', 'pay_RcLBj3ngS7Ho49', '4', 'New Darvaja, Rajeshthan', 402617, NULL),
+(52, 21, '2025-11-06 17:57:34', '[{\"product_name\":\"MarQ Power Bank\",\"price\":3999,\"quantity\":2,\"subtotal\":7998}]', 8048.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'New Darvaja, Rajeshthan', 485397, NULL);
 
 -- --------------------------------------------------------
 
@@ -264,10 +277,10 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `uploaded_at`) V
 (2, 19, 'Noise Buds VS102_1761909031_1.jpeg', '2025-10-31 16:40:31'),
 (3, 19, 'Noise Buds VS102_1761909031_2.jpeg', '2025-10-31 16:40:31'),
 (4, 19, 'Noise Buds VS102_1761909031_3.jpeg', '2025-10-31 16:40:31'),
-(5, 1, 'realme P4 Pro 5G_1761914281_0.jpeg', '2025-10-31 18:08:01'),
-(6, 1, 'realme P4 Pro 5G_1761914281_1.jpeg', '2025-10-31 18:08:01'),
-(7, 1, 'realme P4 Pro 5G_1761914281_2.jpeg', '2025-10-31 18:08:01'),
-(8, 1, 'realme P4 Pro 5G_1761914281_3.jpeg', '2025-10-31 18:08:01');
+(5, 1, 'realme P4 Pro 5G_1762149100_0.jpeg', '2025-10-31 18:08:01'),
+(6, 1, 'realme P4 Pro 5G_1762149100_1.jpeg', '2025-10-31 18:08:01'),
+(7, 1, 'realme P4 Pro 5G_1762149100_2.jpeg', '2025-10-31 18:08:01'),
+(8, 1, 'realme P4 Pro 5G_1762149100_3.jpeg', '2025-10-31 18:08:01');
 
 -- --------------------------------------------------------
 
@@ -463,7 +476,9 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 (17, 'kishan', 'kishan@gmail.com', '$2y$10$vN9AF1oBXWr0l1kO97qN/OLDClQdqyM6rUjLn2n2RR3jmfemGfnQ6', '9409601795', '404, varni, pasodra gam,kamrej, surat.', 'surat', 'kishan_1759746626.png', '1', '1', 'India', 'Maharashtra', 'Nashik - 422001'),
 (18, 'xyz', 'xyz@gmail.com', '$2y$10$hKDV6ZJzafLX.pAzgNSt6ODAoaXdYTTMhPR7jGonO.Mn7m6kQacBq', '', '403, vraj vihar, jagatnaka, varachha, surat.', '', NULL, '2', '1', 'India', 'Gujarat', 'Surat - 395003'),
 (19, 'neel321', 'neel321@gmail.com', '$2y$10$3w5Th7QXBjkQl22x6qP4vOzBO2QI1XjlqUNCpLp.6c5bkC94.U4Xy', '', 'gujarat', '', NULL, '1', '1', NULL, NULL, NULL),
-(20, 'om987@', 'om987@gmail.com', '$2y$10$//4BIQdh5xqzcoiQvG7XVeW3jfHhSi2eiddQ2JYMtiMWX4gRCdvra', NULL, 'Raipur, Chhatisagadh.', NULL, NULL, NULL, '1', NULL, NULL, NULL);
+(20, 'om987@', 'om987@gmail.com', '$2y$10$//4BIQdh5xqzcoiQvG7XVeW3jfHhSi2eiddQ2JYMtiMWX4gRCdvra', NULL, 'Raipur, Chhatisagadh.', NULL, NULL, NULL, '1', NULL, NULL, NULL),
+(21, 'khushal', 'khushal@gmail.com', '$2y$10$Pmd6xV4ekYj4sy6gi364B.vMVrz.o54mdQEOsdtzRGYbG8C8rs2sa', NULL, 'New Darvaja, Rajeshthan', NULL, NULL, NULL, '1', 'India', 'Rajasthan', 'Bikaner - 334001'),
+(22, 'ravi003', 'ravi@gmail.com', '$2y$10$Ap3v2V9Mf5fMObioMk6XTOTi3dF3nwHyndN4jqUPiM19tmH1PWKze', NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -486,7 +501,9 @@ CREATE TABLE `viewcart` (
 INSERT INTO `viewcart` (`id`, `user_id`, `product_id`, `quantity`, `added_at`) VALUES
 (64, 18, 15, 1, '2025-10-29 04:32:35'),
 (81, 16, 1, 1, '2025-10-30 07:38:16'),
-(83, 19, 7, 1, '2025-11-05 13:02:50');
+(83, 19, 7, 1, '2025-11-05 13:02:50'),
+(88, 22, 5, 1, '2025-11-06 12:32:58'),
+(89, 22, 15, 1, '2025-11-06 12:33:22');
 
 -- --------------------------------------------------------
 
@@ -575,7 +592,24 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (111, 20, 18, '2025-11-05 18:43:20'),
 (112, 20, 5, '2025-11-05 18:43:23'),
 (113, 20, 6, '2025-11-05 18:43:23'),
-(114, 20, 19, '2025-11-05 18:43:26');
+(114, 20, 19, '2025-11-05 18:43:26'),
+(115, 21, 16, '2025-11-06 10:57:38'),
+(116, 21, 1, '2025-11-06 10:58:14'),
+(117, 21, 18, '2025-11-06 10:58:20'),
+(118, 21, 5, '2025-11-06 10:58:26'),
+(119, 21, 7, '2025-11-06 10:58:28'),
+(120, 21, 6, '2025-11-06 10:58:29'),
+(121, 21, 13, '2025-11-06 10:58:31'),
+(122, 21, 19, '2025-11-06 10:58:34'),
+(123, 22, 8, '2025-11-06 18:02:34'),
+(124, 22, 16, '2025-11-06 18:02:35'),
+(125, 22, 18, '2025-11-06 18:02:39'),
+(126, 22, 1, '2025-11-06 18:02:44'),
+(127, 22, 2, '2025-11-06 18:02:45'),
+(128, 22, 6, '2025-11-06 18:02:49'),
+(129, 22, 12, '2025-11-06 18:02:50'),
+(130, 22, 13, '2025-11-06 18:02:54'),
+(131, 22, 19, '2025-11-06 18:02:55');
 
 --
 -- Indexes for dumped tables
@@ -681,7 +715,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `coupons`
 --
 ALTER TABLE `coupons`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `feedback`
@@ -693,7 +727,7 @@ ALTER TABLE `feedback`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -723,19 +757,19 @@ ALTER TABLE `subscriber`
 -- AUTO_INCREMENT for table `userdata`
 --
 ALTER TABLE `userdata`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `viewcart`
 --
 ALTER TABLE `viewcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- Constraints for dumped tables

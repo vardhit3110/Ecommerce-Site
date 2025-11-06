@@ -421,8 +421,8 @@ if ($email == true) {
             </li>
 
             <li>
-                <a href="#.php">
-                    <i class="fas fa-"></i>
+                <a href="coupons.php">
+                    <i class="fa fa-tags"></i>
                     <span>Coupons</span>
                 </a>
             </li>
