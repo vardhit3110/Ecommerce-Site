@@ -18,7 +18,7 @@ $result = mysqli_stmt_get_result($stmt);
 if ($row = mysqli_fetch_assoc($result)) {
     $user_id = $row['id'];
     $phone = $row['phone'];
-    $address = $row['address'];
+    $useraddress = $row['address'];
 } else {
     echo "User not found.";
     exit();
@@ -42,7 +42,31 @@ while ($row = mysqli_fetch_assoc($result)) {
 $shipping = 60;
 $grand_total = $total + $shipping;
 
+$discount_amount = 0;
+$coupon_code = isset($_GET['coupon']) ? trim($_GET['coupon']) : 'none';
+
+if ($coupon_code !== 'none' && $coupon_code !== '') {
+    // Check coupon validity
+    $query = "SELECT * FROM coupons WHERE promocode = ? AND status = '1' LIMIT 1";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $coupon_code);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($coupon = mysqli_fetch_assoc($result)) {
+        if ($total >= $coupon['min_bill_price']) {
+            $discount_amount = ($total * $coupon['discount']) / 100;
+            $grand_total = $total + $shipping - $discount_amount;
+        } else {
+            $msg = "Min order ₹{$coupon['min_bill_price']} required for coupon.";
+        }
+    } else {
+        $msg = "Invalid or inactive coupon.";
+    }
+}
+
 mysqli_close($conn);
+
 ?>
 
 <!DOCTYPE html>
@@ -215,19 +239,31 @@ mysqli_close($conn);
                                 <?php endif; ?>
                             </tbody>
                             <tfoot>
+
                                 <tr class="table-bordered border-secondary table-light">
                                     <td colspan="4" class="text-end">Shipping</td>
+                                    <td>₹<?php echo number_format($shipping, 2); ?></td>
+                                </tr>
 
-                                    <td>₹
-                                        <?php echo number_format($shipping, 2); ?>
+                                <tr class="table-bordered border-secondary table-light">
+                                    <td colspan="4" class="text-end">Discount (<?php echo strtoupper($coupon_code); ?>)
+                                    </td>
+                                    <td class="text-success fw-semibold">
+                                        ₹<?php echo number_format($discount_amount, 2); ?>
                                     </td>
                                 </tr>
+
                                 <tr class="table-bordered border-secondary table-active">
                                     <td colspan="4" class="text-end fw-bolder">Total</td>
-                                    <td class="fw-bolder">₹
-                                        <?php echo number_format($grand_total, 2); ?>
+                                    <td class="fw-bolder text-danger">₹<?php echo number_format($grand_total, 2); ?>
                                     </td>
                                 </tr>
+
+                                <?php if (isset($msg)): ?>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-danger small"><?php echo $msg; ?></td>
+                                    </tr>
+                                <?php endif; ?>
                             </tfoot>
                         </table>
                     </div>
@@ -242,8 +278,8 @@ mysqli_close($conn);
                         <h6 class="fw-bold mb-1"><i class="fa-solid fa-location-dot me-2 text-danger"></i>Delivery
                             Address</h6>
                         <p class="mb-1" style="font-size: 14px;">
-                            <?php if (isset($address)) {
-                                echo $address;
+                            <?php if (isset($useraddress)) {
+                                echo $useraddress;
                             } else {
                                 echo "<span class='text-danger' style='font-size: 11px;'>Please Enter Your Address</span>";
                             } ?>
@@ -253,7 +289,6 @@ mysqli_close($conn);
                             <i class="fa-solid fa-pen-to-square"></i> Edit
                         </a>
                     </div>
-
 
                     <div class="mb-3">
                         <h6><i class="fa-solid fa-circle-info me-2 text-warning"></i>Online Payment Instructions</h6>
@@ -289,25 +324,32 @@ mysqli_close($conn);
                     <script>
                         document.getElementById('rzpButton').addEventListener('click', function () {
                             // Create Razorpay order
+                            const coupon = "<?php echo $coupon_code; ?>";
+                            const discount = "<?php echo $discount_amount; ?>";
+
                             fetch('create_razorpay_order.php', {
                                 method: 'POST',
-                                headers: { 'Content-Type': 'application/json' }
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ coupon_code: coupon, discount_amount: discount })
                             })
                                 .then(response => response.json())
                                 .then(data => {
                                     if (data.success) {
-                                        openRazorpayCheckout(data.order, data.key);
-                                    } else {
+                                        const orderCode = data.order_code;
+                                        openRazorpayCheckout(data.order, data.key, orderCode);
+                                    }
+                                    else {
                                         alert('Error: ' + data.message);
                                     }
                                 })
+
                                 .catch(error => {
                                     console.error('Error:', error);
                                     alert('Error creating order: ' + error.message);
                                 });
                         });
 
-                        function openRazorpayCheckout(order, key) {
+                        function openRazorpayCheckout(order, key, orderCode) {
                             const options = {
                                 key: key,
                                 amount: order.amount,
@@ -321,8 +363,8 @@ mysqli_close($conn);
                                 },
                                 prefill: {
                                     name: "<?php echo $_SESSION['username']; ?>",
-                                    email: "<?php echo $_SESSION['username']; ?>@example.com",
-                                    contact: "<?php echo isset($phone) ? $phone : '9999999999'; ?>"
+                                    email: "<?php echo $_SESSION['username']; ?>@gmail.com",
+                                    contact: "<?php echo isset($phone) ? $phone : ''; ?>"
                                 },
                                 notes: {
                                     address: "MobileSite Office"
@@ -333,9 +375,23 @@ mysqli_close($conn);
                                 modal: {
                                     ondismiss: function () {
                                         alert('Payment cancelled. Please try again.');
+
+                                        fetch('update_payment_cancel.php', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                            body: new URLSearchParams({ order_code: orderCode })
+                                        })
+                                            .then(res => res.json())
+                                            .then(data => {
+                                                if (data.success) {
+                                                    console.log('Payment status updated to cancelled (3).');
+                                                } else {
+                                                    console.warn('Cancel update failed:', data.message);
+                                                }
+                                            })
+                                            .catch(err => console.error('Cancel update error:', err));
                                     }
                                 },
-
                                 method: {
                                     upi: true,
                                     card: true,
@@ -356,7 +412,6 @@ mysqli_close($conn);
                                 }, 500);
                             });
                         }
-
                         function verifyPayment(response) {
                             const button = document.getElementById('rzpButton');
                             const originalText = button.innerHTML;
@@ -411,7 +466,7 @@ mysqli_close($conn);
                                     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                                     <label for="address" class="form-label fw-semibold">Your Address</label>
                                     <textarea class="form-control rounded-3" id="address" rows="4" name="address"
-                                        placeholder="Enter your updated address"><?php echo $address; ?></textarea>
+                                        placeholder="Enter your updated address"><?php echo $useraddress; ?></textarea>
                                 </div>
                             </div>
 

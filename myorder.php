@@ -165,7 +165,7 @@ if ($row = mysqli_fetch_assoc($result)) {
 
         <div id="ordersTable">
             <?php
-            $query = "SELECT * FROM orders WHERE user_id = ? AND order_status IN ('1', '2', '3', '5') ORDER BY order_id DESC";
+            $query = "SELECT * FROM orders WHERE user_id = ? AND order_status IN ('1', '2', '3', '5') AND payment_status IN ('1', '2') ORDER BY order_id DESC";
             $stmt = mysqli_prepare($conn, $query);
             mysqli_stmt_bind_param($stmt, "i", $user_id);
             mysqli_stmt_execute($stmt);

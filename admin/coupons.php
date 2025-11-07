@@ -1,7 +1,7 @@
 <?php
 require "slider.php";
 require "db_connect.php";
-$query = "SELECT * FROM coupons ORDER BY id DESC";
+$query = "SELECT * FROM coupons ORDER BY id";
 $result = mysqli_query($conn, $query);
 ?>
 
@@ -192,11 +192,12 @@ $result = mysqli_query($conn, $query);
                                         } else {
                                             $statusBadge = '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 85%, 1.00);">Unknown</span>';
                                         }
+                                        $no_formate = number_format($row['min_bill_price']);
                                         echo "<tr>
                                     <td>{$row['id']}</td>
                                     <td><span class='fw-semibold text-uppercase'>{$row['promocode']}</span></td>
                                     <td>{$row['discount']}%</td>
-                                    <td>₹{$row['min_bill_price']}</td>
+                                    <td>₹{$no_formate}</td>
                                     <td>$statusBadge</td>
                                     <td>{$row['description']}</td>
                                     <td>" . date('Y-m-d h:i A', strtotime($row['creat_time'])) . "</td>

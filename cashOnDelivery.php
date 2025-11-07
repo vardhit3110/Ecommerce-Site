@@ -17,7 +17,7 @@ $result = mysqli_stmt_get_result($stmt);
 
 if ($row = mysqli_fetch_assoc($result)) {
     $user_id = $row['id'];
-    $address = $row['address'];
+    $useraddress = $row['address'];
 } else {
     echo "User not found.";
     exit();
@@ -40,6 +40,29 @@ while ($row = mysqli_fetch_assoc($result)) {
 
 $shipping = 50;
 $grand_total = $total + $shipping;
+
+$discount_amount = 0;
+$coupon_code = isset($_GET['coupon']) ? trim($_GET['coupon']) : 'none';
+
+if ($coupon_code !== 'none' && $coupon_code !== '') {
+    // Check coupon validity
+    $query = "SELECT * FROM coupons WHERE promocode = ? AND status = '1' LIMIT 1";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $coupon_code);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($coupon = mysqli_fetch_assoc($result)) {
+        if ($total >= $coupon['min_bill_price']) {
+            $discount_amount = ($total * $coupon['discount']) / 100;
+            $grand_total = $total + $shipping - $discount_amount;
+        } else {
+            $msg = "Min order ₹{$coupon['min_bill_price']} required for coupon.";
+        }
+    } else {
+        $msg = "Invalid or inactive coupon.";
+    }
+}
 
 mysqli_close($conn);
 ?>
@@ -222,18 +245,23 @@ mysqli_close($conn);
                                     </td>
                                 </tr>
                                 <tr class="table-bordered border-secondary table-light">
-                                    <td colspan="4" class="text-end">Discount</td>
-
-                                    <td style="color: blue;">₹
-                                        
+                                    <td colspan="4" class="text-end">Discount (<?php echo strtoupper($coupon_code); ?>)
+                                    </td>
+                                    <td class="text-success fw-semibold">
+                                        ₹<?php echo number_format($discount_amount, 2); ?>
                                     </td>
                                 </tr>
                                 <tr class="table-bordered border-secondary table-active">
                                     <td colspan="4" class="text-end fw-bolder">Total</td>
-                                    <td class="fw-bolder text-danger">₹
-                                        <?php echo number_format($grand_total, 2); ?>
+                                    <td class="fw-bolder text-danger">
+                                        ₹<?php echo number_format($grand_total, 2); ?>
                                     </td>
                                 </tr>
+                                <?php if (isset($msg)): ?>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-danger small"><?php echo $msg; ?></td>
+                                    </tr>
+                                <?php endif; ?>
                             </tfoot>
                         </table>
                     </div>
@@ -248,8 +276,8 @@ mysqli_close($conn);
                         <h6 class="fw-bold mb-1"><i class="fa-solid fa-location-dot me-2 text-danger"></i>Delivery
                             Address</h6>
                         <p class="mb-1" style="font-size: 14px;">
-                            <?php if (isset($address)) {
-                                echo $address;
+                            <?php if (isset($useraddress)) {
+                                echo $useraddress;
                             } else {
                                 echo "<span class='text-danger' style='font-size: 11px;'>Please Enter Your Address</span>";
                             } ?>
@@ -281,11 +309,12 @@ mysqli_close($conn);
                         <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                         <input type="hidden" name="shipping" value="<?php echo $shipping; ?>">
                         <input type="hidden" name="total_amount" value="<?php echo $grand_total; ?>">
+                        <input type="hidden" name="coupon_code" value="<?php echo $coupon_code; ?>">
+                        <input type="hidden" name="discount_amount" value="<?php echo $discount_amount; ?>">
                         <button type="submit" class="btn btn-success w-100 fw-semibold">
                             <i class="fa-solid fa-bag-shopping me-2"></i>Confirm Order & Pay on Delivery
                         </button>
                     </form>
-
                 </div>
             </div>
 
@@ -308,7 +337,7 @@ mysqli_close($conn);
                                     <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
                                     <label for="address" class="form-label fw-semibold">Your Address</label>
                                     <textarea class="form-control rounded-3" id="address" rows="4" name="address"
-                                        placeholder="Enter your updated address"><?php echo $address; ?></textarea>
+                                        placeholder="Enter your updated address"><?php echo $useraddress; ?></textarea>
                                 </div>
                             </div>
 

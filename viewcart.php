@@ -235,7 +235,6 @@ if (isset($_SESSION['email'])) {
         #coupon-input:hover {
             cursor: pointer;
         }
-
     </style>
 </head>
 
@@ -337,13 +336,17 @@ if (isset($_SESSION['email'])) {
                         <!--  Added Discount Box -->
                         <div class="col-12 mb-3 cart-col">
                             <h5 class="fw-semibold mt-4">Discount Codes</h5>
-                            <form action="#" method="post">
+                            <form action="#" method="post" id="couponForm">
                                 <label class="form-label" id="coupon-input">Enter your coupon code if you have one.</label>
                                 <div class="input-group">
-                                    <input class="form-control py-2" type="text" name="coupon" placeholder="Enter Coupon Code">
-                                    <button type="button" class="btn btn-dark px-4" id="coupon-btn">Apply Coupon</button>
+                                    <input class="form-control py-2" type="text" name="coupon" id="coupon-code"
+                                        placeholder="Enter Coupon Code">
+                                    <button type="button" class="btn btn-dark px-4" id="coupon-btn" id="coupon-btn">Apply
+                                        Coupon</button>
                                 </div>
                             </form>
+                            <div id="coupon-message" class="mt-2 text-success fw-semibold"></div>
+                            <div id="discount-info" class="mt-2 text-danger"></div>
                         </div>
                     </div>
 
@@ -351,7 +354,6 @@ if (isset($_SESSION['email'])) {
                     <div class="col-lg-4">
                         <div class="shipping-box">
                             <h5>Get Shipping Estimates</h5>
-
                             <div class="mb-3">
                                 <label for="address_country" class="form-label">Country</label>
                                 <select id="address_country" class="form-select">
@@ -426,9 +428,12 @@ if (isset($_SESSION['email'])) {
                             <hr>
 
                             <div class="mt-2">
-                                <h6 style="font-weight: 500;">Subtotal : <span
-                                        style="color: green;  float: right; font-weight: 700;">₹<?php echo number_format($cart_total, 2); ?></span>
+                                <h6 style="font-weight: 500;">Subtotal :
+                                    <span id="subtotal-amount" style="color: green; float: right; font-weight: 700;">
+                                        ₹<?php echo number_format($cart_total, 2); ?>
+                                    </span>
                                 </h6>
+
                                 <small class="text-muted1">Shipping & taxes calculated at checkout</small>
                             </div>
                             <p class="pt-0 m-0 fst-normal freeShipclaim" style="font-size: 14px;"><strong>FREE SHIPPING
@@ -451,8 +456,11 @@ if (isset($_SESSION['email'])) {
                             <script>
                                 document.getElementById('checkoutBtn').addEventListener('click', function (e) {
                                     e.preventDefault();
+
                                     const urlParams = new URLSearchParams(window.location.search);
                                     const status = urlParams.get('status');
+                                    const couponInput = document.getElementById('coupon-code');
+                                    let couponCode = couponInput && couponInput.value.trim() !== '' ? couponInput.value.trim() : 'none';
 
                                     if (status !== 'Success') {
                                         alert('Please add location first!');
@@ -466,12 +474,13 @@ if (isset($_SESSION['email'])) {
                                     }
 
                                     if (payment.value === 'cod') {
-                                        window.location.href = 'cashOnDelivery.php';
+                                        window.location.href = 'cashOnDelivery.php?coupon=' + encodeURIComponent(couponCode);
                                     } else if (payment.value === 'online') {
-                                        window.location.href = 'onlinePayment.php';
+                                        window.location.href = 'onlinePayment.php?coupon=' + encodeURIComponent(couponCode);
                                     }
                                 });
                             </script>
+
                             <div class="payment-methods text-center mt-3">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png">
                                 <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg">
@@ -511,6 +520,54 @@ if (isset($_SESSION['email'])) {
             </div>
         <?php endif; ?>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#coupon-btn').click(function () {
+                let coupon = $('#coupon-code').val().trim();
+                let subtotal = <?php echo $cart_total; ?>;
+
+                if (coupon === "") {
+                    $('#coupon-message').text("Please enter a coupon code.").css("color", "red");
+                    return;
+                }
+
+                $.ajax({
+                    url: "check_coupon.php",
+                    type: "POST",
+                    data: { coupon: coupon, subtotal: subtotal },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            // Success message
+                            $('#coupon-message').text(response.message).css("color", "green");
+
+                            // Discount and final total info
+                            $('#discount-info').html(`
+                        <p><strong>Discount:</strong> ₹${response.discount}</p>
+                        <p><strong>Final Total:</strong> ₹${response.final_total}</p>
+                    `);
+
+                            // Update Subtotal box (live change)
+                            $('#subtotal-amount').text('₹' + response.final_total);
+
+                        } else {
+                            $('#coupon-message').text(response.message).css("color", "red");
+                            $('#discount-info').html('');
+
+                            // Reset subtotal if invalid coupon
+                            $('#subtotal-amount').text('₹<?php echo number_format($cart_total, 2); ?>');
+                        }
+                    },
+                    error: function () {
+                        $('#coupon-message').text("Server error. Please try again later.").css("color", "red");
+                    }
+                });
+            });
+        });
+    </script>
+
+
 
     <script src="./links/viewcart.js"></script>
 

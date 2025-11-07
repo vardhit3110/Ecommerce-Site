@@ -9,13 +9,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['addressupdate'])) {
     if (empty($updated_address)) {
         $_SESSION['message'] = "Address cannot be empty.";
         $_SESSION['msg_type'] = "danger";
-        header("Location: ../onlinePayment.php"); 
+        echo '<script>window.history.back();</script>';
         exit();
     }
 
     $stmt = mysqli_prepare($conn, "UPDATE userdata SET address = ? WHERE id = ?");
     mysqli_stmt_bind_param($stmt, "si", $updated_address, $user_id);
-    
+
     if (mysqli_stmt_execute($stmt)) {
         $_SESSION['message'] = "Address updated successfully.";
         $_SESSION['msg_type'] = "success";
@@ -27,9 +27,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['addressupdate'])) {
     mysqli_stmt_close($stmt);
     mysqli_close($conn);
 
-    header("Location: ../onlinePayment.php"); 
+    echo '<script>window.history.back();</script>';
     exit();
 } else {
-    header("Location: ../onlinePayment.php");
+    echo '<script>window.history.back();</script>';
     exit();
 }

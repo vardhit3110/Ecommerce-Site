@@ -54,10 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $grand_total += $shipping;
     $randomNumber = random_int(111111, 999999);
     $product_details = json_encode($cart_items, JSON_UNESCAPED_UNICODE);
-    $insert = "INSERT INTO orders (user_id, product_details, total_amount, shipping_charge, payment_mode, payment_status, order_status, delivery_address,order_code)
-               VALUES (?, ?, ?, ?, '1', '1', '1', ?, ?)";
+    $coupon_code = $_POST['coupon_code'] ?? 'None';
+    $discount_amount = $_POST['discount_amount'] ?? 0;
+
+    $insert = "INSERT INTO orders (user_id, product_details, total_amount, shipping_charge, discount_amount, coupon_code, payment_mode, payment_status, order_status, delivery_address, order_code)
+           VALUES (?, ?, ?, ?, ?, ?, '1', '1', '1', ?, ?)";
     $stmt = mysqli_prepare($conn, $insert);
-    mysqli_stmt_bind_param($stmt, "isddsi", $user_id, $product_details, $grand_total, $shipping, $delivery_address, $randomNumber);
+    mysqli_stmt_bind_param($stmt, "isddsssi", $user_id, $product_details, $total_amount, $shipping, $discount_amount, $coupon_code, $delivery_address, $randomNumber);
+
 
     if (mysqli_stmt_execute($stmt)) {
         $delete = "DELETE FROM viewcart WHERE user_id = ?";
