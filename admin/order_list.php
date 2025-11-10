@@ -156,8 +156,7 @@ include "db_connect.php";
         .pagination-info {
             font-size: 14px;
             color: #333;
-            text-align: right;
-            margin-bottom: 5px;
+            text-align: left;
         }
     </style>
 </head>
@@ -333,9 +332,14 @@ include "db_connect.php";
                         $end = min($page * $total_data, $total_user);
 
                         if ($total_user > 0) {
+                            echo '<div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">';
 
+                            // Left side text
+                            echo "<div class='pagination-info mb-0'>Showing $start to $end of $total_user entries</div>";
 
-                            echo '<ul class="pagination">';
+                            // Right side pagination
+                            echo '<ul class="pagination mb-0">';
+
                             // Prev button
                             if ($page > 1) {
                                 echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
@@ -373,7 +377,7 @@ include "db_connect.php";
                             }
 
                             echo '</ul>';
-                            echo "<div class='pagination-info'>Showing $start to $end of $total_user entries</div>";
+                            echo '</div>'; // closing d-flex div
                         }
                         ?>
                     </div>
@@ -388,134 +392,134 @@ include "db_connect.php";
 
     <!-- Status Update Modal -->
     <!-- ==================== STATUS MODAL ==================== -->
-<div class="modal fade" id="statusModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title"><i class="fa-solid fa-arrows-rotate"></i> Update Order Status</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <!-- ORDER STATUS DROPDOWN -->
-                <div class="mb-3">
-                    <label class="form-label">Select New Order Status :- </label>
-                    <select id="newStatus" class="form-select">
-                        <option value="">-- Select Status --</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Processing</option>
-                        <option value="3">Shipped</option>
-                        <option value="4">Delivered</option>
-                        <option value="5">Cancelled</option>
-                    </select>
+    <div class="modal fade" id="statusModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fa-solid fa-arrows-rotate"></i> Update Order Status</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+                <div class="modal-body">
+                    <!-- ORDER STATUS DROPDOWN -->
+                    <div class="mb-3">
+                        <label class="form-label">Select New Order Status :- </label>
+                        <select id="newStatus" class="form-select">
+                            <option value="">-- Select Status --</option>
+                            <option value="1">Pending</option>
+                            <option value="2">Processing</option>
+                            <option value="3">Shipped</option>
+                            <option value="4">Delivered</option>
+                            <option value="5">Cancelled</option>
+                        </select>
+                    </div>
 
-                <!-- PAYMENT STATUS DROPDOWN -->
-                <div class="mb-3">
-                    <label class="form-label">Select Payment Status :- </label>
-                    <select id="paymentStatus" class="form-select">
-                        <option value="">-- Select Payment Status --</option>
-                        <option value="1">Pending</option>
-                        <option value="2">Success</option>
-                    </select>
-                </div>
+                    <!-- PAYMENT STATUS DROPDOWN -->
+                    <div class="mb-3">
+                        <label class="form-label">Select Payment Status :- </label>
+                        <select id="paymentStatus" class="form-select">
+                            <option value="">-- Select Payment Status --</option>
+                            <option value="1">Pending</option>
+                            <option value="2">Success</option>
+                        </select>
+                    </div>
 
-                <hr>
+                    <hr>
 
-                <p><strong>Username:</strong> <span id="statusUsername"></span></p>
-                <p><strong>Order ID:</strong> <span id="statusOrderId"></span></p>
+                    <p><strong>Username:</strong> <span id="statusUsername"></span></p>
+                    <p><strong>Order ID:</strong> <span id="statusOrderId"></span></p>
 
-                <div class="text-center">
-                    <button id="updateStatusBtn" class="btn btn-success">
-                        <i class="fa-solid fa-floppy-disk"></i> Update Status
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ==================== ORDER DETAILS MODAL ==================== -->
-<div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-primary">
-                <h5 class="modal-title text-white"><i class="fa-solid fa-receipt"></i> Order Details</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="orderDetailsBody">
-                <div class="text-center py-4">
-                    <div class="spinner-border text-dark"></div>
-                    <p class="mt-2">Loading order details...</p>
+                    <div class="text-center">
+                        <button id="updateStatusBtn" class="btn btn-success">
+                            <i class="fa-solid fa-floppy-disk"></i> Update Status
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- ==================== JAVASCRIPT ==================== -->
-<script>
-    // Open Status Modal with data
-    $(document).on('click', '.update-status-btn', function () {
-        let username = $(this).data('username');
-        let orderCode = $(this).data('ordercode');
-        let orderId = $(this).data('id');
+    <!-- ==================== ORDER DETAILS MODAL ==================== -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title text-white"><i class="fa-solid fa-receipt"></i> Order Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderDetailsBody">
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-dark"></div>
+                        <p class="mt-2">Loading order details...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        $('#statusUsername').text(username);
-        $('#statusOrderId').text(orderCode);
-        $('#updateStatusBtn').data('id', orderId);
-    });
+    <!-- ==================== JAVASCRIPT ==================== -->
+    <script>
+        // Open Status Modal with data
+        $(document).on('click', '.update-status-btn', function () {
+            let username = $(this).data('username');
+            let orderCode = $(this).data('ordercode');
+            let orderId = $(this).data('id');
 
-    // Update both Order & Payment Status
-    $('#updateStatusBtn').click(function () {
-        let orderId = $(this).data('id');
-        let newStatus = $('#newStatus').val();
-        let paymentStatus = $('#paymentStatus').val();
-
-        if (newStatus === "" && paymentStatus === "") {
-            alert("Please select at least one status to update.");
-            return;
-        }
-
-        $.ajax({
-            url: './partials/update_order_status.php',
-            type: 'POST',
-            data: {
-                order_id: orderId,
-                status: newStatus,
-                payment_status: paymentStatus
-            },
-            success: function (response) {
-                alert(response);
-                location.reload();
-            },
-            error: function () {
-                alert("Error updating status.");
-            }
+            $('#statusUsername').text(username);
+            $('#statusOrderId').text(orderCode);
+            $('#updateStatusBtn').data('id', orderId);
         });
-    });
 
-    // Fetch Order Details
-    $(document).on('click', '.view-btn', function () {
-        let orderId = $(this).data('id');
-        $('#orderDetailsBody').html(`
+        // Update both Order & Payment Status
+        $('#updateStatusBtn').click(function () {
+            let orderId = $(this).data('id');
+            let newStatus = $('#newStatus').val();
+            let paymentStatus = $('#paymentStatus').val();
+
+            if (newStatus === "" && paymentStatus === "") {
+                alert("Please select at least one status to update.");
+                return;
+            }
+
+            $.ajax({
+                url: './partials/update_order_status.php',
+                type: 'POST',
+                data: {
+                    order_id: orderId,
+                    status: newStatus,
+                    payment_status: paymentStatus
+                },
+                success: function (response) {
+                    alert(response);
+                    location.reload();
+                },
+                error: function () {
+                    alert("Error updating status.");
+                }
+            });
+        });
+
+        // Fetch Order Details
+        $(document).on('click', '.view-btn', function () {
+            let orderId = $(this).data('id');
+            $('#orderDetailsBody').html(`
             <div class="text-center py-4">
                 <div class="spinner-border text-dark"></div>
                 <p class="mt-2">Loading order details...</p>
             </div>
         `);
-        $.ajax({
-            url: 'fetch_order_details.php',
-            type: 'POST',
-            data: { order_id: orderId },
-            success: function (response) {
-                $('#orderDetailsBody').html(response);
-            },
-            error: function () {
-                $('#orderDetailsBody').html('<p class="text-danger text-center">Error loading details.</p>');
-            }
+            $.ajax({
+                url: 'fetch_order_details.php',
+                type: 'POST',
+                data: { order_id: orderId },
+                success: function (response) {
+                    $('#orderDetailsBody').html(response);
+                },
+                error: function () {
+                    $('#orderDetailsBody').html('<p class="text-danger text-center">Error loading details.</p>');
+                }
+            });
         });
-    });
-</script>
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

@@ -5,6 +5,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $promo_code = mysqli_real_escape_string($conn, $_POST['promo_code']);
     $discount = (int) $_POST['discount'];
     $min_bill_price = (float) $_POST['min_bill_price'];
+    $usage_limit = (int) $_POST['usage_limit'];
     $description = mysqli_real_escape_string($conn, $_POST['description']);
 
     $check_query = "SELECT * FROM coupons WHERE promocode = '$promo_code'";
@@ -16,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Insert data
-    $insert_query = "INSERT INTO coupons (promocode, discount, min_bill_price, description) VALUES ('$promo_code', '$discount', '$min_bill_price', '$description')";
+    $insert_query = "INSERT INTO coupons (promocode, discount, min_bill_price, usage_limit, description) VALUES ('$promo_code', '$discount', '$min_bill_price', '$usage_limit', '$description')";
     if (mysqli_query($conn, $insert_query)) {
         echo "<script>alert('Coupon added successfully!'); window.location.href='../coupons.php';</script>";
     } else {

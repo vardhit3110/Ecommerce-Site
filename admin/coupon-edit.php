@@ -23,10 +23,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $promo_code = mysqli_real_escape_string($conn, $_POST['promo_code']);
     $discount = (int) $_POST['discount'];
     $min_bill_price = (float) $_POST['min_bill_price'];
+    $usage_limit = (int) $_POST['usage_limit'];
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     $status = (int) $_POST['status'];
 
-    $update = "UPDATE coupons SET promocode='$promo_code', discount='$discount', min_bill_price='$min_bill_price', description='$description', status='$status'
+    $update = "UPDATE coupons SET promocode='$promo_code', discount='$discount', min_bill_price='$min_bill_price', usage_limit='$usage_limit', description='$description', status='$status'
                WHERE id=$id";
     if (mysqli_query($conn, $update)) {
         echo "<script>alert('Coupon updated successfully!'); window.location.href='coupons.php';</script>";
@@ -214,14 +215,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     value="<?php echo htmlspecialchars($coupon['min_bill_price']); ?>" required>
                             </div>
 
+                            <!--  Usage Limit -->
+                            <div class="col-md-6">
+                                <label for="usage_limit" class="form-label fw-semibold">Usage Limit</label>
+                                <input type="number" id="usage_limit" name="usage_limit" class="form-control"
+                                    value="<?php echo htmlspecialchars($coupon['usage_limit']); ?>" min="0" required>
+                            </div>
+
                             <!-- Status -->
                             <div class="col-md-6">
                                 <label for="status" class="form-label fw-semibold">Status</label>
                                 <select id="status" name="status" class="form-select">
                                     <option value="1" <?php if ($coupon['status'] == 1)
-                                        echo "selected"; ?>>Active</option>
+                                        echo "selected"; ?>>Active
+                                    </option>
                                     <option value="2" <?php if ($coupon['status'] == 2)
-                                        echo "selected"; ?>>Inactive</option>
+                                        echo "selected"; ?>>Inactive
+                                    </option>
                                 </select>
                             </div>
 
@@ -232,6 +242,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     required><?php echo htmlspecialchars($coupon['description']); ?></textarea>
                             </div>
                         </div>
+
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-end mt-4">

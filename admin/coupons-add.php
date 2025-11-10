@@ -178,13 +178,11 @@ require "db_connect.php";
                                     placeholder="Enter Minimum Bill Amount" required>
                             </div>
 
-                            <!-- Status -->
+                            <!-- usage_limit -->
                             <div class="col-md-6">
-                                <label for="status" class="form-label fw-semibold">Status</label>
-                                <select id="status" name="status" class="form-select" disabled>
-                                    <option value="active" selected>Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
+                                <label for="usage_limit" class="form-label fw-semibold">Usage Limit</label>
+                                <input type="number" id="usage_limit" name="usage_limit" class="form-control"
+                                    placeholder="Enter Usage Limit" min="1" required>
                             </div>
 
                             <!-- Description -->

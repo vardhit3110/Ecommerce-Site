@@ -16,7 +16,7 @@ if (isset($_POST['coupon']) && isset($_POST['subtotal'])) {
     $subtotal = floatval($_POST['subtotal']);
 
     // Coupon check query
-    $query = "SELECT * FROM coupons WHERE promocode = '$coupon_code' AND status = '1' LIMIT 1";
+    $query = "SELECT * FROM coupons WHERE promocode = '$coupon_code' AND status = '1' AND usage_limit > 0  LIMIT 1";
     $result = mysqli_query($conn, $query);
 
     if (mysqli_num_rows($result) > 0) {
@@ -35,7 +35,6 @@ if (isset($_POST['coupon']) && isset($_POST['subtotal'])) {
             $response['discount'] = round($discount_amount, 2);
             $response['final_total'] = round($final_total, 2);
 
-            // Store applied coupon in session (optional)
             $_SESSION['applied_coupon'] = [
                 'code' => $coupon_code,
                 'discount' => $discount,

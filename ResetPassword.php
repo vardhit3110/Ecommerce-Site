@@ -51,25 +51,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->Subject = 'Password Reset Request';
                 $mail->Body = "
     <div style='font-family: Arial, sans-serif; color: #333; line-height: 1.6;'>
-        <h2 style='color: #2c3e50;'>Hi,</h2>
+        <h2 style='color: #2c3e50;'>Hi, {$email}</h2>
         <p>We received a request to reset your password.</p>
         <p>Click the button below to set a new password. This link will be valid for <strong>1 hour</strong>.</p>
-        
-        <p style='text-align: center; margin: 30px 0;'>
-            <a href='{$resetLink}' 
-               style='background-color: #314D70; color: #fff; text-decoration: none; 
-                      padding: 12px 25px; border-radius: 6px; 
-                      font-size: 16px; display: inline-block;'>
+            <p style='text-align: center; margin: 30px 0;'>
+                <a href='{$resetLink}'style='background-color: #314D70;
+                        color: #ffffff;
+                        text-decoration: none;
+                        padding: 10px 22px;
+                        border-radius: 6px;
+                        font-size: 15px;
+                        font-weight: 600;
+                        font-family: Arial, Helvetica, sans-serif;
+                        display: inline-block;
+                        box-shadow: 0 3px 8px rgba(0,0,0,0.15);'>
                 🔒 Reset Your Password
-            </a>
-        </p>
-        
+                </a>
+            </p>
         <p>If you did not request this, please ignore this email.</p>
         <hr style='border: none; border-top: 1px solid #ddd; margin: 25px 0;'>
         <p style='font-size: 13px; color: #888;'>Thank you,<br>The Support Team</p>
     </div>
 ";
-
                 $mail->AltBody = "Visit this link to reset your password: {$resetLink}";
 
                 // Attempt to send
@@ -226,7 +229,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="forgot-card">
                 <h2>Forgot Your Password?</h2>
                 <p>Enter your registered email below and we’ll send you a reset link to recover your account.</p>
-
                 <?php if ($errors): ?>
                     <div class="alert alert-danger"><?php echo htmlspecialchars($errors); ?></div>
                 <?php endif; ?>

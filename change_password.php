@@ -13,7 +13,7 @@ if (!$token || !$email) {
 }
 
 // Verify token & expiry
-$stmt = $conn->prepare("SELECT id, reset_expires FROM userdata WHERE email = ? AND is_used='1' AND reset_token = ? LIMIT 1");
+$stmt = $conn->prepare("SELECT id, reset_expires FROM userdata WHERE email = ? AND reset_token = ? LIMIT 1");
 $stmt->bind_param('ss', $email, $token);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-        $update = $conn->prepare("UPDATE userdata SET password = ?, reset_token = NULL, reset_expires = NULL, is_used = '0' WHERE id = ?");
+        $update = $conn->prepare("UPDATE userdata SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?");
         $update->bind_param('si', $passwordHash, $userId);
         if ($update->execute()) {
             // success

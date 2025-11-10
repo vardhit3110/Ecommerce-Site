@@ -139,6 +139,10 @@ $result = mysqli_query($conn, $query);
         .btn-outline-danger:hover {
             color: #fff;
         }
+
+        #card-body {
+            border-radius: 15px;
+        }
     </style>
 </head>
 
@@ -151,56 +155,58 @@ $result = mysqli_query($conn, $query);
             </div>
         </div>
         <!-- main container -->
-        <div class="container py-5">
-            <div class="card shadow border-0">
-                <div class="card-body">
-                    <!-- Header Section -->
-                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
-                        <h4 class="fw-bold mb-3 mb-md-0">
-                            <i class="fa-solid fa-tag"></i> Coupons
-                        </h4>
-                        <form action="coupons-add.php">
-                            <button class="btn btn-primary">
-                                <i class="fa-solid fa-plus"></i> Add New Coupon
-                            </button>
-                        </form>
-                    </div>
+        <!-- <div class="container py-5"> -->
+        <div class="card shadow border-0" id="card-body">
+            <div class="card-body">
+                <!-- Header Section -->
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                    <h4 class="fw-bold mb-3 mb-md-0">
+                        <i class="fa-solid fa-tag"></i> Coupons
+                    </h4>
+                    <form action="coupons-add.php">
+                        <button class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add New Coupon
+                        </button>
+                    </form>
+                </div>
 
-                    <!-- Table Section -->
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle text-center">
-                            <thead class="table-primary">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Promo Code</th>
-                                    <th>Discount</th>
-                                    <th>Min Bill Price</th>
-                                    <th>Status</th>
-                                    <th>Description</th>
-                                    <th>Created Time</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                if (mysqli_num_rows($result) > 0) {
-                                    while ($row = mysqli_fetch_assoc($result)) {
-                                        if ($row['status'] == 1) {
-                                            $statusBadge = '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Active</span>';
-                                        } elseif ($row['status'] == 2) {
-                                            $statusBadge = '<span class="badge text-danger" style="background-color: hsla(0, 75%, 92%, 1.00);">Inactive</span>';
-                                        } else {
-                                            $statusBadge = '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 85%, 1.00);">Unknown</span>';
-                                        }
-                                        $no_formate = number_format($row['min_bill_price']);
-                                        echo "<tr>
+                <!-- Table Section -->
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle text-center">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>Promo Code</th>
+                                <th>Discount</th>
+                                <th>Min Bill Price</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                                <th>usage limit</th>
+                                <th>used count </th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    if ($row['status'] == 1) {
+                                        $statusBadge = '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Active</span>';
+                                    } elseif ($row['status'] == 2) {
+                                        $statusBadge = '<span class="badge text-danger" style="background-color: hsla(0, 75%, 92%, 1.00);">Inactive</span>';
+                                    } else {
+                                        $statusBadge = '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 85%, 1.00);">Unknown</span>';
+                                    }
+                                    $no_formate = number_format($row['min_bill_price']);
+                                    echo "<tr>
                                     <td>{$row['id']}</td>
                                     <td><span class='fw-semibold text-uppercase'>{$row['promocode']}</span></td>
                                     <td>{$row['discount']}%</td>
                                     <td>₹{$no_formate}</td>
                                     <td>$statusBadge</td>
                                     <td>{$row['description']}</td>
-                                    <td>" . date('Y-m-d h:i A', strtotime($row['creat_time'])) . "</td>
+                                    <td>{$row['usage_limit']}</td>
+                                    <td>{$row['used_count']}</td>
                                     <td>
                                         <a href='coupon-edit.php?id={$row['id']}' class='btn btn-sm btn-outline-primary me-1'>
                                             <i class='bi bi-pencil-square'></i> Edit
@@ -210,19 +216,19 @@ $result = mysqli_query($conn, $query);
                                         </a>
                                     </td>
                                 </tr>";
-                                    }
-                                } else {
-                                    echo "<tr>
+                                }
+                            } else {
+                                echo "<tr>
                                     <td class='text-danger' colspan='8'>No Coupons Found</td>
                                   </tr>";
-                                }
-                                ?>
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+        <!-- </div> -->
         <br>
         <div class="footer">
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>

@@ -245,7 +245,7 @@ mysqli_close($conn);
                 <div class="col-lg-8">
                     <div class="card">
                         <h4 class="mt-3 text-center text-primary">User Profile</h4>
-                        <form method="POST" enctype="multipart/form-data" id="myForm">
+                        <form method="POST" enctype="multipart/form-data">
                             <div class="card-body">
                                 <div class="row mb-3">
                                     <div class="col-sm-3">
@@ -326,67 +326,6 @@ mysqli_close($conn);
     </div>
 
     <?php require_once "footer.php"; ?>
-    <script>
-        $(document).ready(function () {
-            $("#myForm").validate({
-                rules: {
-                    username: {
-                        required: true,
-                        minlength: 2
-                    },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    phone: {
-                        required: true,
-                        digits: true,
-                        minlength: 10,
-                        maxlength: 10
-                    },
-                    city: {
-                        required: true,
-                        minlength: 3
-                    },
-                    gender: {
-                        required: true
-                    }
-                },
-                messages: {
-                    username: {
-                        required: "Please enter a username",
-                        minlength: "Username must be at least 2 characters"
-                    },
-                    email: {
-                        required: "Please enter an email address",
-                        email: "Please enter a valid email address"
-                    },
-                    phone: {
-                        required: "Please enter a phone number",
-                        digits: "Only numbers are allowed",
-                        minlength: "Phone must be 10 digits",
-                        maxlength: "Phone must be 10 digits"
-                    },
-                    city: {
-                        required: "Please enter a city",
-                        minlength: "City must be at least 3 characters"
-                    },
-                    gender: {
-                        required: "Please select a gender"
-                    }
-                },
-                errorPlacement: function (error, element) {
-                    error.insertAfter(element);
-                },
-                highlight: function (element) {
-                    $(element).addClass("is-invalid");
-                },
-                unhighlight: function (element) {
-                    $(element).removeClass("is-invalid");
-                }
-            });
-        });
-    </script>
     <script>
         const profileImage = document.getElementById('profileImage');
         const fileInput = document.getElementById('profileImageInput');

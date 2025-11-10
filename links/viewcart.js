@@ -219,48 +219,6 @@ $(document).ready(function () {
                         '324001': 'Kota',
                         '313001': 'Udaipur',
                         '334001': 'Bikaner'
-                    },
-                    'California': {
-                        '90001': 'Los Angeles',
-                        '94102': 'San Francisco',
-                        '92101': 'San Diego',
-                        '90210': 'Beverly Hills'
-                    },
-                    'Texas': {
-                        '75201': 'Dallas',
-                        '77001': 'Houston',
-                        '78201': 'San Antonio',
-                        '73301': 'Austin'
-                    },
-                    'Florida': {
-                        '33101': 'Miami',
-                        '32801': 'Orlando',
-                        '33601': 'Tampa',
-                        '32201': 'Jacksonville'
-                    },
-                    'Ontario': {
-                        'M5V2T6': 'Toronto',
-                        'K1A0A9': 'Ottawa',
-                        'N6A5B7': 'London',
-                        'L8P4R3': 'Hamilton'
-                    },
-                    'Quebec': {
-                        'H3Z2Y7': 'Montreal',
-                        'G1R4R5': 'Quebec City',
-                        'J1H1R1': 'Sherbrooke',
-                        'J8Y6M3': 'Gatineau'
-                    },
-                    'England': {
-                        'SW1A1AA': 'London',
-                        'M11AA': 'Manchester',
-                        'B11AA': 'Birmingham',
-                        'L11AA': 'Liverpool'
-                    },
-                    'Scotland': {
-                        'EH11BB': 'Edinburgh',
-                        'G11AA': 'Glasgow',
-                        'AB11AA': 'Aberdeen',
-                        'DD11AA': 'Dundee'
                     }
                 };
 

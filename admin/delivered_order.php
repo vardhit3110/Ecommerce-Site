@@ -156,8 +156,20 @@ include "db_connect.php";
         .pagination-info {
             font-size: 14px;
             color: #333;
-            text-align: right;
-            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        @media (max-width: 768px) {
+            .pagination-info {
+                margin-bottom: 10px;
+                text-align: center;
+                width: 100%;
+            }
+
+            .pagination {
+                justify-content: center;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -326,16 +338,18 @@ include "db_connect.php";
                         $sql = "SELECT COUNT(*) AS total FROM orders WHERE order_status='4'AND payment_status='2'";
                         $result = mysqli_query($conn, $sql);
                         $row = mysqli_fetch_assoc($result);
-                        $total_user = $row['total'];
-                        $total_page = ceil($total_user / $total_data);
+                        $total_delivered = $row['total'];
+                        $total_page = ceil($total_delivered / $total_data);
 
                         $start = ($page - 1) * $total_data + 1;
-                        $end = min($page * $total_data, $total_user);
+                        $end = min($page * $total_data, $total_delivered);
 
-                        if ($total_user > 0) {
+                        if ($total_delivered > 0) {
+                            echo '<div class="d-flex justify-content-between align-items-center flex-wrap mt-3">';
 
+                            echo "<div class='pagination-info mb-0'>Showing $start to $end of $total_delivered entries</div>";
+                            echo '<ul class="pagination mb-0">';
 
-                            echo '<ul class="pagination">';
                             // Prev button
                             if ($page > 1) {
                                 echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
@@ -373,7 +387,7 @@ include "db_connect.php";
                             }
 
                             echo '</ul>';
-                            echo "<div class='pagination-info'>Showing $start to $end of $total_user entries</div>";
+                            echo '</div>';
                         }
                         ?>
                     </div>
