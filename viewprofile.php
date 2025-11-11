@@ -33,29 +33,38 @@ if (isset($_GET['email']) && !empty($_GET['email'])) {
 }
 
 /* update user code */
-if (isset($_POST['update-profile']) && isset($_GET['email'])) {
-    $get_email = $_GET['email'];
+if (isset($_POST['change-image']) && isset($_FILES['profile_image']['name']) && !empty($_FILES['profile_image']['name'])) {
 
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $address = $_POST['address'];
-    $city = $_POST['city'];
-    $gender = $_POST['gender'];
+    $imagepath = "./store/images/user_img/";
+    $originalName = basename($_FILES["profile_image"]["name"]);
+    $imageFileType = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+    $fileName = $username . "_" . time() . "." . $imageFileType;
+    $targetFilePath = $imagepath . $fileName;
+    $allowedTypes = array('jpg', 'png', 'jpeg', 'gif');
 
-    $stmt = mysqli_prepare($conn, "UPDATE userdata SET username = ?, email = ?, phone = ?, address = ?, city = ?, gender = ? WHERE email = ?");
-    mysqli_stmt_bind_param($stmt, "sssssss", $username, $email, $phone, $address, $city, $gender, $get_email);
+    if (in_array($imageFileType, $allowedTypes)) {
 
-    if (mysqli_stmt_execute($stmt)) {
-        echo "<script>alert('Profile updated successfully.');window.location.href = window.location.href;</script>";
-        exit;
+        if (move_uploaded_file($_FILES["profile_image"]["tmp_name"], $targetFilePath)) {
+
+            $stmt = mysqli_prepare($conn, "UPDATE userdata SET image = ? WHERE email = ?");
+            mysqli_stmt_bind_param($stmt, "ss", $fileName, $get_email);
+
+            if (mysqli_stmt_execute($stmt)) {
+                echo "<script>alert('Image updated successfully.'); window.location.href = window.location.href;</script>";
+                exit;
+            } else {
+                echo "<script>alert('Error updating image in database.');</script>";
+            }
+            mysqli_stmt_close($stmt);
+
+        } else {
+            echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
+        }
+
     } else {
-        echo "<script>alert('Error updating profile.');</script>";
+        echo "<script>alert('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');</script>";
     }
-    mysqli_stmt_close($stmt);
 }
-
-mysqli_close($conn);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -124,13 +133,13 @@ mysqli_close($conn);
                         <div class="card-body">
                             <!-- file change -->
                             <div class="d-flex flex-column align-items-center text-center">
+
                                 <form method="POST" enctype="multipart/form-data">
                                     <input type="file" id="profileImageInput" name="profile_image"
                                         style="display: none;" accept="image/*">
 
                                     <img src="./store/images/user_img/<?php echo $image; ?>" alt="User"
-                                        class="rounded-circle p-1 border border-primary border-3" width="110"
-                                        id="profileImage"
+                                        class="rounded-circle p-1 border border-dark border-3" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;" id="profileImage"
                                         onerror="this.onerror=null; this.src='./store/images/user_img/default.png'">
 
                                     <div class="mt-3">

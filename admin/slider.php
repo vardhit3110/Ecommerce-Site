@@ -416,7 +416,7 @@ if ($email == true) {
             <li>
                 <a href="subscribers-manage.php">
                     <i class="fa-solid fa-bell"></i>
-                    <span>Subscribers Manage</span>
+                    <span>Subscribers</span>
                 </a>
             </li>
 

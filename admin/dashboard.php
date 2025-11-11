@@ -394,7 +394,8 @@
                             <div class="card-header">
                                 <div class="card-content">
                                     <h3>Total Users</h3>
-                                    <h4><?php echo $counts['userdata']; ?></h4>
+                                    <?php $userCount = $counts['userdata']; ?>
+                                    <h4><span id="userCount">0</span></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-users" style="color: #3498db;"></i>
@@ -404,8 +405,9 @@
                         <div class="dashboard-card dashboard-card2">
                             <div class="card-header">
                                 <div class="card-content">
+                                    <?php $categoriesCount = $counts['categories']; ?>
                                     <h3>Total Categories</h3>
-                                    <h4><?php echo $counts['categories']; ?></h4>
+                                    <h4><span id="categoriesCount">0</span></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-tags" style="color: #2ecc71;"></i>
@@ -415,8 +417,9 @@
                         <div class="dashboard-card dashboard-card3">
                             <div class="card-header">
                                 <div class="card-content">
+                                    <?php $productsCount = $counts['product']; ?>
                                     <h3>Total Products</h3>
-                                    <h4><?php echo $counts['product']; ?></h4>
+                                    <h4><span id="productsCount">0</span></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-box" style="color: #e74c3c;"></i>
@@ -426,8 +429,9 @@
                         <div class="dashboard-card dashboard-card4">
                             <div class="card-header">
                                 <div class="card-content">
+                                    <?php $wishlistCount = $counts['wishlist']; ?>
                                     <h3>Total Wishlist</h3>
-                                    <h4><?php echo $counts['wishlist']; ?></h4>
+                                    <h4><span id="wishlistCount">0</span></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-heart" style="color: #f39c12;;"></i>
@@ -442,7 +446,8 @@
                             <div class="card-header">
                                 <div class="card-content">
                                     <h3>Total Feedback</h3>
-                                    <h4><?php echo $counts['feedback']; ?></h4>
+                                    <?php $feedbackCount = $counts['feedback']; ?>
+                                    <h4><span id="feedbackCount">0</span></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-comments" style="color: #9b59b6;"></i>
@@ -453,7 +458,8 @@
                             <div class="card-header">
                                 <div class="card-content">
                                     <h3>Total Orders</h3>
-                                    <h4><?php ?><?php echo $orders; ?></h4>
+                                    <?php $orders; ?>
+                                    <h4><span id="ordersCount">0</span></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-shopping-cart" style="color: #1abc9c;"></i>
@@ -464,7 +470,8 @@
                             <div class="card-header">
                                 <div class="card-content">
                                     <h3>Total Subscribers</h3>
-                                    <h4><?php echo $counts['subscriber']; ?></h4>
+                                    <?php $subscribersCount = $counts['subscriber']; ?>
+                                    <h4><span id="subscribersCount">0</span></h4>
                                 </div>
                                 <div class="card-icon">
                                     <i class="fas fa-bell" style="color: #34495e;"></i>
@@ -473,7 +480,31 @@
                         </div>
                     </div>
                 </div>
+                <script>
+                    function animateCounter(elementId, finalCount, duration = 2000) {
+                        const elem = document.getElementById(elementId);
+                        let currentCount = 0;
+                        const increment = Math.ceil(finalCount / (duration / 20));
 
+                        const counter = setInterval(() => {
+                            currentCount += increment;
+                            if (currentCount >= finalCount) {
+                                currentCount = finalCount;
+                                clearInterval(counter);
+                            }
+                            elem.textContent = currentCount;
+                        }, 20);
+                    }
+
+                    // Start the counters
+                    animateCounter('userCount', <?php echo $userCount; ?>);
+                    animateCounter('categoriesCount', <?php echo $categoriesCount; ?>);
+                    animateCounter('productsCount', <?php echo $productsCount; ?>);
+                    animateCounter('wishlistCount', <?php echo $wishlistCount; ?>);
+                    animateCounter('feedbackCount', <?php echo $feedbackCount; ?>);
+                    animateCounter('ordersCount', <?php echo $orders; ?>);
+                    animateCounter('subscribersCount', <?php echo $subscribersCount; ?>);
+                </script>
             </div>
         </div>
 

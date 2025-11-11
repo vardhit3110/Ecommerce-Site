@@ -41,6 +41,9 @@ if ($revenueresult) {
     $todayRevenue = $revenueRow['today_total'] ?? 0;
 }
 mysqli_close($conn);
+
+
+$targetCount = 1203794;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -158,7 +161,8 @@ mysqli_close($conn);
                         <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center justify-between">
                             <div>
                                 <h2 class="text-sm font-semibold text-gray-500">Users</h2>
-                                <p class="text-2xl font-bold mt-2"><?php echo number_format($users); ?></p>
+                                <p class="text-2xl font-bold mt-2"><?php $userCount = number_format($users); ?><span
+                                        id="userCount">0</span></p>
                                 <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">+11.01%</span>
                             </div>
                             <div class="text-indigo-600 bg-indigo-100 p-3 rounded-xl">
@@ -170,7 +174,8 @@ mysqli_close($conn);
                         <div class="bg-white rounded-2xl shadow-sm p-4 flex items-center justify-between">
                             <div>
                                 <h2 class="text-sm font-semibold text-gray-500">Orders</h2>
-                                <p class="text-2xl font-bold mt-2"><?php echo number_format($orders); ?></p>
+                                <p class="text-2xl font-bold mt-2"><?php $ordersCount = number_format($orders); ?><span
+                                        id="ordersCount">0</span></p>
                                 <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded-full">-9.05%</span>
                             </div>
                             <div class="text-red-600 bg-red-100 p-3 rounded-xl">
@@ -192,7 +197,11 @@ mysqli_close($conn);
                 <!-- RIGHT SIDE (Monthly Target without graph) -->
                 <div class="bg-white rounded-2xl shadow-sm p-6 flex flex-col items-center justify-center">
                     <h2 class="text-sm font-semibold text-gray-500 mb-2">Monthly Target</h2>
-                    <p class="text-xl font-bold mt-2">75.55%</p>
+                    <p class="text-xl font-bold mt-2"><?php $sales = $totalRevenue * 100 / $targetCount;
+                    $monthlySaleResult = number_format($sales, 2);
+                    ?>
+                        <span id="monthlySaleResult">0</span>%
+                    </p>
                     <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full mt-1">+10%</span>
                     <p class="text-gray-500 text-xs mt-2 text-center">You earned $3287 today, higher than last month.
                     </p>
@@ -200,36 +209,90 @@ mysqli_close($conn);
                     <div class="flex justify-center gap-3 mt-4 text-xs flex-wrap">
                         <div class="target-box">
                             <p class="text-gray-400 text-[11px]">Target</p>
-                            <p class="text-gray-800 font-semibold">₹900.9K</p>
+                            <p class="text-gray-800 font-semibold">
+                                ₹<span id="targetCount">0</span>
+                            </p>
                         </div>
                         <div class="target-box">
                             <p class="text-gray-400 text-[11px]">Revenue</p>
-                            <p class="text-gray-800 font-semibold">₹<?php
-                            function shortAmount($amount)
-                            {
-                                if ($amount >= 1000000000) {
-                                    return round($amount / 1000000000, 1) . 'B';
-                                } elseif ($amount >= 1000000) {
-                                    return round($amount / 1000000, 1) . 'M';
-                                } elseif ($amount >= 1000) {
-                                    return round($amount / 1000, 1) . 'K';
-                                } else {
-                                    return $amount;
+                            <p class="text-gray-800 font-semibold">₹
+                                <?php
+                                function shortAmount($amount)
+                                {
+                                    if ($amount >= 1000000000) {
+                                        return round($amount / 1000000000, 1) . 'B';
+                                    } elseif ($amount >= 1000000) {
+                                        return round($amount / 1000000, 1) . 'M';
+                                    } elseif ($amount >= 1000) {
+                                        return round($amount / 1000, 1) . 'K';
+                                    } else {
+                                        return $amount;
+                                    }
                                 }
-                            }
-                            echo shortAmount($totalRevenue);
-                            ?></p>
+                                // echo shortAmount($totalRevenue);
+                                ?>
+                                <span id="revenueCount">0</span>
+                            </p>
+
                         </div>
                         <div class="target-box">
                             <p class="text-gray-400 text-[11px]">Today</p>
-                            <p class="text-gray-800 font-semibold">₹<?php
-                            echo shortAmount($todayRevenue);
-                            ?></p>
+                            <p class="text-gray-800 font-semibold">₹
+                                <span id="todayRevenue">0</span>
+                                <?php
+                                // echo shortAmount($todayRevenue);
+                                ?>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
+            <script>
+                function formatNumber(num) {
+                    if (num >= 1e9) return (num / 1e9).toFixed(1) + 'B';
+                    if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+                    if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+                    return num;
+                }
 
+                function animateCounter(elementId, finalCount, duration = 2000) {
+                    const elem = document.getElementById(elementId);
+                    let currentCount = 0;
+                    const increment = finalCount / (duration / 20);
+
+                    const counter = setInterval(() => {
+                        currentCount += increment;
+                        if (currentCount >= finalCount) {
+                            currentCount = finalCount;
+                            clearInterval(counter);
+                        }
+                        elem.textContent = formatNumber(Math.floor(currentCount));
+                    }, 20);
+                }
+                animateCounter('revenueCount', <?php echo $totalRevenue; ?>);
+                animateCounter('todayRevenue', <?php echo $todayRevenue; ?>);
+                animateCounter('targetCount', <?php echo $targetCount; ?>);
+                animateCounter('monthlySaleResult', <?php echo $monthlySaleResult; ?>);
+            </script>
+            <script>
+                function animateCounter(elementId, finalCount, duration = 2000) {
+                    const elem = document.getElementById(elementId);
+                    let currentCount = 0;
+                    const increment = Math.ceil(finalCount / (duration / 20));
+
+                    const counter = setInterval(() => {
+                        currentCount += increment;
+                        if (currentCount >= finalCount) {
+                            currentCount = finalCount;
+                            clearInterval(counter);
+                        }
+                        elem.textContent = currentCount;
+                    }, 20);
+                }
+
+                animateCounter('userCount', <?php echo $userCount; ?>);
+                animateCounter('ordersCount', <?php echo $ordersCount; ?>);
+            </script>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
 
                 <!-- Active Countries-->

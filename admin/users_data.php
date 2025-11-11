@@ -327,6 +327,33 @@ $end = min($page * $total_data, $total_user);
             color: #6c757d;
             font-style: italic;
         }
+
+        td img {
+            height: 45px;
+            width: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        td .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            gap: 10px;
+        }
+
+        .user-email {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+        }
+
+        .user-ph {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+        }
     </style>
 </head>
 
@@ -349,12 +376,11 @@ $end = min($page * $total_data, $total_user);
                         <a href="#" class="btn btn-primary ms-2"><i class="fa-solid fa-plus"></i> Add New</a>
                     </div>
                 </div>
-
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped align-middle text-center">
+                    <table class="table table-hover table-striped align-middle text-center mt-0">
                         <thead class="table-primary">
                             <tr>
-                                <th>ID</th>
+                                <th><input type="checkbox" class="checkbox-style" id="selectAll"></th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Phone</th>
@@ -368,11 +394,24 @@ $end = min($page * $total_data, $total_user);
                             <?php
                             if (mysqli_num_rows($result_email) > 0) {
                                 while ($row = mysqli_fetch_assoc($result_email)) {
+                                    // Image logic
+                                    $image_path = "";
+                                    if (!empty($row['image'])) {
+                                        $image_path = "../store/images/user_img/" . htmlspecialchars($row['image']);
+                                    } else {
+                                        if ($row['gender'] == 1) {
+                                            $image_path = "../store/images/user_img/male_default_img.png";
+                                        } elseif ($row['gender'] == 2) {
+                                            $image_path = "../store/images/user_img/female_default_img.png";
+                                        } else {
+                                            $image_path = "../store/images/user_img/default_img.jpeg";
+                                        }
+                                    }
                                     echo "<tr>";
-                                    echo "<td>{$row['id']}</td>";
-                                    echo "<td>{$row['username']}</td>";
-                                    echo "<td>{$row['email']}</td>";
-                                    echo "<td>" . ($row['phone'] ?: 'N/A') . "</td>";
+                                    echo '<td><input type="checkbox" class="checkbox-style singleCheck"></td>';
+                                    echo "<td><div class='user-info'><img src='{$image_path}' alt='User Image'><span>{$row['username']}</span></div></td>";
+                                    echo "<td><div class='user-email'><i class='fa-regular fa-envelope'></i>&nbsp;{$row['email']}</div></td>";
+                                    echo "<td><div class='user-ph><div class='user-ph'><i class='fa-regular fa-phone'></i>&nbsp" . ($row['phone'] ?: 'N/A') . "</div></td>";
                                     echo "<td>" . ($row['city'] ?: 'N/A') . "</td>";
 
                                     if ($row['gender'] == 1) {
@@ -398,7 +437,7 @@ $end = min($page * $total_data, $total_user);
                                         </td>';
 
                                     echo "<td>
-                                            <a href='?id={$row['id']}" . (!empty($search) ? "&search=" . urlencode($search) : "") . "' class='btn btn-sm btn-outline-primary me-2'><i class='bi bi-pencil-square'></i> Edit</a>
+                                            <a href='user_edit.php?id={$row['id']}" . (!empty($search) ? "&search=" . urlencode($search) : "") . "' class='btn btn-sm btn-outline-primary me-2'><i class='bi bi-pencil-square'></i> Edit</a>
                                             <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-sm btn-outline-danger' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='bi bi-trash'></i> Delete</a>
                                         </td>";
 
@@ -458,7 +497,6 @@ $end = min($page * $total_data, $total_user);
                         </ul>
                     </div>
                 <?php endif; ?>
-
             </div>
         </div>
         <br>
@@ -466,7 +504,7 @@ $end = min($page * $total_data, $total_user);
             <p>&copy; 2025 Admin Panel. All rights reserved.</p>
         </div>
     </div>
-     <script>
+    <script>
         $(document).ready(function () {
             let searchTimeout;
             $('#searchInput').on('input', function () {
@@ -561,6 +599,19 @@ $end = min($page * $total_data, $total_user);
             }
 
             attachToggleListeners();
+        });
+
+        /* checkbox all check */
+        $('#selectAll').on('change', function () {
+            $('.singleCheck').prop('checked', $(this).prop('checked'));
+        });
+
+        $(document).on('change', '.singleCheck', function () {
+            if (!$(this).prop('checked')) {
+                $('#selectAll').prop('checked', false);
+            } else if ($('.singleCheck:checked').length === $('.singleCheck').length) {
+                $('#selectAll').prop('checked', true);
+            }
         });
     </script>
 </body>
