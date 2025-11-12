@@ -136,7 +136,7 @@ require "db_connect.php";
 
 <body>
     <div class="main-content">
-        <div class="header">
+        <div class="header"> 
             <h1><i class="fa-solid fa-message-lines"></i> Feedback</h1>
             <div class="user-profile">
                 <i class="fa-solid fa-message-smile fa-2x"></i>&nbsp;

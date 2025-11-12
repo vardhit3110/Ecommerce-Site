@@ -39,35 +39,45 @@
         }
 
         .card {
-            border-radius: 12px;
-            margin: 30px auto;
-            max-width: 600px;
+            background: #ffffff;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
         }
 
-        .table th,
-        .table td {
-            vertical-align: middle;
-        }
-
-        .btn i {
-            pointer-events: none;
-        }
-
-        .desc-size {
-            max-width: 450px;
-        }
-
-        #box-color {
-            background-color: rgba(238, 238, 238, 1)
-        }
-
-        .main-box {
-            background-color: #ffffffff;
-            border-radius: 25px;
+        .card-header {
+            background-color: #3a0ca3;
+            color: #fff;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            font-weight: 600;
         }
 
         .card-body {
-            background-color: rgb(247, 247, 247);
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 0 0 15px 15px;
+        }
+
+        label.form-label {
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        input.form-control,
+        textarea.form-control,
+        select.form-select {
+            border-radius: 8px;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+        }
+
+        input.form-control:focus,
+        textarea.form-control:focus,
+        select.form-select:focus {
+            border-color: #4361ee;
+            box-shadow: 0 0 5px rgba(67, 97, 238, 0.3);
         }
 
         .footer {
@@ -90,83 +100,73 @@
 
         <!-- Form Card -->
 
-        <div class="main-box">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-xl-6">
-                    <div class="card shadow-sm border-0" id="card">
-                        <div class="card-header bg-dark text-white">
-                            <h5 class="mb-0"><i class="fa-solid fa-box"></i> Product Form</h5>
+        <div class="card shadow-sm border-0">
+            <div class="p-2">
+                <h5 class="mb-0"><i class="fa-solid fa-layer-group"></i> Product Form</h5>
+            </div>
+            <div class="card-body">
+                <form id="productForm" method="post" action="partials/_product_add.php" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="productname" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" name="productname" id="productname"
+                            placeholder="Enter product name">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="productdesc" class="form-label">Description</label>
+                        <textarea class="form-control" name="productdesc" id="productdesc" rows="3"
+                            placeholder="Write product description..."></textarea>
+                    </div>
+
+                    <!-- Price & Category in same row -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="productprice" class="form-label">Price (₹)</label>
+                            <input type="number" class="form-control" name="productprice" id="productprice"
+                                placeholder="Enter price" step="0.01" min="0">
                         </div>
-                        <div class="card-body">
-                            <form id="productForm" method="post" action="partials/_product_add.php"
-                                enctype="multipart/form-data">
 
-                                <div class="mb-3">
-                                    <label for="productname" class="form-label">Product Name</label>
-                                    <input type="text" class="form-control" name="productname" id="productname"
-                                        placeholder="Enter product name">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="productdesc" class="form-label">Description</label>
-                                    <textarea class="form-control" name="productdesc" id="productdesc" rows="3"
-                                        placeholder="Write product description..."></textarea>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="productprice" class="form-label">Price (in ₹)</label>
-                                    <input type="number" class="form-control" name="productprice" id="productprice"
-                                        placeholder="Enter product price" step="0.01" min="0">
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="productcategory" class="form-label">Category</label>
-
-                                    <select class="form-select" name="categoryid" id="categoryid">
-                                        <option hidden disabled selected value>None</option>
-                                        <?php
-                                        $catsql = "SELECT * FROM `categories`";
-                                        $catresult = mysqli_query($conn, $catsql);
-                                        while ($row = mysqli_fetch_assoc($catresult)) {
-                                            $catId = $row['categorie_id'];
-                                            $catName = $row['categorie_name'];
-                                            echo '<option value="' . $catId . '">' . $catName . '</option>';
-                                        }
-                                        ?>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3 d-flex align-items-start gap-3">
-                                    <div class="flex-grow-1">
-                                        <label for="productimage" class="form-label">Main Product Image</label>
-                                        <input type="file" class="form-control" name="productimage" id="productimage"
-                                            required>
-                                        <small class="text-muted" style="font-size: 11px;">* Main thumbnail
-                                            image</small>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <label for="multipleimages" class="form-label">Additional Images</label>
-                                        <input type="file" class="form-control" name="multipleimages[]"
-                                            id="multipleimages" multiple>
-                                        <small class="text-danger" style="font-size: 11px;">* You can select multiple
-                                            images</small>
-                                    </div>
-                                </div>
-
-                                <hr>&nbsp;
-                                <div class="d-flex justify-content-end">
-                                    <a href="product_list.php" id="resetBtn" class="btn btn-danger">
-                                        <i class="fa-solid fa-xmark"></i> Close
-                                    </a>
-                                    &nbsp;
-                                    <button type="submit" name="insert" class="btn btn-success">
-                                        <i class="fa-solid fa-plus"></i> Add Product
-                                    </button>
-                                </div>
-                            </form>
+                        <div class="col-md-6">
+                            <label for="categoryid" class="form-label">Category</label>
+                            <select class="form-select" name="categoryid" id="categoryid">
+                                <option hidden disabled selected value>-- Select Category --</option>
+                                <?php
+                                require "db_connect.php";
+                                $catsql = "SELECT * FROM `categories`";
+                                $catresult = mysqli_query($conn, $catsql);
+                                while ($row = mysqli_fetch_assoc($catresult)) {
+                                    echo '<option value="' . $row['categorie_id'] . '">' . htmlspecialchars($row['categorie_name']) . '</option>';
+                                }
+                                ?>
+                            </select>
                         </div>
                     </div>
-                </div>
+
+                    <div class="mb-3 d-flex gap-3 flex-wrap">
+                        <div class="flex-fill">
+                            <label for="productimage" class="form-label">Main Product Image</label>
+                            <input type="file" class="form-control" name="productimage" id="productimage" required>
+                            <small class="text-muted" style="font-size: 11px;">* Main thumbnail image</small>
+                        </div>
+
+                        <div class="flex-fill">
+                            <label for="multipleimages" class="form-label">Additional Images</label>
+                            <input type="file" class="form-control" name="multipleimages[]" id="multipleimages"
+                                multiple>
+                            <small class="text-danger" style="font-size: 11px;">* You can select multiple images</small>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                    <div class="d-flex justify-content-end">
+                        <a href="product_list.php" class="btn btn-danger me-2">
+                            <i class="fa-solid fa-xmark"></i> Cancel
+                        </a>
+                        <button type="submit" name="insert" class="btn btn-success">
+                            <i class="fa-solid fa-plus"></i> Add Product
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
         <script>

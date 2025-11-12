@@ -56,11 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* .error {
-            color: red;
-            font-size: 13px;
-            margin-top: 3px;
-        } */
         .error {
             font-size: 12px;
             color: red;
@@ -251,8 +246,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             z-index: 9999;
         }
 
+        .prod-info {
+            /* justify-content: start; */
+
+        }
+
+        td img {
+            height: 60px;
+            width: 60px;
+            object-fit: cover;
+            border-radius: 8%;
+            margin-right: 10px;
+        }
+
+        td .cat-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cat-details {
+            font-size: 13px;
+            line-height: 1.4;
+            text-align: left;
+        }
+
         .box1 {
             background-color: #ffffff;
+        }
+
+        .prod-details {
+            font-size: 13px;
+            line-height: 1.1;
+            text-align: left;
         }
 
         .header {
@@ -332,113 +358,96 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                 </div>
             </div>
         </div><br>
-
-
         <!-- main container  -->
-        <div class="content-area container-fluid py-4">
-            <div class="row g-4">
-
-                <div class="col d-flex justify-content-end">
+        <div class="card shadow border-0" id="card-body">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0"><i class="fa-solid fa-list"></i> Products</h4>
                     <a href="product-add.php" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add New</a>
                 </div>
 
-                <!--  -->
-                <div class="">
-                    <!-- <div class="col-lg-7 col-md-8"> -->
-                    <div class="card shadow-sm border-1 h-100">
-                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Product List</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table
-                                    class="table table-striped table-bordered border-dark table-hover align-middle mb-0">
-                                    <thead class="">
-                                        <tr class="table-success border-dark">
-                                            <th>ID</th>
-                                            <th>Image</th>
-                                            <th>Product Details</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $query = "SELECT * FROM product p INNER JOIN categories c ON p.categorie_id = c.categorie_id WHERE 1";
-                                        $params = [];
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle text-center mt-0">
+                        <thead class="table-success">
+                            <tr>
+                                <th><input type="checkbox" class="checkbox-style" id="selectAll"></th>
+                                <th>Product</th>
+                                <th>Description</th>
+                                <th>Price</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $query = "SELECT * FROM product p INNER JOIN categories c ON p.categorie_id = c.categorie_id WHERE 1";
+                            $params = [];
 
-                                        if (!empty($_GET['category_name'])) {
-                                            $query .= " AND categorie_name LIKE ?";
-                                            $params[] = "%" . $_GET['category_name'] . "%";
-                                        }
+                            if (!empty($_GET['category_name'])) {
+                                $query .= " AND categorie_name LIKE ?";
+                                $params[] = "%" . $_GET['category_name'] . "%";
+                            }
 
-                                        if (!empty($_GET['product_name'])) {
-                                            $query .= " AND product_name = ?";
-                                            $params[] = $_GET['product_name'];
-                                        }
+                            if (!empty($_GET['product_name'])) {
+                                $query .= " AND product_name = ?";
+                                $params[] = $_GET['product_name'];
+                            }
 
-                                        if (!empty($_GET['status'])) {
-                                            $query .= " AND product_status = ?";
-                                            $params[] = $_GET['status'];
-                                        }
+                            if (!empty($_GET['status'])) {
+                                $query .= " AND product_status = ?";
+                                $params[] = $_GET['status'];
+                            }
 
-                                        $stmt = mysqli_prepare($conn, $query);
+                            $stmt = mysqli_prepare($conn, $query);
 
-                                        if ($stmt) {
-                                            if (!empty($params)) {
-                                                $types = str_repeat("s", count($params));
-                                                mysqli_stmt_bind_param($stmt, $types, ...$params);
-                                            }
+                            if ($stmt) {
+                                if (!empty($params)) {
+                                    $types = str_repeat("s", count($params));
+                                    mysqli_stmt_bind_param($stmt, $types, ...$params);
+                                }
 
-                                            mysqli_stmt_execute($stmt);
-                                            $result = mysqli_stmt_get_result($stmt);
+                                mysqli_stmt_execute($stmt);
+                                $result = mysqli_stmt_get_result($stmt);
 
-                                            if (mysqli_num_rows($result)) {
-                                                while ($row = mysqli_fetch_assoc($result)) {
-                                                    $productId = $row['product_Id'];
-                                                    $status = $row['product_status'];
-                                                    $isActive = $status == 1;
+                                if (mysqli_num_rows($result)) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        $productId = $row['product_Id'];
+                                        $status = $row['product_status'];
+                                        $isActive = $status == 1;
+                                        $prodDesc = $row['product_desc'];
 
-                                                    echo '<tr>';
-                                                    echo "<td>{$row['product_Id']}</td>";
-                                                    echo "<td class='text-center'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' class='img-thumbnail' alt='Product Image' style='width:100px; height:auto;'></td>";
-                                                    echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['product_name']);
-                                                    echo "<br><b>Description : </b><br>" . nl2br(htmlspecialchars(str_replace(', ', "<br>", $row['product_desc']))) . "";
-                                                    echo "<br><br><b>Price : </b>₹" . number_format((float) $row['product_price']) . "</td>";
-                                                    echo '<td class="text-center">
-                                                        <div class="status-toggle-container">
-                                                            <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $productId . ', ' . $status . ')">
-                                                                <div class="toggle-slider"></div>
-                                                                <div class="toggle-text">
-                                                                    <span class="toggle-on">ON</span>
-                                                                    <span class="toggle-off">OFF</span>
-                                                                </div>
-                                                            </div>
-                                                            <span class="status-indicator ' . ($isActive ? 'active' : 'inactive') . '">';
-                                                    echo $isActive ? 'ACTIVE' : 'INACTIVE';
-                                                    echo '</span></div>
-                                                    </td>';
+                                        echo "<tr>";
+                                        echo '<td><input type="checkbox" class="checkbox-style singleCheck"></td>';
+                                        echo "<td><div class='prod-info'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' alt='Product Image'><center><span style='display: flex; font-size: 12px;'>" . htmlspecialchars($row['product_name']) . "</span></center></div></td>";
+                                        echo "<td class='prod-details'><p title='.$prodDesc.'>" . htmlspecialchars(substr($prodDesc, 0, 110)) . "...</p></td>";
+                                        echo "<td>₹" . number_format((float) $row['product_price'], 2) . "</td>";
 
-                                                    echo "<td class='text-center'>
-                                                            <a href='product-edit.php?id={$row['product_Id']}' class='btn btn-outline-primary btn-sm'> <i class='bi bi-pencil-square'></i> Edit</a>&nbsp;
-                                                            <a href='partials/_product_add.php?id={$row['product_Id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='bi bi-trash'></i> Delete</a>
-                                                        </td>";
-                                                    echo '</tr>';
-                                                }
-                                            } else {
-                                                echo "<tr><td colspan='5' class='text-center text-danger'>No records found</td></tr>";
-                                            }
+                                        echo '<td>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <div class="status-indicator ' . ($isActive ? 'active' : 'inactive') . '">' . ($isActive ? 'Active' : 'Inactive') . '</div>
+                                            <div class="toggle-switch mt-2 ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this,' . $productId . ',' . $status . ')">
+                                                <div class="toggle-slider"></div>
+                                            </div>
+                                        </div>
+                                    </td>';
 
-                                            mysqli_stmt_close($stmt);
-                                        } else {
-                                            echo "<tr><td colspan='5' class='text-center text-danger'>Query preparation failed</td></tr>";
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                                        echo "<td>
+                                        <a href='product-edit.php?id={$row['product_Id']}' class='btn btn-sm btn-outline-primary me-2'><i class='bi bi-pencil-square'></i> Edit</a>
+                                        <a href='partials/_product_add.php?id={$row['product_Id']}' class='btn btn-sm btn-outline-danger' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='bi bi-trash'></i> Delete</a>
+                                    </td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='6' class='text-center text-danger'>No records found</td></tr>";
+                                }
+
+                                mysqli_stmt_close($stmt);
+                            } else {
+                                echo "<tr><td colspan='6' class='text-center text-danger'>Query preparation failed</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -494,6 +503,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                 }
             });
         }
+
+        $('#selectAll').on('change', function () {
+            $('.singleCheck').prop('checked', $(this).prop('checked'));
+        });
+
+        $(document).on('change', '.singleCheck', function () {
+            if (!$(this).prop('checked')) {
+                $('#selectAll').prop('checked', false);
+            } else if ($('.singleCheck:checked').length === $('.singleCheck').length) {
+                $('#selectAll').prop('checked', true);
+            }
+        });
     </script>
 </body>
 

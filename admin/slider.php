@@ -448,6 +448,13 @@ if ($email == true) {
                 </a>
             </li>
 
+            <li>
+                <a href="banner.php">
+                    <i class="fa-solid fa-image-stack"></i>
+                    <span>Web Banner</span>
+                </a>
+            </li>
+
             <li class="logout">
                 <a href="partials/_logout.php">
                     <i class="fa fa-sign-out"></i>

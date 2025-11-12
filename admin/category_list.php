@@ -88,7 +88,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         }
 
         .card-body {
+            border-radius: 15px;
             background-color: rgba(255, 249, 249, 1)
+        }
+
+        #card-body {
+            border-radius: 15px;
         }
 
         .status-toggle-container {
@@ -244,9 +249,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             z-index: 9999;
         }
 
-        .main-content {
-            margin-left: 250px;
-            padding: 20px;
+        td img {
+            height: 70px;
+            width: 70px;
+            border-radius: 20%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        td .cat-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cat-details {
+            font-size: 13px;
+            line-height: 1.4;
+            text-align: left;
         }
 
         .header {
@@ -282,89 +302,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             </div>
         </div>
         <!-- main container  -->
-        <div class="content-area container-fluid py-4">
-            <div class="row g-4">
-                <div class="col d-flex justify-content-end">
-                    <form action="category-add.php" id="categoryForm">
-                        <button class="btn btn-primary" id="changePage">
-                            <i class="fa-solid fa-plus"></i> Add Category
-                        </button>
-                    </form>
+        <div class="card shadow border-0" id="card-body">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0"><i class="fa-solid fa-list"></i> Categories</h4>
+                    <a href="category-add.php" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add New</a>
                 </div>
 
-                <div class="col-12">
-                    <div class="card shadow-sm border-1 h-100">
-                        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fa-solid fa-list"></i> Category List</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table
-                                    class="table table-striped table-bordered border-dark table-hover align-middle mb-0">
-                                    <thead class="">
-                                        <tr class="table-success border-dark">
-                                            <th>ID</th>
-                                            <th>Image</th>
-                                            <th>Category Details</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle text-center mt-0">
+                        <thead class="table-success">
+                            <tr>
+                                <th><input type="checkbox" class="checkbox-style" id="selectAll"></th>
+                                <th>Category</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $stmt = mysqli_prepare($conn, "SELECT * FROM categories");
+                            mysqli_stmt_execute($stmt);
+                            $result = mysqli_stmt_get_result($stmt);
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $catId = $row['categorie_id'];
+                                    $status = $row['categorie_status'];
+                                    $isActive = $status == 1;
+                                    echo "<tr>";
+                                    echo '<td><input type="checkbox" class="checkbox-style singleCheck"></td>';
+                                    echo "<td><div class='cat-info'><img src='images/" . htmlspecialchars($row['categorie_image']) . "' alt='Category Image'><span>" . htmlspecialchars($row['categorie_name']) . "</span></div></td>";
+                                    echo "<td class='cat-details'>" . htmlspecialchars($row['categorie_desc']) . "</td>";
 
-                                        <?php
-                                        $stmt = mysqli_prepare($conn, "SELECT * FROM categories");
-                                        if ($stmt) {
-                                            mysqli_stmt_execute($stmt);
-                                            $result = mysqli_stmt_get_result($stmt);
-                                            if (mysqli_num_rows($result) > 0) {
-                                                while ($row = mysqli_fetch_assoc($result)) {
-                                                    $catId = $row['categorie_id'];
-                                                    $status = $row['categorie_status'];
-                                                    $isActive = $status == 1;
+                                    echo '<td>
+                                        <div class="d-flex flex-column align-items-center">
+                                            <div class="status-indicator ' . ($isActive ? 'active' : 'inactive') . '">' . ($isActive ? 'Active' : 'Inactive') . '</div>
+                                            <div class="toggle-switch mt-2 ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this,' . $catId . ',' . $status . ')">
+                                                <div class="toggle-slider"></div>
+                                            </div>
+                                        </div>
+                                    </td>';
 
-                                                    echo '<tr>';
-                                                    echo "<td>{$row['categorie_id']}</td>";
-                                                    echo "<td class='text-center'><img src='images/" . htmlspecialchars($row['categorie_image']) . "' class='img-thumbnail' alt='Category Image' style='width:100px; height:auto;'></td>";
-                                                    echo "<td class='desc-size'><b>Name : </b> " . htmlspecialchars($row['categorie_name']) . ".";
-                                                    echo "<br><br><b>Desc : </b>" . htmlspecialchars($row['categorie_desc']) . "</td>";
+                                    echo "<td>
+                                        <a href='category-edit.php?id={$row['categorie_id']}' class='btn btn-sm btn-outline-primary me-2'><i class='bi bi-pencil-square'></i> Edit</a>
+                                        <a href='partials/_categories_add.php?id={$row['categorie_id']}' class='btn btn-sm btn-outline-danger' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='bi bi-trash'></i> Delete</a>
+                                    </td>";
 
-                                                    /* Status toggle */
-                                                    echo '<td class="text-center">
-                                                    <div class="status-toggle-container">
-                                                    <div class="toggle-switch ' . ($isActive ? 'active' : 'inactive') . '" onclick="toggleStatus(this, ' . $catId . ', ' . $status . ')">
-                                                    <div class="toggle-slider"></div>
-                                                    <div class="toggle-text">
-                                                    <span class="toggle-on">ON</span>
-                                                    <span class="toggle-off">OFF</span>
-                                                    </div>
-                                                    </div>
-                                                    <span class="status-indicator ' . ($isActive ? 'active' : 'inactive') . '">';
-                                                    echo $isActive ? 'ACTIVE' : 'INACTIVE';
-                                                    echo '</span></div>
-                                                    </td>';
-
-                                                    echo "<td class='text-center'>
-                                                    <a href='category-edit.php?id={$row['categorie_id']}' class='btn btn-outline-primary btn-sm'> <i class='bi bi-pencil-square'></i> Edit</a>&nbsp;
-                                                         <a href='partials/_categories_add.php?id={$row['categorie_id']}' class='btn btn-outline-danger btn-sm' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='bi bi-trash'></i> Delete</a>
-                                                    </td>";
-                                                    echo '</tr>';
-                                                }
-                                            } else {
-                                                echo "<tr><td colspan='5' class='text-center text-danger'>No records found</td></tr>";
-                                            }
-
-                                            mysqli_stmt_close($stmt);
-                                        } else {
-                                            echo "<tr><td colspan='5' class='text-center text-danger'>Query preparation failed</td></tr>";
-                                        }
-                                        ?>
-
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='5' class='text-center text-danger'>No records found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -420,6 +412,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                 }
             });
         }
+        $('#selectAll').on('change', function () {
+            $('.singleCheck').prop('checked', $(this).prop('checked'));
+        });
+
+        $(document).on('change', '.singleCheck', function () {
+            if (!$(this).prop('checked')) {
+                $('#selectAll').prop('checked', false);
+            } else if ($('.singleCheck:checked').length === $('.singleCheck').length) {
+                $('#selectAll').prop('checked', true);
+            }
+        });
     </script>
 </body>
 

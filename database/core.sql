@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2025 at 02:06 PM
+-- Generation Time: Nov 12, 2025 at 02:26 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -334,6 +334,21 @@ CREATE TABLE `sitedetail` (
 
 INSERT INTO `sitedetail` (`id`, `systemName`, `email`, `contact`, `address`) VALUES
 (1, 'MobileSite', 'info@mobilesite.com', '9876543210', '123, Rosewood Apartments,MG Road, Near Central Park,New Delhi, India');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `site_image`
+--
+
+CREATE TABLE `site_image` (
+  `id` int(5) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `sub_title` varchar(100) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `status` enum('1','2') NOT NULL DEFAULT '1' COMMENT '1-active,\r\n2-Inactive',
+  `creatat` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1832,6 +1847,12 @@ ALTER TABLE `sitedetail`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `site_image`
+--
+ALTER TABLE `site_image`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `subscriber`
 --
 ALTER TABLE `subscriber`
@@ -1910,6 +1931,12 @@ ALTER TABLE `product_images`
 --
 ALTER TABLE `sitedetail`
   MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `site_image`
+--
+ALTER TABLE `site_image`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `subscriber`
