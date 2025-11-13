@@ -252,9 +252,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         }
 
         td img {
-            height: 60px;
+            height: 70px;
             width: 60px;
-            object-fit: cover;
+            object-fit: contain;
             border-radius: 8%;
             margin-right: 10px;
         }
@@ -415,10 +415,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                                         $status = $row['product_status'];
                                         $isActive = $status == 1;
                                         $prodDesc = $row['product_desc'];
-
+                                        $productName = $row['product_name'];
                                         echo "<tr>";
                                         echo '<td><input type="checkbox" class="checkbox-style singleCheck"></td>';
-                                        echo "<td><div class='prod-info'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' alt='Product Image'><center><span style='display: flex; font-size: 12px;'>" . htmlspecialchars($row['product_name']) . "</span></center></div></td>";
+                                        echo "<td><div class='prod-info'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' alt='Product Image' title='.$productName.'></div></td>";
                                         echo "<td class='prod-details'><p title='.$prodDesc.'>" . htmlspecialchars(substr($prodDesc, 0, 110)) . "...</p></td>";
                                         echo "<td>₹" . number_format((float) $row['product_price'], 2) . "</td>";
 

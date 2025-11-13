@@ -39,9 +39,10 @@ require "db_connect.php";
         }
 
         img {
-            width: 100px;
-            height: 100px;
+            width: 230px;
+            height: 80px;
             object-fit: cover;
+            border-radius: 5px;
         }
 
         .switch {
@@ -136,10 +137,10 @@ require "db_connect.php";
                             $result = mysqli_query($conn, $query);
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
-                                    $img = !empty($row['image_path']) ? $row['image_path'] : './images/banner/Product is Empty1.png';
+                                    $img = !empty($row['image_path']) ? $row['image_path'] : './images/banner/';
                                     $checked = ($row['status'] == 1) ? 'checked' : '';
                                     echo "<tr>
-                                            <td><img src='{$img}' class='img-thumb'></td>
+                                            <td><img src='./images/banner/{$img}' class='img-thumb'></td>
                                             <td>" . htmlspecialchars($row['title']) . "</td>
                                             <td>" . htmlspecialchars($row['sub_title']) . "</td>
                                             <td>
@@ -149,7 +150,7 @@ require "db_connect.php";
                                                 </label>
                                             </td>
                                             <td>
-                                                <a href='.php?id={$row['id']}' class='btn btn-outline-primary btn-sm'>
+                                                <a href='banner_edit.php?id={$row['id']}' class='btn btn-outline-primary btn-sm'>
                                                 <i class='bi bi-pencil-square'></i> Edit
                                                 </a>
                                                 &nbsp;

@@ -258,7 +258,7 @@ session_start();
 
                         echo '</div>
                                     <div class="card-body">
-                                        <h5 class="card-title text-primary">' . htmlspecialchars($product_name) . '</h5>
+                                        <h6 class="card-title text-primary">' . htmlspecialchars($product_name) . '</h6>
                                         <p class="card-text">' . substr($product_desc, 0, 90) . '...</p>
                                     </div>
                                     <ul class="list-group list-group-flush">
@@ -316,7 +316,7 @@ session_start();
                 $total_product = mysqli_num_rows($result);
                 $total_page = ceil($total_product / $limit);
 
-                echo '<div class="d-flex justify-content-center mt-4">';
+                echo '<div class="d-flex justify-content-center mt-0">';
                 echo '<ul class="pagination">';
 
                 if ($page > 1) {

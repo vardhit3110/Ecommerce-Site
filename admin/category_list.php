@@ -250,10 +250,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
         }
 
         td img {
-            height: 70px;
-            width: 70px;
-            border-radius: 20%;
-            object-fit: cover;
+            height: 90px;
+            width: 75px;
+            border-radius: 8px;
+            object-fit: contain;
             margin-right: 10px;
         }
 

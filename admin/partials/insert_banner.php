@@ -6,22 +6,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sub_title = trim($_POST['sub_title']);
     $status = 1;
 
-    // File Upload Handling
     if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === UPLOAD_ERR_OK) {
         $fileTmp = $_FILES['image_path']['tmp_name'];
         $fileName = basename($_FILES['image_path']['name']);
         $fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
 
-        // Allowed extensions
         $allowed = ['jpg', 'jpeg', 'png', 'webp'];
         if (!in_array($fileExt, $allowed)) {
             echo "<script>alert('Only JPG, JPEG, PNG, or WEBP files are allowed.'); window.history.back();</script>";
             exit();
         }
 
-        // New unique name
         $newFileName = preg_replace("/[^a-zA-Z0-9]/", "_", pathinfo($fileName, PATHINFO_FILENAME)) . "_" . time() . "." . $fileExt;
-        $uploadDir = "./images/banner/";
+        $uploadDir = "../images/banner/";
         $uploadPath = $uploadDir . $newFileName;
 
         // Move file
@@ -35,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sssi", $title, $sub_title, $newFileName, $status);
 
         if ($stmt->execute()) {
-            echo "<script>alert('Banner added successfully!'); window.location.href='banner.php';</script>";
+            echo "<script>alert('Banner added successfully!'); window.location.href='../banner.php';</script>";
         } else {
             echo "<script>alert('Database error: Unable to insert data.'); window.history.back();</script>";
         }
