@@ -167,19 +167,27 @@ if (isset($_GET['id'])) {
                         rows="3"><?php echo htmlspecialchars($product['product_desc']); ?></textarea>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Category</label>
-                    <select class="form-select" name="category_id" id="category_id" required>
-                        <?php
-                        $catsql = "SELECT * FROM categories";
-                        $catresult = mysqli_query($conn, $catsql);
-                        while ($row = mysqli_fetch_assoc($catresult)) {
-                            $selected = ($product['categorie_id'] == $row['categorie_id']) ? 'selected' : '';
-                            echo '<option value="' . $row['categorie_id'] . '" ' . $selected . '>' . htmlspecialchars($row['categorie_name']) . '</option>';
-                        }
-                        ?>
-                    </select>
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" name="category_id" id="category_id" required>
+                            <?php
+                            $catsql = "SELECT * FROM categories";
+                            $catresult = mysqli_query($conn, $catsql);
+                            while ($row = mysqli_fetch_assoc($catresult)) {
+                                $selected = ($product['categorie_id'] == $row['categorie_id']) ? 'selected' : '';
+                                echo '<option value="' . $row['categorie_id'] . '" ' . $selected . '>' . htmlspecialchars($row['categorie_name']) . '</option>';
+                            }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Product Discount (%)</label>
+                        <input type="number" class="form-control" name="product_off" id="product_off" step="0.01"
+                            value="<?php echo isset($product['product_off']) ? htmlspecialchars($product['product_off']) : '0'; ?>">
+                    </div>
                 </div>
+
 
                 <div class="d-flex justify-content-end mt-3">
                     <a href="product_list.php" class="btn btn-secondary"><i class="fa-solid fa-xmark"></i>
@@ -201,6 +209,7 @@ if (isset($_GET['id'])) {
         $name = $_POST['productname'];
         $desc = $_POST['productdesc'];
         $price = $_POST['productprice'];
+        $product_off = isset($_POST['product_off']) ? $_POST['product_off'] : 0;
         $category_id = $_POST['category_id'];
         $oldImage = $_POST['old_image'];
         $newImageName = $oldImage;
@@ -212,8 +221,9 @@ if (isset($_GET['id'])) {
             move_uploaded_file($_FILES['productimage']['tmp_name'], $targetPath);
         }
 
-        $stmt = mysqli_prepare($conn, "UPDATE product SET product_name=?, product_desc=?, product_price=?, product_image=?, categorie_id=? WHERE product_id=?");
-        mysqli_stmt_bind_param($stmt, "ssdsii", $name, $desc, $price, $newImageName, $category_id, $id);
+        $stmt = mysqli_prepare($conn, "UPDATE product SET product_name=?, product_desc=?, product_price=?, product_image=?, categorie_id=?, product_off=? WHERE product_id=?");
+        mysqli_stmt_bind_param($stmt, "ssdsiid", $name, $desc, $price, $newImageName, $category_id, $product_off, $id);
+
         mysqli_stmt_execute($stmt);
 
         // multiple image insert and update

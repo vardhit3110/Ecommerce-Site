@@ -167,6 +167,11 @@ include "db_connect.php";
                         $product_desc = $row['product_desc'];
                         $product_price = $row['product_price'];
                         $category_name = $row['categorie_name'];
+                        $product_price = $row['product_price'];
+                        $product_off = $row['product_off'];
+
+                        $offprice = $product_price * $product_off / 100;
+                        $finalPrice = $product_price - $offprice;
 
                         $multiImages = [];
                         $multiQuery = mysqli_query($conn, "SELECT image_path FROM product_images WHERE product_id = $product_id");
@@ -219,7 +224,7 @@ include "db_connect.php";
                             <div class="col-md-8 details-box position-relative">
                                 <h4 class="fw-bold mb-2"><?php echo htmlspecialchars($product_name); ?></h4>
                                 <p class="text-muted mb-2"><?php echo nl2br(htmlspecialchars($product_desc)); ?></p>
-                                <h5 class="text-danger mb-3">₹<?php echo number_format((float) $product_price); ?></h5>
+                                <h5 class="text-danger mb-3">₹<?php echo number_format((float) $finalPrice); ?></h5>
 
                                 <div class="mb-3">
                                     <?php if (isset($_SESSION['email'])): ?>

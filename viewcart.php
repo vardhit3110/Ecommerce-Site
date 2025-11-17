@@ -245,7 +245,7 @@ if (isset($_SESSION['email'])) {
 
         <?php if (isset($_SESSION['email'])): ?>
             <?php
-            $cart_query = "SELECT viewcart.*, product.product_name, product.product_price, product.product_image FROM viewcart JOIN product  ON viewcart.product_id = product.product_Id WHERE viewcart.user_id = '$user_id'";
+            $cart_query = "SELECT viewcart.*, product.product_name, product.product_price, product.product_image, product.product_off FROM viewcart JOIN product  ON viewcart.product_id = product.product_Id WHERE viewcart.user_id = '$user_id'";
             $cart_result = mysqli_query($conn, $cart_query);
             $cart_total = 0;
             ?>
@@ -279,10 +279,18 @@ if (isset($_SESSION['email'])) {
                             <tbody>
                                 <?php while ($item = mysqli_fetch_assoc($cart_result)): ?>
                                     <?php
-                                    $item_total = $item['product_price'] * $item['quantity'];
-                                    $cart_total += $item_total;
+
+
                                     $image_path = "admin/images/product_img/" . $item['product_image'];
                                     $product_image = file_exists($image_path) ? $image_path : "https://via.placeholder.com/80";
+                                    $product_price = $item['product_price'];
+                                    $product_off = $item['product_off'];
+
+                                    $offprice = $product_price * $product_off / 100;
+                                    $finalPrice = $product_price - $offprice;
+
+                                    $item_total = $finalPrice * $item['quantity'];
+                                    $cart_total += $item_total;
                                     ?>
                                     <tr>
                                         <td>
@@ -301,8 +309,7 @@ if (isset($_SESSION['email'])) {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td><span
-                                                style="font-weight: 600;">₹<?php echo number_format($item['product_price'], 2); ?></span>
+                                        <td><span style="font-weight: 600;">₹<?php echo number_format($finalPrice, 2); ?></span>
                                         </td>
                                         <td>
                                             <div class="quantity-controls">

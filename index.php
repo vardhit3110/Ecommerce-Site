@@ -294,7 +294,6 @@ session_start();
 
             <div class="carousel slide" id="topDealsCarousel">
                 <div class="carousel-inner gap-5" id="carouselItems">
-
                     <?php
                     $sql = "SELECT product_details FROM orders WHERE order_status = '4'";
                     $result = mysqli_query($conn, $sql);

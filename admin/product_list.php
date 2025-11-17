@@ -281,6 +281,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
             text-align: left;
         }
 
+        .hover-text {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            width: 250px;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            position: absolute;
+            left: 0;
+            top: 120%;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .hover-text:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -418,8 +445,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                                         $productName = $row['product_name'];
                                         echo "<tr>";
                                         echo '<td><input type="checkbox" class="checkbox-style singleCheck"></td>';
-                                        echo "<td><div class='prod-info'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' alt='Product Image' title='.$productName.'></div></td>";
-                                        echo "<td class='prod-details'><p title='.$prodDesc.'>" . htmlspecialchars(substr($prodDesc, 0, 110)) . "...</p></td>";
+                                        echo "<td><div class='prod-info'><img src='images/product_img/" . htmlspecialchars($row['product_image']) . "' alt='Product Image' title=$productName</div></td>";
+                                        // echo "<td class='prod-details'><p title='.$prodDesc.'>" . htmlspecialchars(substr($prodDesc, 0, 110)) . "...</p></td>";
+                                        echo "<td class='prod-details'><p class='hover-text'>" . htmlspecialchars(substr($prodDesc, 0, 110)) . "...<span class='tooltip-text'>$prodDesc</span></p></td>";
                                         echo "<td>₹" . number_format((float) $row['product_price'], 2) . "</td>";
 
                                         echo '<td>

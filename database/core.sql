@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2025 at 02:03 PM
+-- Generation Time: Nov 17, 2025 at 02:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -97,9 +97,9 @@ INSERT INTO `coupons` (`id`, `promocode`, `discount`, `min_bill_price`, `usage_l
 (2, 'V9TL2XQM', 7, 2500, 200, 0, '1', 'Weekend Shopping Deal', '2025-11-07 17:06:53'),
 (3, 'H2NB6PRJ', 5, 5000, 150, 0, '1', 'Mid-Month Saver', '2025-11-07 17:07:20'),
 (4, 'K4FJ8TZQ', 10, 8000, 120, 0, '1', 'Festival Celebration Offer', '2025-11-07 17:07:49'),
-(5, 'M1XW9GTR', 12, 12000, 99, 1, '1', 'Loyal Customer Reward', '2025-11-07 17:08:19'),
+(5, 'M1XW9GTR', 12, 12000, 98, 2, '1', 'Loyal Customer Reward', '2025-11-07 17:08:19'),
 (6, 'R7LQ3DNP', 8, 35000, 85, 5, '1', 'Premium Shopper Benefit', '2025-11-07 17:08:50'),
-(7, 'X6DM5JQR', 14, 90000, 48, 2, '1', 'Mega Purchase Advantage', '2025-11-07 17:15:19');
+(7, 'X6DM5JQR', 14, 90000, 47, 3, '1', 'Mega Purchase Advantage', '2025-11-07 17:15:19');
 
 -- --------------------------------------------------------
 
@@ -134,7 +134,8 @@ INSERT INTO `feedback` (`feedback_id`, `user_id`, `rating`, `comment`, `submisio
 (11, 12, '2', 'Some links mobile pe click nahi ho rahe the, issue check karein.', '2025-10-09', NULL),
 (12, 13, '5', 'Mujhe product ka detail page open karne mein problem hui.', '2025-10-09', NULL),
 (13, 16, '4', 'Chat support ka option add karein, helpful rahega.', '2025-10-09', NULL),
-(14, 17, '3', 'Mobile view thoda aur responsive ho toh maza aa jaye.', '2025-10-09', NULL);
+(14, 17, '3', 'Mobile view thoda aur responsive ho toh maza aa jaye.', '2025-10-09', NULL),
+(15, 28, '4', '\"Good\"', '2025-11-14', NULL);
 
 -- --------------------------------------------------------
 
@@ -227,7 +228,7 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `t
 (58, 23, '2025-11-07 16:08:19', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 73841.00, 60.00, '2', '1', NULL, 'order_RcotdCHzs9EzjY', NULL, '1', 'Aanad, Gujarat', 390633, 'BIGSALE11', '9119', NULL),
 (59, 23, '2025-11-07 16:12:09', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 73841.00, 60.00, '2', '1', NULL, 'order_Rcoxg9G2pSRuhr', NULL, '1', 'Aanad, Gujarat', 394705, 'BIGSALE11', '9119', NULL),
 (60, 23, '2025-11-07 16:18:50', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 73841.00, 60.00, '2', '1', NULL, 'order_Rcp4igyQarKRsA', NULL, '1', 'Aanad, Gujarat', 525667, 'BIGSALE11', '9119', NULL),
-(61, 23, '2025-11-07 16:19:01', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 73841.00, 60.00, '2', '1', NULL, 'order_Rcp4uOnqmUTmOo', NULL, '1', 'Aanad, Gujarat', 285514, 'BIGSALE11', '9119', NULL),
+(61, 23, '2025-11-07 16:19:01', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 73841.00, 60.00, '2', '2', NULL, 'order_Rcp4uOnqmUTmOo', NULL, '4', 'Aanad, Gujarat', 285514, 'BIGSALE11', '9119', NULL),
 (62, 23, '2025-11-07 16:26:47', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 73841.00, 60.00, '2', '3', NULL, 'order_RcpD7Ez9so9YBv', NULL, '1', 'Aanad, Gujarat', 668988, 'BIGSALE11', '9119', NULL),
 (63, 23, '2025-11-07 16:32:30', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 73841.00, 60.00, '2', '3', NULL, 'order_RcpJ9QZBRmmDs9', NULL, '1', 'Aanad, Gujarat', 233102, 'BIGSALE11', '9119', NULL),
 (64, 23, '2025-11-07 16:38:39', '[{\"product_name\":\"Apple iPhone 17\",\"price\":82900,\"quantity\":1,\"subtotal\":82900}]', 73831.00, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Aanad, Gujarat', 920740, 'BIGSALE11', '9119', NULL),
@@ -245,7 +246,9 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `t
 (76, 27, '2025-11-13 15:50:17', '[{\"product_name\":\"realme P3 Pro 5G\",\"price\":16999,\"quantity\":1,\"subtotal\":16999}]', 15009.12, 50.00, '1', '2', NULL, NULL, NULL, '4', '32, darshan, kamrej, surat.', 569306, 'M1XW9GTR', '2039.88', NULL),
 (77, 27, '2025-11-13 15:50:49', '[{\"product_name\":\"OnePlus Nord Buds 3r\",\"price\":1699,\"quantity\":1,\"subtotal\":1699}]', 1749.00, 50.00, '1', '1', NULL, NULL, NULL, '1', '32, darshan, kamrej, surat.', 790437, 'none', '0', NULL),
 (78, 27, '2025-11-13 15:52:13', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 270.00, 60.00, '2', '3', NULL, 'order_RfBpJfYHqHCgdV', NULL, '1', '32, darshan, kamrej, surat.', 133163, 'none', '0', NULL),
-(79, 27, '2025-11-13 15:52:51', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', '32, darshan, kamrej, surat.', 521667, 'none', '0', NULL);
+(79, 27, '2025-11-13 15:52:51', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', '32, darshan, kamrej, surat.', 521667, 'none', '0', NULL),
+(80, 28, '2025-11-14 10:32:41', '[{\"product_name\":\"ASUS Vivobook 15 Intel Core i3\",\"price\":34990,\"quantity\":1,\"subtotal\":34990}]', 30841.20, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Vesu Ring Road, Surat.', 610090, 'M1XW9GTR', '4198.8', NULL),
+(81, 29, '2025-11-17 18:35:50', '[{\"product_name\":\"Apple iPhone 17\",\"price\":92999,\"quantity\":1,\"subtotal\":92999},{\"product_name\":\"MarQ Power Bank\",\"price\":5999,\"quantity\":2,\"subtotal\":11998}]', 90347.42, 50.00, '1', '2', NULL, NULL, NULL, '4', 'kapodra , Surat.', 511349, 'X6DM5JQR', '14699.58', NULL);
 
 -- --------------------------------------------------------
 
@@ -261,6 +264,7 @@ CREATE TABLE `product` (
   `product_price` int(12) NOT NULL,
   `categorie_id` int(100) NOT NULL,
   `product_status` enum('1','2') NOT NULL DEFAULT '1' COMMENT 'active - 1, \r\ninactive - 2',
+  `product_off` int(11) DEFAULT NULL COMMENT 'Discount (%)',
   `product_creatdated` datetime(6) NOT NULL DEFAULT current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -268,27 +272,28 @@ CREATE TABLE `product` (
 -- Dumping data for table `product`
 --
 
-INSERT INTO `product` (`product_Id`, `product_name`, `product_image`, `product_desc`, `product_price`, `categorie_id`, `product_status`, `product_creatdated`) VALUES
-(1, 'realme P4 Pro 5G', 'realme P4 Pro 5G_1758870375.jpeg', '8 GB RAM | 256 GB ROM,\r\n17.27 cm (6.8 inch) Display,\r\n50MP + 8MP | 50MP Front Camera,\r\n7000 mAh Battery,\r\nSnapdragon 7 Gen 4 Mobile Processor.', 24999, 1, '1', '2025-09-26 12:36:15.435172'),
-(2, 'Samsung Galaxy A35 5G', 'Samsung Galaxy A35 5G_1758870502.jpeg', '8 GB RAM | 128 GB ROM | Expandable Upto 1 TB,\r\n16.76 cm (6.6 inch) Full HD+ Display,\r\n50MP + 8MP + 5MP | 13MP Front Camera,\r\n5000 mAh Battery,\r\nSamsung Exynos 1380 Processor.', 17999, 1, '1', '2025-09-26 12:38:22.340524'),
-(3, 'Samsung Galaxy S24 FE 5G', 'Samsung Galaxy S24 FE 5G_1758870636.jpeg', '8 GB RAM | 256 GB ROM,\r\n17.02 cm (6.7 inch) Full HD+ Display,\r\n50MP + 12MP | 10MP Front Camera,\r\n4700 mAh Battery,\r\nExynos 2400e Processor.', 33999, 1, '1', '2025-09-26 12:40:36.809211'),
-(4, 'Apple iPhone 17', 'Apple iPhone 17_1758870730.jpeg', '256 GB ROM,\r\n16.0 cm (6.3 inch) Super Retina XDR Display,\r\n48MP + 48MP | 18MP Front Camera,\r\nA19 Chip, 6 Core Processor Processor.', 82900, 1, '1', '2025-09-26 12:42:10.507793'),
-(5, 'realme Buds T200', 'realme Buds T200_1758871015.jpeg', 'With Mic:Yes,\r\nWireless range: 10 m.\r\nBattery life: 48 hr | Charging time: 2,\r\n12.4mm Dynamic Bass Driver,\r\n48 Hours Total Playback | 10mins Charge for 5 Hrs Playback,\r\nDual-mic AI Deep Call Noise Cancellation,\r\nDual Device Connection,\r\nLow Latency for Ga', 999, 3, '1', '2025-09-26 12:46:55.321459'),
-(6, 'OnePlus Nord Buds 3r', 'OnePlus Nord Buds 3r_1758871100.jpeg', 'Fast Charging:Get 8 hours of playback with just 10 minutes of charging.Up to 54 hours of total music time on a full charge.', 1599, 3, '1', '2025-09-26 12:48:20.615559'),
-(7, 'OnePlus Nord Buds 3r', 'OnePlus Nord Buds 3r_1758871346.jpeg', 'Fast Charging:Get 8 hours of playback with just 10 minutes of charging.Up to 54 hours of total music time on a full charge.\r\n\r\nTitanium-coated Drivers:Enjoy powerful bass and crisp audio with 12.4mm Titanium-coated drivers and fixed spatial audio.', 1699, 3, '1', '2025-09-26 12:52:26.342437'),
-(8, 'Charger EliteGadgets 67 W', 'Charger EliteGadgets 67 W_1758875222.jpeg', 'Wall Charger,\r\nSuitable For: Mobile,\r\nNo Cable Included,\r\nUniversal Voltage.', 283, 2, '1', '2025-09-26 13:57:02.813674'),
-(9, 'Apple iPhone 17', 'Apple iPhone 17_1758875436.jpeg', '256 GB ROM, 1\r\n6.0 cm (6.3 inch) Super Retina XDR Display, \r\n48MP + 48MP | 18MP Front Camera, \r\nA19 Chip, \r\n6 Core Processor Processor.', 82999, 1, '1', '2025-09-26 14:00:36.415872'),
-(10, 'realme P4 5G', 'realme P4 5G_1759147927.jpeg', '8 GB RAM | 128 GB ROM,\r\n17.2 cm (6.77 inch) Display,\r\n50MP + 8MP | 16MP Front Camera,\r\n7000 mAh Battery,\r\nMediatek Dimensity 7400 Processor.', 19499, 1, '1', '2025-09-29 17:42:07.131418'),
-(11, 'realme P3 Pro 5G', 'realme P3 Pro 5G_1759148137.jpeg', '8 GB RAM | 128 GB ROM,\r\n17.35 cm (6.83 inch) Display,\r\n50MP + 2MP | 16MP Front Camera,\r\n6000 mAh Battery,\r\n7s Gen 3 Mobile Platform Processor.', 16999, 1, '1', '2025-09-29 17:45:37.503636'),
-(12, 'Noise Aura Buds', 'Noise Aura Buds_1759470841.jpeg', 'Battery life: 60 hrs Playtime,\r\nENC with Quad Mic,\r\nDriver Size : 12mm polymer composite driver,\r\nInstacharge: 10-min = 150-min playtime,\r\nLow Latency(Upto 50ms).', 1499, 3, '1', '2025-10-03 11:24:01.806162'),
-(13, 'OPPO Enco Buds3 Pro', 'OPPO Enco Buds3 Pro_1759471019.jpeg', 'Battery life: 54 hr | Charging time: 2.0 hr,\r\n12.4mm Dynamic Bass Boost Driver - Powerful & Rhythmic Bass,\r\nFast Charging- 4Hrs Playback after 10mins Charge,\r\nIntelligent Touch Controls | IP55 Dust &Water Resistant.', 1799, 3, '1', '2025-10-03 11:26:59.068164'),
-(14, 'OPPO Enco Buds3 Pro', 'OPPO Enco Buds3 Pro_1759471138.jpeg', 'Battery life: 28 hrs | Charging time: 1.5 hrs,\r\n10mm Dynamic Bass Boost Driver - Powerful & Rhythmic Bass,\r\nEnco Live Stereo Sound Effects,\r\nAI Deep Noise Cancellation | 80ms Ultra Low Latency game mode.', 1399, 3, '1', '2025-10-03 11:28:58.484094'),
-(15, 'USB Type C Cable', 'USB Type C Cable_1759471431.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: USB Type A | Connector Two: USB Type C,\r\nCable Speed: 680 Mbps.\r\nMobile, Tablet.', 210, 2, '1', '2025-10-03 11:33:51.784597'),
-(16, 'MarQ Power Bank', 'MarQ Power Bank_1759471631.jpeg', 'Capacity: 10000 mAh,\r\nLithium Polymer Battery | Type-C Connector,\r\nPower Source: DC 5V,9V,12V,\r\nCharging Cable Included.', 3999, 2, '1', '2025-10-03 11:37:11.243206'),
-(17, 'PTron Power Bank', 'PTron Power Bank_1759471796.jpeg', 'Pocket Size Power Bank with Max. Output: 22.5W (Max.),\r\nCharging Protocols: PD 3.0, QC 3.0, VOOC, PPS & Number of Ports: 3 (1 Type-C, 2 USB A),\r\nCompatibility: All iPhones & Android Phones Charging Compatibility,\r\nWeight: 407 g | Capacity: 20000 mAh.', 1199, 2, '1', '2025-10-03 11:39:56.892581'),
-(18, 'PTron Type C', 'PTron Type C_1759471978.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: Type C,\r\nConnector Two: Type C,\r\nCable Speed: 480 Mbps | Mobile | Tablet.', 198, 2, '1', '2025-10-03 11:42:58.819258'),
-(19, 'Noise Buds VS102', 'Noise Buds VS102_1761904945.jpeg', 'Bluetooth version: 5.3,\r\nWireless range: 10 m,\r\nBattery life: 70 hrs,\r\nBattery life: 70 Hour Playtime | Type - C Charging Port,\r\nUnique Flybird Design | ENC with Quad Mic.', 1099, 3, '1', '2025-10-31 15:32:25.099519'),
-(20, 'ASUS Vivobook 15 Intel Core i3', 'ASUS Vivobook 15 Intel Core i3_1763035300.jpeg', 'Stylish & Portable Thin and Light Laptop,\r\n15.6 Inch Full HD, 16:9 aspect ratio, LED Backlit, 60Hz refresh rate, 250nits, 45% NTSC color gamut, Anti-glare display,\r\nFinger Print Sensor for Faster System Access,\r\nLight Laptop without Optical Disk Drive.', 34990, 4, '1', '2025-11-13 17:31:40.829247');
+INSERT INTO `product` (`product_Id`, `product_name`, `product_image`, `product_desc`, `product_price`, `categorie_id`, `product_status`, `product_off`, `product_creatdated`) VALUES
+(1, 'realme P4 Pro 5G', 'realme P4 Pro 5G_1758870375.jpeg', '8 GB RAM | 256 GB ROM,\r\n17.27 cm (6.8 inch) Display,\r\n50MP + 8MP | 50MP Front Camera,\r\n7000 mAh Battery,\r\nSnapdragon 7 Gen 4 Mobile Processor.', 34999, 1, '1', 40, '2025-09-26 12:36:15.435172'),
+(2, 'Samsung Galaxy A35 5G', 'Samsung Galaxy A35 5G_1758870502.jpeg', '8 GB RAM | 128 GB ROM | Expandable Upto 1 TB,\r\n16.76 cm (6.6 inch) Full HD+ Display,\r\n50MP + 8MP + 5MP | 13MP Front Camera,\r\n5000 mAh Battery,\r\nSamsung Exynos 1380 Processor.', 27999, 1, '1', 32, '2025-09-26 12:38:22.340524'),
+(3, 'Samsung Galaxy S24 FE 5G', 'Samsung Galaxy S24 FE 5G_1758870636.jpeg', '8 GB RAM | 256 GB ROM,\r\n17.02 cm (6.7 inch) Full HD+ Display,\r\n50MP + 12MP | 10MP Front Camera,\r\n4700 mAh Battery,\r\nExynos 2400e Processor.', 40999, 1, '1', 7, '2025-09-26 12:40:36.809211'),
+(4, 'Apple iPhone 17', 'Apple iPhone 17_1758870730.jpeg', '256 GB ROM,\r\n16.0 cm (6.3 inch) Super Retina XDR Display,\r\n48MP + 48MP | 18MP Front Camera,\r\nA19 Chip, 6 Core Processor Processor.', 92999, 1, '1', 7, '2025-09-26 12:42:10.507793'),
+(5, 'realme Buds T200', 'realme Buds T200_1758871015.jpeg', 'With Mic:Yes,\r\nWireless range: 10 m.\r\nBattery life: 48 hr | Charging time: 2,\r\n12.4mm Dynamic Bass Driver,\r\n48 Hours Total Playback | 10mins Charge for 5 Hrs Playback,\r\nDual-mic AI Deep Call Noise Cancellation,\r\nDual Device Connection,\r\nLow Latency for Ga', 1399, 3, '1', 20, '2025-09-26 12:46:55.321459'),
+(6, 'OnePlus Nord Buds 3r', 'OnePlus Nord Buds 3r_1758871100.jpeg', 'Fast Charging:Get 8 hours of playback with just 10 minutes of charging.Up to 54 hours of total music time on a full charge.', 1599, 3, '1', 0, '2025-09-26 12:48:20.615559'),
+(7, 'OnePlus Nord Buds 3r', 'OnePlus Nord Buds 3r_1758871346.jpeg', 'Fast Charging:Get 8 hours of playback with just 10 minutes of charging.Up to 54 hours of total music time on a full charge.\r\n\r\nTitanium-coated Drivers:Enjoy powerful bass and crisp audio with 12.4mm Titanium-coated drivers and fixed spatial audio.', 1699, 3, '1', 0, '2025-09-26 12:52:26.342437'),
+(8, 'Charger EliteGadgets 67 W', 'Charger EliteGadgets 67 W_1758875222.jpeg', 'Wall Charger,\r\nSuitable For: Mobile,\r\nNo Cable Included,\r\nUniversal Voltage.', 783, 2, '1', 50, '2025-09-26 13:57:02.813674'),
+(9, 'Apple iPhone 17', 'Apple iPhone 17_1758875436.jpeg', '256 GB ROM, 1\r\n6.0 cm (6.3 inch) Super Retina XDR Display, \r\n48MP + 48MP | 18MP Front Camera, \r\nA19 Chip, \r\n6 Core Processor Processor.', 92999, 1, '1', 7, '2025-09-26 14:00:36.415872'),
+(10, 'realme P4 5G', 'realme P4 5G_1759147927.jpeg', '8 GB RAM | 128 GB ROM,\r\n17.2 cm (6.77 inch) Display,\r\n50MP + 8MP | 16MP Front Camera,\r\n7000 mAh Battery,\r\nMediatek Dimensity 7400 Processor.', 25999, 1, '1', 11, '2025-09-29 17:42:07.131418'),
+(11, 'realme P3 Pro 5G', 'realme P3 Pro 5G_1759148137.jpeg', '8 GB RAM | 128 GB ROM,\r\n17.35 cm (6.83 inch) Display,\r\n50MP + 2MP | 16MP Front Camera,\r\n6000 mAh Battery,\r\n7s Gen 3 Mobile Platform Processor.', 26999, 1, '1', 17, '2025-09-29 17:45:37.503636'),
+(12, 'Noise Aura Buds', 'Noise Aura Buds_1759470841.jpeg', 'Battery life: 60 hrs Playtime,\r\nENC with Quad Mic,\r\nDriver Size : 12mm polymer composite driver,\r\nInstacharge: 10-min = 150-min playtime,\r\nLow Latency(Upto 50ms).', 1499, 3, '1', 27, '2025-10-03 11:24:01.806162'),
+(13, 'OPPO Enco Buds3 Pro', 'OPPO Enco Buds3 Pro_1759471019.jpeg', 'Battery life: 54 hr | Charging time: 2.0 hr,\r\n12.4mm Dynamic Bass Boost Driver - Powerful & Rhythmic Bass,\r\nFast Charging- 4Hrs Playback after 10mins Charge,\r\nIntelligent Touch Controls | IP55 Dust &Water Resistant.', 1799, 3, '1', 10, '2025-10-03 11:26:59.068164'),
+(14, 'OPPO Enco Buds3 Pro', 'OPPO Enco Buds3 Pro_1759471138.jpeg', 'Battery life: 28 hrs | Charging time: 1.5 hrs,\r\n10mm Dynamic Bass Boost Driver - Powerful & Rhythmic Bass,\r\nEnco Live Stereo Sound Effects,\r\nAI Deep Noise Cancellation | 80ms Ultra Low Latency game mode.', 1399, 3, '1', 10, '2025-10-03 11:28:58.484094'),
+(15, 'USB Type C Cable', 'USB Type C Cable_1759471431.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: USB Type A | Connector Two: USB Type C,\r\nCable Speed: 680 Mbps.\r\nMobile, Tablet.', 410, 2, '1', 60, '2025-10-03 11:33:51.784597'),
+(16, 'MarQ Power Bank', 'MarQ Power Bank_1759471631.jpeg', 'Capacity: 10000 mAh,\r\nLithium Polymer Battery | Type-C Connector,\r\nPower Source: DC 5V,9V,12V,\r\nCharging Cable Included.', 5999, 2, '1', 39, '2025-10-03 11:37:11.243206'),
+(17, 'PTron Power Bank', 'PTron Power Bank_1759471796.jpeg', 'Pocket Size Power Bank with Max. Output: 22.5W (Max.),\r\nCharging Protocols: PD 3.0, QC 3.0, VOOC, PPS & Number of Ports: 3 (1 Type-C, 2 USB A),\r\nCompatibility: All iPhones & Android Phones Charging Compatibility,\r\nWeight: 407 g | Capacity: 20000 mAh.', 2199, 2, '1', 10, '2025-10-03 11:39:56.892581'),
+(18, 'PTron Type C', 'PTron Type C_1759471978.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: Type C,\r\nConnector Two: Type C,\r\nCable Speed: 480 Mbps | Mobile | Tablet.', 449, 2, '1', 35, '2025-10-03 11:42:58.819258'),
+(19, 'Noise Buds VS102', 'Noise Buds VS102_1761904945.jpeg', 'Bluetooth version: 5.3,\r\nWireless range: 10 m,\r\nBattery life: 70 hrs,\r\nBattery life: 70 Hour Playtime | Type - C Charging Port,\r\nUnique Flybird Design | ENC with Quad Mic.', 1099, 3, '1', 10, '2025-10-31 15:32:25.099519'),
+(20, 'ASUS Vivobook 15 Intel Core i3', 'ASUS Vivobook 15 Intel Core i3_1763035300.jpeg', 'Stylish & Portable Thin and Light Laptop,\r\n15.6 Inch Full HD, 16:9 aspect ratio, LED Backlit, 60Hz refresh rate, 250nits, 45% NTSC color gamut, Anti-glare display,\r\nFinger Print Sensor for Faster System Access,\r\nLight Laptop without Optical Disk Drive.', 44990, 4, '1', 25, '2025-11-13 17:31:40.829247'),
+(21, 'DELL', 'DELL_1763386023.jpeg', 'Intel Core i3 Processor (13th Gen),\r\n    16 GB DDR5 RAM,\r\n    64 bit Windows 11 Home Operating System,\r\n    512 GB SSD,\r\n    35.56 cm (14 inch) Display,\r\n    Microsoft Office 2021, Windows 11 Home,\r\n    1 Year Accidentaly Damage Protection + Onsite.', 70990, 4, '1', 48, '2025-11-17 18:57:03.764603');
 
 -- --------------------------------------------------------
 
@@ -323,7 +328,11 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `uploaded_at`) V
 (13, 20, 'ASUS Vivobook 15 Intel Core i3_1763035300_0.jpeg', '2025-11-13 17:31:40'),
 (14, 20, 'ASUS Vivobook 15 Intel Core i3_1763035300_1.jpeg', '2025-11-13 17:31:40'),
 (15, 20, 'ASUS Vivobook 15 Intel Core i3_1763035300_2.jpeg', '2025-11-13 17:31:40'),
-(16, 20, 'ASUS Vivobook 15 Intel Core i3_1763035300_3.jpeg', '2025-11-13 17:31:40');
+(16, 20, 'ASUS Vivobook 15 Intel Core i3_1763035300_3.jpeg', '2025-11-13 17:31:40'),
+(17, 21, 'DELL_1763386023_0.jpeg', '2025-11-17 18:57:03'),
+(18, 21, 'DELL_1763386023_1.jpeg', '2025-11-17 18:57:03'),
+(19, 21, 'DELL_1763386023_2.jpeg', '2025-11-17 18:57:03'),
+(20, 21, 'DELL_1763386023_3.jpeg', '2025-11-17 18:57:03');
 
 -- --------------------------------------------------------
 
@@ -1634,14 +1643,16 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 (17, 'kishan', 'kishan@gmail.com', '$2y$10$vN9AF1oBXWr0l1kO97qN/OLDClQdqyM6rUjLn2n2RR3jmfemGfnQ6', '9409601795', '404, varni, pasodra gam,kamrej, surat.', 'surat', NULL, '1', '1', 'India', 'Maharashtra', 'Nashik - 422001', NULL, '2025-11-07 18:36:16', '1'),
 (18, 'xyz', 'xyz@gmail.com', '$2y$10$hKDV6ZJzafLX.pAzgNSt6ODAoaXdYTTMhPR7jGonO.Mn7m6kQacBq', '', '403, vraj vihar, jagatnaka, varachha, surat.', '', NULL, '2', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
 (19, 'neel321', 'neel321@gmail.com', '$2y$10$3w5Th7QXBjkQl22x6qP4vOzBO2QI1XjlqUNCpLp.6c5bkC94.U4Xy', '', 'gujarat', '', NULL, '1', '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
-(20, 'om987@', 'om987@gmail.com', '$2y$10$//4BIQdh5xqzcoiQvG7XVeW3jfHhSi2eiddQ2JYMtiMWX4gRCdvra', NULL, 'Raipur, Chhatisagadh.', NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
+(20, 'om987', 'om987@gmail.com', '$2y$10$//4BIQdh5xqzcoiQvG7XVeW3jfHhSi2eiddQ2JYMtiMWX4gRCdvra', '9875468151', 'Raipur, Chhatisagadh.', NULL, NULL, '', '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
 (21, 'khushal', 'khushal@gmail.com', '$2y$10$Pmd6xV4ekYj4sy6gi364B.vMVrz.o54mdQEOsdtzRGYbG8C8rs2sa', NULL, 'New Darvaja, Rajeshthan', NULL, NULL, NULL, '1', 'India', 'Rajasthan', 'Bikaner - 334001', NULL, '2025-11-07 18:36:16', '1'),
 (22, 'ravi003', 'ravi@gmail.com', '$2y$10$Ap3v2V9Mf5fMObioMk6XTOTi3dF3nwHyndN4jqUPiM19tmH1PWKze', NULL, 'gujarat', NULL, NULL, NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
 (23, 'ketan59', 'ketan@gmail.com', '$2y$10$CI2dZj68aYfpXanmkSdXeeIz/isKsA4DJF9scBLpDtxe.apl2aE5C', NULL, 'Aanad, Gujarat', NULL, NULL, NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
 (24, 'neelpatel', 'neelpatel@gmail.com', '$2y$10$1pVkKlmQ45745GZKJuCtrOEm4soKLCmEFhuXWpRbVZmfTn5ZBt29i', NULL, 'Sarathana Nature Park, Surat.', NULL, NULL, NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1'),
 (25, 'ravina', 'ravina852@gmail.com', '$2y$10$y6cpD.xlld4DmuNG3kJWJe5BDAeXJyfjunrNwZa7HvKOzICCUm9ju', '9898989898', 'Rajasthan', 'Rajasthan', NULL, '2', '1', 'India', 'Rajasthan', 'Udaipur - 313001', NULL, NULL, '1'),
 (26, 'vishal98', 'vishal@gmail.com', '$2y$10$DhDhPRmUsu.eK6rhJF7OxeALWZ1/FY1lQn.1wAM9wm3HY6fUU0BlG', '7539518528', 'Mota Varachha, Surat,Gujarat.', NULL, 'vishal98_1762863111.jpg', '1', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1'),
-(27, 'sujal87', 'sujal87@gmail.com', '$2y$10$TdmZ0gnyij13nU9ooTj/HuNO31cJjfRCrbx9UNx1QugiZVA83vwV.', NULL, '32, darshan, kamrej, surat.', NULL, NULL, NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1');
+(27, 'sujal87', 'sujal87@gmail.com', '$2y$10$TdmZ0gnyij13nU9ooTj/HuNO31cJjfRCrbx9UNx1QugiZVA83vwV.', NULL, '32, darshan, kamrej, surat.', NULL, NULL, NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1'),
+(28, 'umang3110', 'umang3110@gmail.com', '$2y$10$Y00rZm86Kg5sqbFzk67gIuQ8mvZ5NQeO7jhDe5dgFBsxIg3msMtDa', NULL, 'Vesu Ring Road, Surat.', NULL, 'umang3110_1763096661.png', NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1'),
+(29, 'divyraj', 'divyraj@gmail.com', '$2y$10$OexejsLHYmtDf/xu2LctV.k8r6g5Mq9NmO3pI3cIqPMzfOdFkEYAG', NULL, 'kapodra , Surat.', NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL, NULL, '1');
 
 -- --------------------------------------------------------
 
@@ -1817,7 +1828,28 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (176, 8, 20, '2025-11-13 17:37:27'),
 (177, 8, 14, '2025-11-13 17:39:45'),
 (178, 8, 9, '2025-11-13 18:13:10'),
-(179, 8, 2, '2025-11-13 18:13:18');
+(179, 8, 2, '2025-11-13 18:13:18'),
+(180, 28, 12, '2025-11-14 10:30:03'),
+(181, 28, 7, '2025-11-14 10:30:04'),
+(182, 28, 6, '2025-11-14 10:30:05'),
+(183, 28, 5, '2025-11-14 10:30:06'),
+(184, 28, 4, '2025-11-14 10:30:10'),
+(185, 28, 3, '2025-11-14 10:30:11'),
+(186, 28, 1, '2025-11-14 10:30:13'),
+(187, 28, 2, '2025-11-14 10:30:14'),
+(188, 28, 8, '2025-11-14 10:30:18'),
+(189, 28, 15, '2025-11-14 10:30:19'),
+(190, 28, 16, '2025-11-14 10:30:20'),
+(191, 28, 20, '2025-11-14 10:30:22'),
+(192, 29, 16, '2025-11-17 14:32:34'),
+(193, 29, 4, '2025-11-17 14:32:44'),
+(194, 29, 3, '2025-11-17 14:32:46'),
+(195, 29, 2, '2025-11-17 14:32:46'),
+(196, 29, 1, '2025-11-17 14:32:47'),
+(197, 29, 9, '2025-11-17 14:32:50'),
+(198, 29, 10, '2025-11-17 14:32:51'),
+(199, 29, 11, '2025-11-17 14:32:51'),
+(200, 29, 21, '2025-11-17 18:58:22');
 
 --
 -- Indexes for dumped tables
@@ -1935,25 +1967,25 @@ ALTER TABLE `coupons`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `product_Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `sitedetail`
@@ -1977,19 +2009,19 @@ ALTER TABLE `subscriber`
 -- AUTO_INCREMENT for table `userdata`
 --
 ALTER TABLE `userdata`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `viewcart`
 --
 ALTER TABLE `viewcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=119;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=201;
 
 --
 -- Constraints for dumped tables

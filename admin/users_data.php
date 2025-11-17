@@ -343,16 +343,41 @@ $end = min($page * $total_data, $total_user);
             gap: 10px;
         }
 
-        .user-email {
+        .user-ph {
             display: flex;
             align-items: center;
             justify-content: start;
         }
 
-        .user-ph {
+        .user-email {
+            margin: auto;
             display: flex;
             align-items: center;
             justify-content: start;
+            position: relative;
+            /* display: inline-block; */
+            cursor: pointer;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            width: auto;
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            position: absolute;
+            left: 0;
+            top: 120%;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .user-email:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
         }
     </style>
 </head>
@@ -394,6 +419,7 @@ $end = min($page * $total_data, $total_user);
                             <?php
                             if (mysqli_num_rows($result_email) > 0) {
                                 while ($row = mysqli_fetch_assoc($result_email)) {
+                                    $email = $row['email'];
                                     // Image logic
                                     $image_path = "";
                                     if (!empty($row['image'])) {
@@ -410,7 +436,7 @@ $end = min($page * $total_data, $total_user);
                                     echo "<tr>";
                                     echo '<td><input type="checkbox" class="checkbox-style singleCheck"></td>';
                                     echo "<td><div class='user-info'><img src='{$image_path}' alt='User Image'><span>{$row['username']}</span></div></td>";
-                                    echo "<td><div class='user-email'><i class='fa-regular fa-envelope'></i>&nbsp;{$row['email']}</div></td>";
+                                    echo "<td><p class='user-email'><i class='fa-regular fa-envelope'></i>&nbsp;{$email}<span class='tooltip-text'><i class='fa-regular fa-envelope'></i>&nbsp;{$email}</span></p></td>";
                                     echo "<td><div class='user-ph><div class='user-ph'><i class='fa-regular fa-phone'></i>&nbsp" . ($row['phone'] ?: 'N/A') . "</div></td>";
                                     echo "<td>" . ($row['city'] ?: 'N/A') . "</td>";
 

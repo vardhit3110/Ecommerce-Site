@@ -138,6 +138,11 @@ session_start();
         .card-img-container {
             position: relative;
         }
+
+        .off-price {
+            display: flex;
+            gap: 4px;
+        }
     </style>
 </head>
 
@@ -219,6 +224,10 @@ session_start();
                         $product_name = $row['product_name'];
                         $product_desc = $row['product_desc'];
                         $product_price = $row['product_price'];
+                        $product_off = $row['product_off'];
+
+                        $offprice = $product_price * $product_off / 100;
+                        $finalPrice = $product_price - $offprice;
 
                         // Check if product is in user's wishlist
                         $is_in_wishlist = false;
@@ -259,10 +268,15 @@ session_start();
                         echo '</div>
                                     <div class="card-body">
                                         <h6 class="card-title text-primary">' . htmlspecialchars($product_name) . '</h6>
-                                        <p class="card-text">' . substr($product_desc, 0, 90) . '...</p>
+                                        <p class="card-text" title="' . $product_desc . '">' . substr($product_desc, 0, 32) . '...</p>
+                                        <div class="off-price">
+                                        <li class="list-group-item"><b>Price:</b> ₹' . number_format((float) $finalPrice) . '</li>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        &nbsp;&nbsp;<del style="color: #888;">₹' . number_format((float) $product_price) . '</del>
+                                        <span style="color: red; font-style: italic; font-size: 14px; font-weight: 600;">' . htmlspecialchars($product_off) . '% Off</span>
+                                        </div>
                                     </div>
                                     <ul class="list-group list-group-flush">
-                                        <li class="list-group-item"><b>Price:</b> ₹' . number_format((float) $product_price) . '</li>
+                                        
                                     </ul>
                                     <div class="card-body text-center">';
 
