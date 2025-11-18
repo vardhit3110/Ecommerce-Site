@@ -550,7 +550,7 @@ if (mysqli_num_rows($result) > 0) {
     </nav>
 
     <!-- Searching -->
-    
+
 
     <?php if (isset($_SESSION['email'])): ?>
       <?php

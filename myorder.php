@@ -392,7 +392,7 @@ if ($row = mysqli_fetch_assoc($result)) {
                                                                 <div class="product-row"
                                                                     style="display:flex;align-items:flex-start;gap:15px;background:#f9f9f9;border-radius:10px;padding:10px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
                                                                     <img src="<?php echo $image; ?>" alt="<?php echo $pname; ?>"
-                                                                        style="width:90px;height:90px;border-radius:8px;object-fit:cover;">
+                                                                        style="width:90px;height:90px;border-radius:8px;object-fit:contain;">
                                                                     <div style="display:flex;flex-direction:column;">
                                                                         <strong
                                                                             style="font-size:15px;color:#333;"><?php echo $pname; ?></strong>
@@ -443,8 +443,6 @@ if ($row = mysqli_fetch_assoc($result)) {
             ?>
         </div>
     </div>
-
-
     <?php include "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>

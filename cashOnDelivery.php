@@ -29,6 +29,7 @@ mysqli_stmt_bind_param($stmt, "i", $user_id);
 mysqli_stmt_execute($stmt);
 $result = mysqli_stmt_get_result($stmt);
 
+
 $cart_items = [];
 $total = 0;
 
@@ -240,14 +241,14 @@ mysqli_close($conn);
                                 <tr class="table-bordered border-secondary table-light">
                                     <td colspan="4" class="text-end">Shipping</td>
 
-                                    <td>₹
+                                    <td>+ ₹
                                         <?php echo number_format($shipping, 2); ?>
                                     </td>
                                 </tr>
                                 <tr class="table-bordered border-secondary table-light">
                                     <td colspan="4" class="text-end">Discount (<?php echo strtoupper($coupon_code); ?>)
                                     </td>
-                                    <td class="text-success fw-semibold">
+                                    <td class="fw-semibold">-
                                         ₹<?php echo number_format($discount_amount, 2); ?>
                                     </td>
                                 </tr>
