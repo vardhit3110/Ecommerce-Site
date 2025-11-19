@@ -144,6 +144,174 @@ session_start();
             display: flex;
             gap: 4px;
         }
+
+        #card-color {
+            color: #0023c0ff;
+            font-weight: 600;
+        }
+
+        #main-container {
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        #main-container:hover {
+            transform: scale(1.03);
+            /* box-shadow: 0 6px 18px rgba(0, 119, 204, 0.3); */
+        }
+
+        .not-data {
+            background-color: #ffebebff;
+            border-radius: 8px;
+        }
+
+        .detail-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(0, 119, 204, 0.3);
+            background: linear-gradient(135deg, #e0f7ff, #cceeff);
+        }
+
+        .carousel-inner img {
+            height: 360px;
+            object-fit: fill;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .carousel-inner img {
+                height: 280px;
+            }
+        }
+
+        .top-deals-container {
+            width: 100%;
+            background-color: #ffffffff;
+            padding: 40px 50px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-deals-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Product Card */
+        .product-card {
+            border: none;
+            text-align: center;
+            background: white;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            width: 200px;
+            flex: 0 0 auto;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            padding: 10px;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .product-info {
+            padding: 10px 5px;
+        }
+
+        .product-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #222;
+        }
+
+        .product-price {
+            font-size: 0.9rem;
+            color: #000000ff;
+            font-weight: 700;
+        }
+
+        .order-count {
+            font-size: 0.85rem;
+            color: #28a745;
+        }
+
+        .carousel-inner {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+        }
+
+        .carousel-inner::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #333;
+            border: none;
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            z-index: 5;
+        }
+
+        .carousel-btn:hover {
+            background-color: #007bff;
+        }
+
+        .carousel-btn.prev {
+            left: 10px;
+        }
+
+        .carousel-btn.next {
+            right: 10px;
+        }
+
+        @media (max-width: 1200px) {
+            .product-card {
+                width: 180px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .product-card {
+                width: 160px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-card {
+                width: 140px;
+            }
+
+            .top-deals-title {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .product-card {
+                width: 120px;
+            }
+        }
     </style>
 </head>
 
@@ -353,8 +521,103 @@ session_start();
         }
         ?>
         <br>
-    </main>
 
+        <!-- top product -->
+        <div class="container-fluid top-deals-container">
+            <div class="d-flex justify-content-between align-items-centermb-2">
+                <div class="top-deals-title text-dark" style="font-weight: 700; margin-left: 20px;">
+                    <?php echo $category_name; ?> Top Deals
+                </div>
+                <div>
+                    <button class="carousel-btn prev" id="prevBtn">&#10094;</button>
+                    <button class="carousel-btn next" id="nextBtn">&#10095;</button>
+                </div>
+            </div>
+
+            <div class="carousel slide" id="topDealsCarousel">
+                <div class="carousel-inner gap-5" id="carouselItems">
+                    <?php
+                    $sql = "SELECT product_details FROM orders WHERE order_status = '4'";
+                    $result = mysqli_query($conn, $sql);
+
+                    $productCounts = [];
+                    $categoryId = intval($_GET['id']);
+
+                    if ($result && mysqli_num_rows($result) > 0) {
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            $products = json_decode($row['product_details'], true);
+
+                            if (is_array($products)) {
+                                foreach ($products as $p) {
+
+                                    $productName = mysqli_real_escape_string($conn, trim($p['product_name']));
+                                    $qty = intval($p['quantity']);
+
+                                    $checkQuery = "SELECT product_Id FROM product WHERE product_name = '$productName' AND categorie_id = $categoryId LIMIT 1";
+                                    $checkRes = mysqli_query($conn, $checkQuery);
+                                    if ($checkRes && mysqli_num_rows($checkRes) > 0) {
+                                        if (!isset($productCounts[$productName])) {
+                                            $productCounts[$productName] = 0;
+                                        }
+                                        $productCounts[$productName] += $qty;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // top 8 products
+                    arsort($productCounts);
+                    $topProducts = array_slice($productCounts, 0, 8, true);
+
+                    $productData = [];
+
+                    foreach ($topProducts as $pname => $count) {
+                        $query = "SELECT p.product_Id, p.product_name, p.product_image, p.categorie_id, p.product_price, c.categorie_name 
+                       FROM product p INNER JOIN categories c ON p.categorie_id = c.categorie_id WHERE p.product_name = '" . mysqli_real_escape_string($conn, $pname) . "' AND p.categorie_id = $categoryId LIMIT 1";
+                        $res = mysqli_query($conn, $query);
+                        if ($res && mysqli_num_rows($res) > 0) {
+                            $data = mysqli_fetch_assoc($res);
+                            $data['count'] = $count;
+                            $productData[] = $data;
+                        }
+                    }
+
+                    if (!empty($productData)) {
+                        foreach ($productData as $p) {
+                            $pPrice = $p['product_price'];
+                            echo '<div class="product-card">
+                                    <a href="viewproduct.php?Productid=' . $product_id . '" class="text-decoration-none">
+                                        <img src="./admin/images/product_img/' . htmlspecialchars($p['product_image']) . '" alt="' . htmlspecialchars($p['product_name']) . '">
+                                        <div class="product-info">
+                                            <div class="product-name">' . htmlspecialchars($p['product_name']) . '</div>
+                                            <div class="product-price">₹' . htmlspecialchars(number_format($pPrice, 0)) . '</div>
+                                            <div class="order-count">Ordered ' . intval($p['count']) . ' times</div>
+                                        </div>
+                                    </a>
+                                </div>';
+                        }
+                    } else {
+                        echo '<p class="text-center text-muted">No Deal Orders Found.</p>';
+                    }
+                    ?>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const carousel = document.getElementById('carouselItems');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+
+        nextBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: 300, behavior: 'smooth' });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            carousel.scrollBy({ left: -300, behavior: 'smooth' });
+        });
+    </script>
     <?php require_once "footer.php"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 

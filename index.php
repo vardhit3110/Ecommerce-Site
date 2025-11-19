@@ -249,14 +249,33 @@ session_start();
             $result = mysqli_stmt_get_result($stmt);
 
             if (mysqli_num_rows($result) > 0) {
-                echo '<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">';
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $catid = $row['categorie_id'];
-                    $catImage = $row['categorie_image'];
-                    $catname = $row['categorie_name'];
-                    $catdesc = $row['categorie_desc'];
 
-                    echo '<div class="col">
+
+                echo '
+        <div id="catSlider" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+        ';
+
+                $i = 0;
+                $items = [];
+
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $items[] = $row;
+                }
+
+                $chunks = array_chunk($items, 4);
+
+                foreach ($chunks as $index => $chunk) {
+                    echo '<div class="carousel-item ' . ($index == 0 ? 'active' : '') . '">
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4">';
+
+                    foreach ($chunk as $row) {
+                        $catid = $row['categorie_id'];
+                        $catImage = $row['categorie_image'];
+                        $catname = $row['categorie_name'];
+                        $catdesc = $row['categorie_desc'];
+
+                        echo '<div class="col">
                         <div class="card h-100" id="main-container" onclick="window.location.href=\'viewproductList.php?id=' . $catid . '\'">
                             <div class="p-2">
                                 <img src="./admin/images/' . htmlspecialchars($catImage) . '" class="card-img-top" alt="' . htmlspecialchars($catname) . '" style="height: 250px; object-fit: contain; border-radius: 5px;">
@@ -264,23 +283,39 @@ session_start();
                             <div class="card-body text-center">
                                 <h5 class="card-title" id="card-color">' . htmlspecialchars($catname) . '</h5>
                                 <p class="card-text" style="font-size: 0.9rem;">' . htmlspecialchars($catdesc) . '</p>
-                                <a href="viewproductList.php?id=' . $catid . '" class="btn btn-primary mt-2">View All</a>
                             </div>
                         </div>
                     </div>';
+                    }
+
+                    echo '</div></div>';
                 }
-                echo '</div><br><br>';
+
+                // Slider Controls
+                echo '
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#catSlider" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#catSlider" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+        </div><br><br>';
             } else {
                 echo '<div class="not-data text-center">
-                    <div class="container">
-                        <p class="display-5" style="font-weight: 500;">Sorry, no Category available.</p><br>
-                        <p class="lead"> We will update soon.</p>
-                    </div>
-                </div><br><br>';
+            <div class="container">
+                <p class="display-5" style="font-weight: 500;">Sorry, no Category available.</p><br>
+                <p class="lead"> We will update soon.</p>
+            </div>
+        </div><br><br>';
             }
             mysqli_stmt_close($stmt);
         }
         ?>
+
 
         <!-- Dynamic Top Deals Section -->
         <div class="container-fluid top-deals-container">

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 18, 2025 at 01:44 PM
+-- Generation Time: Nov 19, 2025 at 02:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -68,7 +68,8 @@ INSERT INTO `categories` (`categorie_id`, `categorie_name`, `categorie_image`, `
 (1, 'Mobile Phones', 'Mobile Phones.png', 'Latest smartphones from top brands - find your perfect phone today.', '1', '2025-09-26 12:28:25'),
 (2, 'Mobile Accessories', 'Mobile Accessories.png', 'Screen protectors, stylish back covers, and magnetic phone holders - protect, style.', '1', '2025-09-26 12:29:07'),
 (3, 'Buds', 'Buds.png', 'Auto pair. Noise cancel. Touch control. Tiny buds, big performance - perfect for work & workouts.', '1', '2025-09-26 12:30:14'),
-(4, 'Laptops', 'Laptops_1763034773.png', 'Explore laptops built for every need — smart, fast, and ready for anything.', '1', '2025-11-13 17:22:53');
+(4, 'Laptops', 'Laptops_1763034773.png', 'Explore laptops built for every need — smart, fast, and ready for anything.', '1', '2025-11-13 17:22:53'),
+(5, 'Laptop Accessories', 'Laptop Accessories_1763549581.png', 'Upgrade your workspace with sleek and smart laptop accessories!', '1', '2025-11-19 16:23:01');
 
 -- --------------------------------------------------------
 
@@ -94,7 +95,7 @@ CREATE TABLE `coupons` (
 
 INSERT INTO `coupons` (`id`, `promocode`, `discount`, `min_bill_price`, `usage_limit`, `used_count`, `status`, `description`, `creat_time`) VALUES
 (1, 'QZ8R3KLP', 3, 1000, 248, 2, '1', 'New User Offer', '2025-11-07 17:06:23'),
-(2, 'V9TL2XQM', 7, 2500, 200, 0, '1', 'Weekend Shopping Deal', '2025-11-07 17:06:53'),
+(2, 'V9TL2XQM', 7, 2500, 199, 1, '1', 'Weekend Shopping Deal', '2025-11-07 17:06:53'),
 (3, 'H2NB6PRJ', 5, 5000, 150, 0, '1', 'Mid-Month Saver', '2025-11-07 17:07:20'),
 (4, 'K4FJ8TZQ', 10, 8000, 119, 1, '1', 'Festival Celebration Offer', '2025-11-07 17:07:49'),
 (5, 'M1XW9GTR', 8, 12000, 98, 2, '1', 'Loyal Customer Reward', '2025-11-07 17:08:19'),
@@ -249,7 +250,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `t
 (79, 27, '2025-11-13 15:52:51', '[{\"product_name\":\"USB Type C Cable\",\"price\":210,\"quantity\":1,\"subtotal\":210}]', 260.00, 50.00, '1', '2', NULL, NULL, NULL, '4', '32, darshan, kamrej, surat.', 521667, 'none', '0', NULL),
 (80, 28, '2025-11-14 10:32:41', '[{\"product_name\":\"ASUS Vivobook 15 Intel Core i3\",\"price\":34990,\"quantity\":1,\"subtotal\":34990}]', 30841.20, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Vesu Ring Road, Surat.', 610090, 'M1XW9GTR', '4198.8', NULL),
 (81, 29, '2025-11-17 18:35:50', '[{\"product_name\":\"Apple iPhone 17\",\"price\":92999,\"quantity\":1,\"subtotal\":92999},{\"product_name\":\"MarQ Power Bank\",\"price\":5999,\"quantity\":2,\"subtotal\":11998}]', 90347.42, 50.00, '1', '2', NULL, NULL, NULL, '4', 'kapodra , Surat.', 511349, 'X6DM5JQR', '14699.58', NULL),
-(82, 30, '2025-11-18 18:00:28', '[{\"product_name\":\"MarQ Power Bank\",\"price\":5999,\"quantity\":1,\"subtotal\":5999},{\"product_name\":\"OnePlus Nord Buds 3r\",\"price\":1699,\"quantity\":2,\"subtotal\":3398},{\"product_name\":\"PTron Power Bank\",\"price\":2199,\"quantity\":1,\"subtotal\":2199}]', 10486.40, 50.00, '1', '2', NULL, NULL, NULL, '4', 'surat.', 771497, 'K4FJ8TZQ', '1159.6', NULL);
+(82, 30, '2025-11-18 18:00:28', '[{\"product_name\":\"MarQ Power Bank\",\"price\":5999,\"quantity\":1,\"subtotal\":5999},{\"product_name\":\"OnePlus Nord Buds 3r\",\"price\":1699,\"quantity\":2,\"subtotal\":3398},{\"product_name\":\"PTron Power Bank\",\"price\":2199,\"quantity\":1,\"subtotal\":2199}]', 10486.40, 50.00, '1', '2', NULL, NULL, NULL, '4', 'surat.', 771497, 'K4FJ8TZQ', '1159.6', NULL),
+(83, 26, '2025-11-19 18:22:39', '[{\"product_name\":\"HP Intel Core i7\",\"price\":77503,\"quantity\":1,\"subtotal\":77503},{\"product_name\":\"Mouse ( USB 2.0, Black )\",\"price\":599,\"quantity\":1,\"subtotal\":599}]', 72684.86, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Mota Varachha, Surat,Gujarat.', 238085, 'V9TL2XQM', '5467.14', NULL);
 
 -- --------------------------------------------------------
 
@@ -274,7 +276,7 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_Id`, `product_name`, `product_image`, `product_desc`, `product_price`, `categorie_id`, `product_status`, `product_off`, `product_creatdated`) VALUES
-(1, 'realme P4 Pro 5G', 'realme P4 Pro 5G_1758870375.jpeg', '8 GB RAM | 256 GB ROM,\r\n17.27 cm (6.8 inch) Display,\r\n50MP + 8MP | 50MP Front Camera,\r\n7000 mAh Battery,\r\nSnapdragon 7 Gen 4 Mobile Processor.', 34999, 1, '1', 40, '2025-09-26 12:36:15.435172'),
+(1, 'realme P4 Pro 5G', 'realme P4 Pro 5G_1758870375.jpeg', '8 GB RAM | 256 GB ROM,\n17.27 cm (6.8 inch) Display,\n50MP + 8MP | 50MP Front Camera,\n7000 mAh Battery,\nSnapdragon 7 Gen 4 Mobile Processor.', 34999, 1, '1', 40, '2025-09-26 12:36:15.435172'),
 (2, 'Samsung Galaxy A35 5G', 'Samsung Galaxy A35 5G_1758870502.jpeg', '8 GB RAM | 128 GB ROM | Expandable Upto 1 TB,\r\n16.76 cm (6.6 inch) Full HD+ Display,\r\n50MP + 8MP + 5MP | 13MP Front Camera,\r\n5000 mAh Battery,\r\nSamsung Exynos 1380 Processor.', 27999, 1, '1', 32, '2025-09-26 12:38:22.340524'),
 (3, 'Samsung Galaxy S24 FE 5G', 'Samsung Galaxy S24 FE 5G_1758870636.jpeg', '8 GB RAM | 256 GB ROM,\r\n17.02 cm (6.7 inch) Full HD+ Display,\r\n50MP + 12MP | 10MP Front Camera,\r\n4700 mAh Battery,\r\nExynos 2400e Processor.', 40999, 1, '1', 7, '2025-09-26 12:40:36.809211'),
 (4, 'Apple iPhone 17', 'Apple iPhone 17_1758870730.jpeg', '256 GB ROM,\r\n16.0 cm (6.3 inch) Super Retina XDR Display,\r\n48MP + 48MP | 18MP Front Camera,\r\nA19 Chip, 6 Core Processor Processor.', 92999, 1, '1', 7, '2025-09-26 12:42:10.507793'),
@@ -294,7 +296,9 @@ INSERT INTO `product` (`product_Id`, `product_name`, `product_image`, `product_d
 (18, 'PTron Type C', 'PTron Type C_1759471978.jpeg', 'Length 1 m,\r\nRound Cable,\r\nConnector One: Type C,\r\nConnector Two: Type C,\r\nCable Speed: 480 Mbps | Mobile | Tablet.', 449, 2, '1', 35, '2025-10-03 11:42:58.819258'),
 (19, 'Noise Buds VS102', 'Noise Buds VS102_1761904945.jpeg', 'Bluetooth version: 5.3,\r\nWireless range: 10 m,\r\nBattery life: 70 hrs,\r\nBattery life: 70 Hour Playtime | Type - C Charging Port,\r\nUnique Flybird Design | ENC with Quad Mic.', 1099, 3, '1', 10, '2025-10-31 15:32:25.099519'),
 (20, 'ASUS Vivobook 15 Intel Core i3', 'ASUS Vivobook 15 Intel Core i3_1763035300.jpeg', 'Stylish & Portable Thin and Light Laptop,\r\n15.6 Inch Full HD, 16:9 aspect ratio, LED Backlit, 60Hz refresh rate, 250nits, 45% NTSC color gamut, Anti-glare display,\r\nFinger Print Sensor for Faster System Access,\r\nLight Laptop without Optical Disk Drive.', 44990, 4, '1', 25, '2025-11-13 17:31:40.829247'),
-(21, 'DELL', 'DELL_1763386023.jpeg', 'Intel Core i3 Processor (13th Gen),\r\n    16 GB DDR5 RAM,\r\n    64 bit Windows 11 Home Operating System,\r\n    512 GB SSD,\r\n    35.56 cm (14 inch) Display,\r\n    Microsoft Office 2021, Windows 11 Home,\r\n    1 Year Accidentaly Damage Protection + Onsite.', 70990, 4, '1', 48, '2025-11-17 18:57:03.764603');
+(21, 'DELL', 'DELL_1763386023.jpeg', 'Intel Core i3 Processor (13th Gen),\r\n    16 GB DDR5 RAM,\r\n    64 bit Windows 11 Home Operating System,\r\n    512 GB SSD,\r\n    35.56 cm (14 inch) Display,\r\n    Microsoft Office 2021, Windows 11 Home,\r\n    1 Year Accidentaly Damage Protection + Onsite.', 70990, 4, '1', 48, '2025-11-17 18:57:03.764603'),
+(22, 'HP Intel Core i7', 'HP Intel Core i7_1763552531.jpeg', 'Intel Core i7 Processor (13th Gen),\r\n16 GB DDR4 RAM,\r\nWindows 11 Home Operating System,\r\n512 GB SSD,\r\n39.62 cm (15.6 Inch) Display,\r\n1 Year Onsite Warranty.', 77503, 4, '1', 14, '2025-11-19 17:12:11.546026'),
+(23, 'Mouse ( USB 2.0, Black )', 'Mouse ( USB 2.0, Black )_1763553682.jpeg', 'Wired,\r\nInterface: USB 2.0,\r\nOptical Mouse.', 599, 5, '1', 70, '2025-11-19 17:31:22.209109');
 
 -- --------------------------------------------------------
 
@@ -333,7 +337,12 @@ INSERT INTO `product_images` (`id`, `product_id`, `image_path`, `uploaded_at`) V
 (17, 21, 'DELL_1763386023_0.jpeg', '2025-11-17 18:57:03'),
 (18, 21, 'DELL_1763386023_1.jpeg', '2025-11-17 18:57:03'),
 (19, 21, 'DELL_1763386023_2.jpeg', '2025-11-17 18:57:03'),
-(20, 21, 'DELL_1763386023_3.jpeg', '2025-11-17 18:57:03');
+(20, 21, 'DELL_1763386023_3.jpeg', '2025-11-17 18:57:03'),
+(21, 22, 'HP Intel Core i7_1763552531_0.jpeg', '2025-11-19 17:12:11'),
+(22, 22, 'HP Intel Core i7_1763552531_1.jpeg', '2025-11-19 17:12:11'),
+(23, 22, 'HP Intel Core i7_1763552531_2.jpeg', '2025-11-19 17:12:11'),
+(24, 23, 'Mouse ( USB 2.0, Black )_1763553682_0.jpeg', '2025-11-19 17:31:22'),
+(25, 23, 'Mouse ( USB 2.0, Black )_1763553682_1.jpeg', '2025-11-19 17:31:22');
 
 -- --------------------------------------------------------
 
@@ -1635,7 +1644,7 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 (4, 'admin', 'admin@gmail.com', '$2y$10$0Jg5MUd92.NXOvFsln8cdu/UAxDE1PmMILmA5w', '9638527415', NULL, 'rajakot', NULL, '2', '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
 (5, 'anil', 'anil@gmail.com', '$2y$10$PIAUkD3hjhXLPoc9lBCBleLWBNDGVQbbpAUZaN2klpxxGd.v3838C', '9879879872', NULL, 'surat', NULL, '1', '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
 (7, 'dixitpatel', 'dixitpatel@gmail.com', '$2y$10$a0XpIEU3korUVQ3U86n5A..A4GW0orTGRzt/UFevoq2lgE7LlAfX.', '9876543210', '106, Bapunagar, India Colony, Ahmedabad..', 'surat', 'dixitpatel_1762856047.jpg', '1', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
-(8, 'vardhit', 'vamjavardhit461@gmail.com', '$2y$10$X6ESH9MDbF8pWEbm9vhsm.H18RQQ7KkhmOJnm8Jz2vIaFNxbGZDlW', '9876543210', '1021, raj mall, jaipur, rajesthan', 'Ahmedabad', 'vardhit_1762855113.jpg', '1', '1', 'India', 'Rajasthan', 'Jaipur - 302001', NULL, NULL, '1'),
+(8, 'vardhit', 'vamjavardhit461@gmail.com', '$2y$10$kPr7qxLym8QyEFQo7g1WbehTQNfNpPFaMF52Bo8nfxjPi.V5p6ZWm', '9876543210', '1021, raj mall, jaipur, rajesthan', 'Ahmedabad', 'vardhit_1762855113.jpg', '1', '1', 'India', 'Rajasthan', 'Jaipur - 302001', NULL, NULL, '1'),
 (9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', 'Mumbai', '', NULL, '', '1', 'India', 'Maharashtra', 'Mumbai - 400001', NULL, '2025-11-07 18:36:16', '1'),
 (10, 'dhruv321', 'dhruv321@gmail.com', '$2y$10$GLkGP8f2XraRWU9E.x1WU.sbXMXQCbc6eH3h224jJj0vqFl.yVh2S', '9512128080', 'sadar chowk, jetpur.', 'surat', NULL, '1', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
 (12, 'pateldix', 'pateldix@gmail.com', '$2y$10$7kiih7PgCM3zmi68q7.LVOGY6WjoShfHz97IAjd/uPmMh1u6OUs0O', '9876543210', 'Mota varachha, surat.', 'gandhinagar', NULL, '2', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
@@ -1862,7 +1871,9 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (208, 30, 19, '2025-11-18 10:35:26'),
 (209, 30, 21, '2025-11-18 10:35:31'),
 (210, 30, 20, '2025-11-18 10:35:33'),
-(211, 30, 18, '2025-11-18 12:17:12');
+(211, 30, 18, '2025-11-18 12:17:12'),
+(212, 26, 23, '2025-11-19 18:21:57'),
+(213, 26, 22, '2025-11-19 18:22:09');
 
 --
 -- Indexes for dumped tables
@@ -1968,7 +1979,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `categorie_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `categorie_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `coupons`
@@ -1986,19 +1997,19 @@ ALTER TABLE `feedback`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `product_Id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `product_images`
 --
 ALTER TABLE `product_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `sitedetail`
@@ -2028,13 +2039,13 @@ ALTER TABLE `userdata`
 -- AUTO_INCREMENT for table `viewcart`
 --
 ALTER TABLE `viewcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=212;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
 
 --
 -- Constraints for dumped tables
