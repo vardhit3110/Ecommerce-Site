@@ -41,7 +41,7 @@ $tooltipText = "Our HTML editor updates the webview automatically in real-time a
 </head>
 
 <body>
-  <?php 
+  <?php
   include "db_connect.php";
   ?>
 
@@ -56,8 +56,8 @@ $tooltipText = "Our HTML editor updates the webview automatically in real-time a
   $result = mysqli_query($conn, $sql);
 
   $productCounts = [];
-  $categoryId = intval($_GET['id']); // URL category
-  
+  $categoryId = intval($_GET['id']);
+
   if ($result && mysqli_num_rows($result) > 0) {
     while ($row = mysqli_fetch_assoc($result)) {
       $products = json_decode($row['product_details'], true);
@@ -69,19 +69,12 @@ $tooltipText = "Our HTML editor updates the webview automatically in real-time a
           $qty = intval($p['quantity']);
 
           // find product in DB with same name + category
-          $checkQuery = "SELECT product_Id FROM product 
-                               WHERE product_name = '$productName' 
-                               AND categorie_id = $categoryId 
-                               LIMIT 1";
-
+          $checkQuery = "SELECT product_Id FROM product WHERE product_name = '$productName' AND categorie_id = $categoryId LIMIT 1";
           $checkRes = mysqli_query($conn, $checkQuery);
-
           if ($checkRes && mysqli_num_rows($checkRes) > 0) {
-
             if (!isset($productCounts[$productName])) {
               $productCounts[$productName] = 0;
             }
-
             $productCounts[$productName] += $qty;
           }
         }
@@ -96,14 +89,7 @@ $tooltipText = "Our HTML editor updates the webview automatically in real-time a
   $productData = [];
 
   foreach ($topProducts as $pname => $count) {
-    $query = "SELECT p.product_Id, p.product_name, p.product_image, 
-                     p.categorie_id, p.product_price, c.categorie_name 
-              FROM product p 
-              INNER JOIN categories c ON p.categorie_id = c.categorie_id 
-              WHERE p.product_name = '" . mysqli_real_escape_string($conn, $pname) . "' 
-              AND p.categorie_id = $categoryId 
-              LIMIT 1";
-
+    $query = "SELECT p.product_Id, p.product_name, p.product_image, p.categorie_id, p.product_price, c.categorie_name FROM product p INNER JOIN categories c ON p.categorie_id = c.categorie_id WHERE p.product_name = '" . mysqli_real_escape_string($conn, $pname) . "' AND p.categorie_id = $categoryId LIMIT 1";
     $res = mysqli_query($conn, $query);
     if ($res && mysqli_num_rows($res) > 0) {
       $data = mysqli_fetch_assoc($res);
