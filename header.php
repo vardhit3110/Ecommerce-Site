@@ -544,7 +544,7 @@ if (mysqli_num_rows($result) > 0) {
       ?>
 
       <a href="about.php">About Us</a>
-      <a href="#">Contact Us</a>
+      <a href="contactUs.php">Contact Us</a>
       <a href="<?php echo isset($_SESSION['email']) ? 'feedback.php' : '#'; ?>" onclick="<?php if (!isset($_SESSION['email']))
                echo 'alert(\'Please log in to give feedback.\')'; ?>">Feedback</a>
     </nav>

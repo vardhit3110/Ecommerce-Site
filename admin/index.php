@@ -14,7 +14,7 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        :root {
+        <style> :root {
             --primary: #4361ee;
             --secondary: #3a0ca3;
             --success: #4cc9f0;
@@ -24,82 +24,107 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: url('https://images.unsplash.com/photo-1506765515384-028b60a970df') no-repeat center center/cover;
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background overlay to make login box visible */
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(2px);
+            z-index: -1;
         }
 
         .login-box {
             width: 400px;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.1);
             padding: 40px;
-            margin-top: 80px;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 15px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .login-box h5 {
             font-weight: 700;
-            color: #333;
+            color: #fff;
         }
 
         .form-control {
             border-radius: 8px;
-            background-color: #f9f9f9;
-            border: 1px solid #ccc;
+            background-color: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: #eee;
         }
 
         .form-control:focus {
-            border-color: #007bff;
+            border-color: #4cc9f0;
+            background-color: rgba(255, 255, 255, 0.3);
             box-shadow: none;
-            background-color: #fff;
+            color: white;
         }
 
         .btn-custom {
-            background-color: #007bff;
+            background: linear-gradient(135deg, #4cc9f0, #4361ee);
             border: none;
             color: white;
             font-weight: 600;
             padding: 10px;
             border-radius: 8px;
             width: 100%;
+            transition: 0.3s ease;
         }
 
         .btn-custom:hover {
-            background-color: #0056b3;
-        }
-
-        .error {
-            color: red;
-            font-size: 14px;
-            margin-top: 5px;
+            background: linear-gradient(135deg, #3a0ca3, #4361ee);
+            transform: translateY(-2px);
         }
 
         .login-icon {
-            color: #007bff;
+            color: #4cc9f0;
             font-size: 40px;
             margin-bottom: 10px;
         }
 
-        .create-account-link {
-            text-align: center;
-            margin-top: 20px;
+        .error {
+            color: #ffb3b3;
+            font-size: 14px;
+            margin-top: 5px;
         }
+    </style>
 
-        .create-account-link a {
-            color: #007bff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .create-account-link a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 
 <body>
-
     <div class="container d-flex justify-content-center align-items-center flex-column">
         <form action="partials/admin_login.php" method="post" id="myForm" class="login-box">
             <div class="text-center">

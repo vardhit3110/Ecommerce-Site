@@ -571,17 +571,15 @@ $(document).ready(function () {
                 $('#calculateShipping').prop('disabled', true).text('Saving...');
             },
             success: function (response) {
-                // Show success message
+
                 $('#saveMessage').removeClass('error').addClass('success').text('Shipping information saved successfully!');
 
-                // Reset button
                 $('#calculateShipping').prop('disabled', false).text('Add Location');
             },
             error: function (xhr, status, error) {
-                // Show error message
+
                 $('#saveMessage').removeClass('success').addClass('error').text('Error saving shipping information. Please try again.');
 
-                // Reset button
                 $('#calculateShipping').prop('disabled', false).text('Add Location');
             }
         });
