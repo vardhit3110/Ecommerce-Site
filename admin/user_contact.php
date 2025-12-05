@@ -81,12 +81,12 @@ $result = mysqli_query($conn, $query);
                             if (mysqli_num_rows($result) > 0) {
                                 while ($row = mysqli_fetch_assoc($result)) {
                                     $replyStatus = $row['reply_status'] == 1
-                                        ? '<span class="badge bg-success">Replied</span>'
-                                        : '<span class="badge bg-warning text-dark">Pending</span>';
+                                        ? '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Replied</span>'
+                                        : '<span class="badge text-warning" style="background-color: hsla(43, 100%, 95%, 1.00);">Pending</span>';
 
                                     $emailSent = $row['email_send'] == 1
-                                        ? '<span class="badge bg-success">Sent</span>'
-                                        : '<span class="badge bg-secondary">Not Sent</span>';
+                                        ? '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Sent</span>'
+                                        : '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 85%, 1.00);">Not Sent</span>';
                                     echo "<tr>
                                     <td>{$row['id']}</td>
                                     <td>{$row['name']}</td>
