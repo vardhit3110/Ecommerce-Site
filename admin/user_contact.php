@@ -1,0 +1,167 @@
+<?php
+require "slider.php";
+require "db_connect.php";
+
+// Fetch all contactus entries with user info
+$query = "SELECT c.id, c.user_id, u.username AS name, u.email AS user_email, c.subject, c.message, c.reply_status, c.email_send  FROM contactus c JOIN userdata u ON c.user_id = u.id ORDER BY c.id DESC";
+$result = mysqli_query($conn, $query);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Contact Us</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <?php require "links/icons.html"; ?>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma;
+            background: #eef2f7;
+        }
+
+        .card {
+            border-radius: 14px;
+        }
+
+        .modal-content {
+            border-radius: 16px !important;
+            border: none;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #4c6ef5, #6a9bf8);
+            color: white;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .input-label {
+            font-weight: 600;
+            color: #444;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-content">
+        <div class="header mb-4">
+            <h1><i class="fa-solid fa-envelope"></i> User Contact Messages</h1>
+        </div>
+
+        <!-- Reply Box Above Table -->
+        <div class="card shadow border-0">
+            <div class="card-body">
+                <h4 class="fw-bold mb-3">
+                    <i class="fa-solid fa-message"></i> Contact Us
+                </h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle text-center">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>ID</th>
+                                <th>User Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Reply Status</th>
+                                <th>Email Sent</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if (mysqli_num_rows($result) > 0) {
+                                while ($row = mysqli_fetch_assoc($result)) {
+                                    $replyStatus = $row['reply_status'] == 1
+                                        ? '<span class="badge bg-success">Replied</span>'
+                                        : '<span class="badge bg-warning text-dark">Pending</span>';
+
+                                    $emailSent = $row['email_send'] == 1
+                                        ? '<span class="badge bg-success">Sent</span>'
+                                        : '<span class="badge bg-secondary">Not Sent</span>';
+                                    echo "<tr>
+                                    <td>{$row['id']}</td>
+                                    <td>{$row['name']}</td>
+                                    <td>{$row['user_email']}</td>
+                                    <td>{$row['subject']}</td>
+                                    <td>{$row['message']}</td>
+                                    <td>{$replyStatus}</td>
+                                    <td>{$emailSent}</td>
+                                    <td>
+                                        <button class='btn btn-sm btn-outline-primary reply-btn'
+                                            data-contact='{$row['id']}'
+                                            data-user='{$row['user_id']}'
+                                            data-name='{$row['name']}'
+                                            data-email='{$row['user_email']}'>
+                                            <i class='bi bi-reply'></i> Reply
+                                        </button>
+                                        <a href='./partials/contact-delete.php?id={$row['id']}' class='btn btn-sm btn-outline-danger' 
+                                            onclick=\"return confirm('Are you sure you want to delete this message?');\">
+                                            <i class='bi bi-trash'></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='8' class='text-danger'>No Contact Messages Found</td></tr>";
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="replyModal">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="./partials/contact-reply-send.php" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><i class="bi bi-reply-all"></i> Send Reply</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" name="contact_id" id="modal_contact_id">
+                            <input type="hidden" name="user_id" id="modal_user_id">
+                            <p><b>User Name:</b> <span id="modal_user_name"></span></p>
+                            <p><b>Email:</b> <span id="modal_user_email"></span></p>
+                            <label class="input-label">Reply Message</label>
+                            <textarea name="reply_message" class="form-control" required
+                                placeholder="Write your reply..."></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-success"><i class="bi bi-send"></i> Send Reply</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function () {
+                $('.reply-btn').click(function () {
+
+                    $('#modal_contact_id').val($(this).data('contact'));
+                    $('#modal_user_id').val($(this).data('user'));
+                    $('#modal_user_name').text($(this).data('name'));
+                    $('#modal_user_email').text($(this).data('email'));
+                    $("#replyModal").modal("show");
+                });
+            });
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <br>
+        <div class="footer">
+            <p>&copy; 2025 Admin Panel. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>

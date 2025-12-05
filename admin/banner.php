@@ -115,9 +115,15 @@ require "db_connect.php";
             <div class="card-body">
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
                     <h4 class="fw-bold mb-3 mb-md-0"><i class="bi bi-folder2-open"></i> All Banners</h4>
-                    <a href="add_banner.php" class="btn btn-primary">
-                        <i class="fa fa-plus"></i> Add New
-                    </a>
+                    <div class="d-flex gap-2">
+                        <a href="site_settings.php" class="btn btn-secondary">
+                            <i class="fa fa-cogs" aria-hidden="true"></i> Site Settings
+                        </a>
+
+                        <a href="add_banner.php" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Add New
+                        </a>
+                    </div>
                 </div>
 
                 <div class="table-responsive">

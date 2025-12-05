@@ -442,9 +442,9 @@ if ($email == true) {
             </li>
 
             <li>
-                <a href="site_settings.php">
+                <a href="user_contact.php">
                     <i class="fa fa-cogs" aria-hidden="true"></i>
-                    <span>Site settings</span>
+                    <span>User Contact</span>
                 </a>
             </li>
 

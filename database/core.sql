@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2025 at 02:18 PM
+-- Generation Time: Dec 05, 2025 at 01:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -74,6 +74,37 @@ INSERT INTO `categories` (`categorie_id`, `categorie_name`, `categorie_image`, `
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `contactus`
+--
+
+CREATE TABLE `contactus` (
+  `id` int(100) NOT NULL,
+  `user_id` int(100) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `subject` varchar(100) NOT NULL,
+  `message` varchar(255) NOT NULL,
+  `create_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `reply_message` varchar(255) DEFAULT NULL,
+  `reply_status` enum('0','1') NOT NULL DEFAULT '0' COMMENT '0 = Not replied \r\n1 = Replied',
+  `email_send` enum('0','1') NOT NULL DEFAULT '0' COMMENT '0 = Email not sent\r\n1 = Email sent',
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `contactus`
+--
+
+INSERT INTO `contactus` (`id`, `user_id`, `name`, `email`, `subject`, `message`, `create_date`, `reply_message`, `reply_status`, `email_send`, `updated_at`) VALUES
+(1, 30, 'yash87', 'yash87@gmail.com', 'Payment Issu', 'Online Payment Not Working.', '2025-12-04 18:19:13', NULL, '0', '0', NULL),
+(2, 7, 'dixitpatel', 'dixitpatel@gmail.com', 'qqq', 'abcdefghijk...', '2025-12-04 18:19:45', NULL, '0', '0', NULL),
+(4, 27, 'sujal87', 'sujal87@gmail.com', 'aaa', 'testing', '2025-12-05 12:08:50', NULL, '0', '0', NULL),
+(5, 28, 'umang3110', 'umang3110@gmail.com', 'name', 'abc', '2025-12-05 12:09:38', 'xyz...', '1', '0', '2025-12-05 14:44:04'),
+(6, 8, 'vardhit', 'vamjavardhit461@gmail.com', 'paypal', 'please add paypal option', '2025-12-05 15:38:49', 'Next Update add To Paypal gateway', '1', '0', '2025-12-05 15:55:34');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `coupons`
 --
 
@@ -136,7 +167,8 @@ INSERT INTO `feedback` (`feedback_id`, `user_id`, `rating`, `comment`, `submisio
 (12, 13, '5', 'Mujhe product ka detail page open karne mein problem hui.', '2025-10-09', NULL),
 (13, 16, '4', 'Chat support ka option add karein, helpful rahega.', '2025-10-09', NULL),
 (14, 17, '3', 'Mobile view thoda aur responsive ho toh maza aa jaye.', '2025-10-09', NULL),
-(15, 28, '4', '\"Good\"', '2025-11-14', NULL);
+(15, 28, '4', '\"Good\"', '2025-11-14', NULL),
+(16, 30, '5', 'ABC', '2025-12-04', NULL);
 
 -- --------------------------------------------------------
 
@@ -1644,7 +1676,7 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 (4, 'admin', 'admin@gmail.com', '$2y$10$0Jg5MUd92.NXOvFsln8cdu/UAxDE1PmMILmA5w', '9638527415', NULL, 'rajakot', NULL, '2', '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
 (5, 'anil', 'anil@gmail.com', '$2y$10$PIAUkD3hjhXLPoc9lBCBleLWBNDGVQbbpAUZaN2klpxxGd.v3838C', '9879879872', NULL, 'surat', NULL, '1', '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
 (7, 'dixitpatel', 'dixitpatel@gmail.com', '$2y$10$a0XpIEU3korUVQ3U86n5A..A4GW0orTGRzt/UFevoq2lgE7LlAfX.', '9876543210', '106, Bapunagar, India Colony, Ahmedabad..', 'surat', 'dixitpatel_1762856047.jpg', '1', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
-(8, 'vardhit', 'vamjavardhit461@gmail.com', '$2y$10$kPr7qxLym8QyEFQo7g1WbehTQNfNpPFaMF52Bo8nfxjPi.V5p6ZWm', '9876543210', '1021, raj mall, jaipur, rajesthan', 'Ahmedabad', 'vardhit_1762855113.jpg', '1', '1', 'India', 'Rajasthan', 'Jaipur - 302001', NULL, NULL, '1'),
+(8, 'vardhit', 'vamjavardhit461@gmail.com', '$2y$10$v1B9.vY8ufzk4iWw8qmMZuBh/bGnlW2SCF.U1uPCbaYWHnQDQlrPu', '9876543210', '1021, raj mall, jaipur, rajesthan', 'Ahmedabad', 'vardhit_1762855113.jpg', '1', '1', 'India', 'Rajasthan', 'Jaipur - 302001', NULL, NULL, '1'),
 (9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', 'Mumbai', '', NULL, '', '1', 'India', 'Maharashtra', 'Mumbai - 400001', NULL, '2025-11-07 18:36:16', '1'),
 (10, 'dhruv321', 'dhruv321@gmail.com', '$2y$10$GLkGP8f2XraRWU9E.x1WU.sbXMXQCbc6eH3h224jJj0vqFl.yVh2S', '9512128080', 'sadar chowk, jetpur.', 'surat', NULL, '1', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
 (12, 'pateldix', 'pateldix@gmail.com', '$2y$10$7kiih7PgCM3zmi68q7.LVOGY6WjoShfHz97IAjd/uPmMh1u6OUs0O', '9876543210', 'Mota varachha, surat.', 'gandhinagar', NULL, '2', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
@@ -1892,6 +1924,13 @@ ALTER TABLE `categories`
   ADD PRIMARY KEY (`categorie_id`);
 
 --
+-- Indexes for table `contactus`
+--
+ALTER TABLE `contactus`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`);
+
+--
 -- Indexes for table `coupons`
 --
 ALTER TABLE `coupons`
@@ -1982,6 +2021,12 @@ ALTER TABLE `categories`
   MODIFY `categorie_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT for table `contactus`
+--
+ALTER TABLE `contactus`
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `coupons`
 --
 ALTER TABLE `coupons`
@@ -1991,7 +2036,7 @@ ALTER TABLE `coupons`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `orders`
