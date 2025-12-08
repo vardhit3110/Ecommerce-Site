@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 05, 2025 at 01:50 PM
+-- Generation Time: Dec 08, 2025 at 02:17 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -96,11 +96,15 @@ CREATE TABLE `contactus` (
 --
 
 INSERT INTO `contactus` (`id`, `user_id`, `name`, `email`, `subject`, `message`, `create_date`, `reply_message`, `reply_status`, `email_send`, `updated_at`) VALUES
-(1, 30, 'yash87', 'yash87@gmail.com', 'Payment Issu', 'Online Payment Not Working.', '2025-12-04 18:19:13', NULL, '0', '0', NULL),
-(2, 7, 'dixitpatel', 'dixitpatel@gmail.com', 'qqq', 'abcdefghijk...', '2025-12-04 18:19:45', NULL, '0', '0', NULL),
-(4, 27, 'sujal87', 'sujal87@gmail.com', 'aaa', 'testing', '2025-12-05 12:08:50', NULL, '0', '0', NULL),
-(5, 28, 'umang3110', 'umang3110@gmail.com', 'name', 'abc', '2025-12-05 12:09:38', 'xyz...', '1', '0', '2025-12-05 14:44:04'),
-(6, 8, 'vardhit', 'vamjavardhit461@gmail.com', 'paypal', 'please add paypal option', '2025-12-05 15:38:49', 'Next Update add To Paypal gateway', '1', '0', '2025-12-05 15:55:34');
+(1, 8, 'vardhit', 'vamjavardhit461@gmail.com', 'Payment Problem', 'Money deducted but order not shown.', '2025-12-08 16:47:27', 'Restart Your Device.!', '1', '1', '2025-12-08 17:29:55'),
+(2, 7, 'dixitpatel', 'dixitpatel@gmail.com', 'Order Delay', 'My order is late. Please update status.', '2025-12-08 16:48:27', NULL, '0', '0', NULL),
+(3, 30, 'yash87', 'yash87@gmail.com', 'Email Not Received', 'Verification email is not coming.', '2025-12-08 16:49:31', NULL, '0', '0', NULL),
+(4, 25, 'ravina', 'ravina852@gmail.com', 'Profile Update', 'I want to change my mobile number.', '2025-12-08 16:50:25', NULL, '0', '0', NULL),
+(5, 26, 'vishal98', 'vishal@gmail.com', 'Account Locked', 'My account is locked after multiple login attempts.', '2025-12-08 16:51:25', NULL, '0', '0', NULL),
+(6, 27, 'sujal87', 'sujal87@gmail.com', 'Change Password', 'I want to reset my password but link not working.', '2025-12-08 16:52:04', NULL, '0', '0', NULL),
+(7, 28, 'umang3110', 'umang3110@gmail.com', 'Refund Request', 'I want a refund for my last order.', '2025-12-08 16:53:05', NULL, '0', '0', NULL),
+(8, 31, 'vamjadixit315', 'vamjadixit315@gmail.com', 'Refund Request', 'I want a refund for my last order.', '2025-12-08 17:12:50', 'Wait For Few Min.', '1', '1', '2025-12-08 17:13:39'),
+(9, 9, 'prince123', 'prince123@gmail.com', 'Feedback', 'The website is easy to use, thank you!', '2025-12-08 17:19:07', NULL, '0', '0', NULL);
 
 -- --------------------------------------------------------
 
@@ -127,7 +131,7 @@ CREATE TABLE `coupons` (
 INSERT INTO `coupons` (`id`, `promocode`, `discount`, `min_bill_price`, `usage_limit`, `used_count`, `status`, `description`, `creat_time`) VALUES
 (1, 'QZ8R3KLP', 3, 1000, 248, 2, '1', 'New User Offer', '2025-11-07 17:06:23'),
 (2, 'V9TL2XQM', 7, 2500, 199, 1, '1', 'Weekend Shopping Deal', '2025-11-07 17:06:53'),
-(3, 'H2NB6PRJ', 5, 5000, 150, 0, '1', 'Mid-Month Saver', '2025-11-07 17:07:20'),
+(3, 'H2NB6PRJ', 5, 5000, 149, 1, '1', 'Mid-Month Saver', '2025-11-07 17:07:20'),
 (4, 'K4FJ8TZQ', 10, 8000, 119, 1, '1', 'Festival Celebration Offer', '2025-11-07 17:07:49'),
 (5, 'M1XW9GTR', 8, 12000, 98, 2, '1', 'Loyal Customer Reward', '2025-11-07 17:08:19'),
 (6, 'R7LQ3DNP', 12, 35000, 45, 5, '1', 'Premium Shopper Benefit', '2025-11-07 17:08:50'),
@@ -283,7 +287,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `t
 (80, 28, '2025-11-14 10:32:41', '[{\"product_name\":\"ASUS Vivobook 15 Intel Core i3\",\"price\":34990,\"quantity\":1,\"subtotal\":34990}]', 30841.20, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Vesu Ring Road, Surat.', 610090, 'M1XW9GTR', '4198.8', NULL),
 (81, 29, '2025-11-17 18:35:50', '[{\"product_name\":\"Apple iPhone 17\",\"price\":92999,\"quantity\":1,\"subtotal\":92999},{\"product_name\":\"MarQ Power Bank\",\"price\":5999,\"quantity\":2,\"subtotal\":11998}]', 90347.42, 50.00, '1', '2', NULL, NULL, NULL, '4', 'kapodra , Surat.', 511349, 'X6DM5JQR', '14699.58', NULL),
 (82, 30, '2025-11-18 18:00:28', '[{\"product_name\":\"MarQ Power Bank\",\"price\":5999,\"quantity\":1,\"subtotal\":5999},{\"product_name\":\"OnePlus Nord Buds 3r\",\"price\":1699,\"quantity\":2,\"subtotal\":3398},{\"product_name\":\"PTron Power Bank\",\"price\":2199,\"quantity\":1,\"subtotal\":2199}]', 10486.40, 50.00, '1', '2', NULL, NULL, NULL, '4', 'surat.', 771497, 'K4FJ8TZQ', '1159.6', NULL),
-(83, 26, '2025-11-19 18:22:39', '[{\"product_name\":\"HP Intel Core i7\",\"price\":77503,\"quantity\":1,\"subtotal\":77503},{\"product_name\":\"Mouse ( USB 2.0, Black )\",\"price\":599,\"quantity\":1,\"subtotal\":599}]', 72684.86, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Mota Varachha, Surat,Gujarat.', 238085, 'V9TL2XQM', '5467.14', NULL);
+(83, 26, '2025-11-19 18:22:39', '[{\"product_name\":\"HP Intel Core i7\",\"price\":77503,\"quantity\":1,\"subtotal\":77503},{\"product_name\":\"Mouse ( USB 2.0, Black )\",\"price\":599,\"quantity\":1,\"subtotal\":599}]', 72684.86, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Mota Varachha, Surat,Gujarat.', 238085, 'V9TL2XQM', '5467.14', NULL),
+(84, 9, '2025-12-08 17:33:30', '[{\"product_name\":\"DELL\",\"price\":70990,\"quantity\":1,\"subtotal\":70990}]', 67490.50, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Mumbai', 636032, 'H2NB6PRJ', '3549.5', NULL);
 
 -- --------------------------------------------------------
 
@@ -1677,7 +1682,7 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 (5, 'anil', 'anil@gmail.com', '$2y$10$PIAUkD3hjhXLPoc9lBCBleLWBNDGVQbbpAUZaN2klpxxGd.v3838C', '9879879872', NULL, 'surat', NULL, '1', '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
 (7, 'dixitpatel', 'dixitpatel@gmail.com', '$2y$10$a0XpIEU3korUVQ3U86n5A..A4GW0orTGRzt/UFevoq2lgE7LlAfX.', '9876543210', '106, Bapunagar, India Colony, Ahmedabad..', 'surat', 'dixitpatel_1762856047.jpg', '1', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
 (8, 'vardhit', 'vamjavardhit461@gmail.com', '$2y$10$v1B9.vY8ufzk4iWw8qmMZuBh/bGnlW2SCF.U1uPCbaYWHnQDQlrPu', '9876543210', '1021, raj mall, jaipur, rajesthan', 'Ahmedabad', 'vardhit_1762855113.jpg', '1', '1', 'India', 'Rajasthan', 'Jaipur - 302001', NULL, NULL, '1'),
-(9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', 'Mumbai', '', NULL, '', '1', 'India', 'Maharashtra', 'Mumbai - 400001', NULL, '2025-11-07 18:36:16', '1'),
+(9, 'prince123', 'prince123@gmail.com', '$2y$10$7vsf.dmO2lLUskgcNWjpg.VggGiwqKfEkLGPmAWrux5ZaHnGczi5a', '', 'Mumbai', '', NULL, '', '1', 'India', 'Delhi', 'Daryaganj - 110002', NULL, '2025-11-07 18:36:16', '1'),
 (10, 'dhruv321', 'dhruv321@gmail.com', '$2y$10$GLkGP8f2XraRWU9E.x1WU.sbXMXQCbc6eH3h224jJj0vqFl.yVh2S', '9512128080', 'sadar chowk, jetpur.', 'surat', NULL, '1', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
 (12, 'pateldix', 'pateldix@gmail.com', '$2y$10$7kiih7PgCM3zmi68q7.LVOGY6WjoShfHz97IAjd/uPmMh1u6OUs0O', '9876543210', 'Mota varachha, surat.', 'gandhinagar', NULL, '2', '1', 'India', 'Gujarat', 'Surat - 395003', NULL, '2025-11-07 18:36:16', '1'),
 (13, 'abc', 'abc@gmail.com', '$2y$10$yu5/obd1ogq2Yf3VQrvaP.wLA7c.XXTjvRud2c/kZXwTvTg6BjIii', '9513578524', NULL, 'bharuch', NULL, '2', '1', NULL, NULL, NULL, NULL, '2025-11-07 18:36:16', '1'),
@@ -1695,7 +1700,8 @@ INSERT INTO `userdata` (`id`, `username`, `email`, `password`, `phone`, `address
 (27, 'sujal87', 'sujal87@gmail.com', '$2y$10$TdmZ0gnyij13nU9ooTj/HuNO31cJjfRCrbx9UNx1QugiZVA83vwV.', NULL, '32, darshan, kamrej, surat.', NULL, NULL, NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1'),
 (28, 'umang3110', 'umang3110@gmail.com', '$2y$10$Y00rZm86Kg5sqbFzk67gIuQ8mvZ5NQeO7jhDe5dgFBsxIg3msMtDa', NULL, 'Vesu Ring Road, Surat.', NULL, 'umang3110_1763096661.png', NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1'),
 (29, 'divyraj', 'divyraj@gmail.com', '$2y$10$OexejsLHYmtDf/xu2LctV.k8r6g5Mq9NmO3pI3cIqPMzfOdFkEYAG', NULL, 'kapodra , Surat.', NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL, NULL, '1'),
-(30, 'yash87', 'yash87@gmail.com', '$2y$10$bMkDlUzZxgSmkgeYAvED8ennXYRW8dZal5TgRwr1sUy4VvWOwgmYy', NULL, 'surat.', NULL, NULL, NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1');
+(30, 'yash87', 'yash87@gmail.com', '$2y$10$bMkDlUzZxgSmkgeYAvED8ennXYRW8dZal5TgRwr1sUy4VvWOwgmYy', NULL, 'surat.', NULL, NULL, NULL, '1', 'India', 'Gujarat', 'Surat - 395003', NULL, NULL, '1'),
+(31, 'vamjadixit315', 'vamjadixit315@gmail.com', '$2y$10$ybxVxeB60HTQH.Gt25/Ffub3PifT0tNuwY25ELKH6NfJLVGADU8ku', NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, NULL, NULL, NULL, '1');
 
 -- --------------------------------------------------------
 
@@ -1720,7 +1726,8 @@ INSERT INTO `viewcart` (`id`, `user_id`, `product_id`, `quantity`, `added_at`) V
 (81, 16, 1, 1, '2025-10-30 07:38:16'),
 (83, 19, 7, 1, '2025-11-05 13:02:50'),
 (105, 24, 12, 1, '2025-11-10 08:58:49'),
-(110, 25, 18, 1, '2025-11-10 13:19:01');
+(110, 25, 18, 1, '2025-11-10 13:19:01'),
+(129, 31, 23, 1, '2025-12-08 11:41:45');
 
 -- --------------------------------------------------------
 
@@ -1905,7 +1912,16 @@ INSERT INTO `wishlist` (`id`, `user_id`, `prod_id`, `created_at`) VALUES
 (210, 30, 20, '2025-11-18 10:35:33'),
 (211, 30, 18, '2025-11-18 12:17:12'),
 (212, 26, 23, '2025-11-19 18:21:57'),
-(213, 26, 22, '2025-11-19 18:22:09');
+(213, 26, 22, '2025-11-19 18:22:09'),
+(214, 31, 23, '2025-12-08 17:11:47'),
+(215, 31, 5, '2025-12-08 17:11:52'),
+(216, 31, 6, '2025-12-08 17:11:53'),
+(217, 31, 12, '2025-12-08 17:11:54'),
+(218, 31, 1, '2025-12-08 17:11:58'),
+(219, 31, 2, '2025-12-08 17:11:59'),
+(220, 31, 4, '2025-12-08 17:12:00'),
+(221, 31, 21, '2025-12-08 17:12:07'),
+(222, 9, 21, '2025-12-08 17:31:25');
 
 --
 -- Indexes for dumped tables
@@ -2024,7 +2040,7 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `contactus`
 --
 ALTER TABLE `contactus`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `coupons`
@@ -2042,7 +2058,7 @@ ALTER TABLE `feedback`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -2078,19 +2094,19 @@ ALTER TABLE `subscriber`
 -- AUTO_INCREMENT for table `userdata`
 --
 ALTER TABLE `userdata`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT for table `viewcart`
 --
 ALTER TABLE `viewcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
 --
 ALTER TABLE `wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223;
 
 --
 -- Constraints for dumped tables
