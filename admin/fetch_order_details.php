@@ -57,18 +57,17 @@ include "db_connect.php";
 
                     echo "
                 <div class='mb-4 p-2 border rounded bg-light'>
-                        <img src='{$product_img}' class='product-img mb-2' alt='Product' style='width:90px;height:90px;object-fit:cover;border-radius:10px;'>
+                        <img src='{$product_img}' class='product-img mb-2' alt='Product' style='width:90px; height:90px; object-fit:contain; border-radius:10px;'>
                         <p class='fw-bold mb-1'>{$product_name}</p>
-                        <small>Qty: {$qty} | Price: ₹{$price} each</small>
+                        <small>Qty: {$qty} | Price: ₹{$price} each am to tu event ma gyo tyare maro wight shirt pan fadi nakho to ana paisa magiya me hato fatelo pan keva pur to peri sakay avo te vadhu fado have e perato pan nathi ana paisa magiya me tari pase thi</small>
                     </div>
                 ";
                 }
 
                 echo "</div>";
 
-                // RIGHT SIDE — Order Details
-                echo "
-                <div class='col-md-8'>
+                // right side — Order Details
+                echo "<div class='col-md-8'>
                     <p><span class='info-label fw-bold'>Order Code:</span> {$row['order_code']}</p>
                     <p><span class='info-label fw-bold'>Order Date:</span> {$row['order_date']}</p>
                     <p><span class='info-label fw-bold'>Shipping Charge:</span> ₹{$row['shipping_charge']}</p>
@@ -85,11 +84,9 @@ include "db_connect.php";
                 </div>
             </div>
         </div>";
-
             } else {
                 echo "<p class='text-center text-muted'>No product details found in this order.</p>";
             }
-
         } else {
             echo "<p class='text-center text-danger'>Order not found.</p>";
         }

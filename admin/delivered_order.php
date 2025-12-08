@@ -500,7 +500,7 @@ include "db_connect.php";
                 </div>
             `);
             $.ajax({
-                url: 'fetch_order_details.php',
+                url: 'fetch_order_details.php', 
                 type: 'POST',
                 data: { order_id: orderId },
                 success: function (response) {

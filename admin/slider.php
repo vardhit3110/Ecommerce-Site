@@ -443,7 +443,7 @@ if ($email == true) {
 
             <li>
                 <a href="user_contact.php">
-                    <i class="fa fa-cogs" aria-hidden="true"></i>
+                    <i class="fa-solid fa-envelope"></i>
                     <span>User Contact</span>
                 </a>
             </li>
