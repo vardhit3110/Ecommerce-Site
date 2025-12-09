@@ -75,56 +75,11 @@ if (isset($_POST['change-image']) && isset($_FILES['profile_image']['name']) && 
     <title>View Profile</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
-    <style>
-        .error {
-            color: red;
-            font-size: 13px;
-            margin-top: 3px;
-        }
-
-        .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            word-wrap: break-word;
-            background-color: #fff;
-            background-clip: border-box;
-            border: 0 solid transparent;
-            border-radius: .25rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 6px 0 rgb(218 218 253 / 65%), 0 2px 6px 0 rgb(206 206 238 / 54%);
-        }
-
-        .me-2 {
-            margin-right: .5rem !important;
-        }
-
-        #profileImage {
-            cursor: pointer;
-        }
-
-        .form-control {
-            margin-bottom: 17px;
-        }
-
-        label.error {
-            font-size: 13px;
-            color: red;
-            margin-top: -22px;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .card-body {
-            min-height: 500px;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/viewprofile.css">
 </head>
 
 <body>
     <?php require_once "header.php"; ?>
-
     <div class="container">
         <div class="main-body">
             <div class="row mt-5">
@@ -139,7 +94,9 @@ if (isset($_POST['change-image']) && isset($_FILES['profile_image']['name']) && 
                                         style="display: none;" accept="image/*">
 
                                     <img src="./store/images/user_img/<?php echo $image; ?>" alt="User"
-                                        class="rounded-circle p-1 border border-dark border-3" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;" id="profileImage"
+                                        class="rounded-circle p-1 border border-dark border-3"
+                                        style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;"
+                                        id="profileImage"
                                         onerror="this.onerror=null; this.src='./store/images/user_img/default.png'">
 
                                     <div class="mt-3">

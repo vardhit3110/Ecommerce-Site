@@ -165,8 +165,7 @@ require "db_connect.php";
                                                 <i class='bi bi-trash'></i> Delete
                                                 </a>
                                             </td>
-                                            </tr>
-                                        ";
+                                            </tr>";
                                 }
                             } else {
                                 echo "<tr><td colspan='5' class='text-danger'>No Content Found</td></tr>";

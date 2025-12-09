@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2025 at 02:17 PM
+-- Generation Time: Dec 09, 2025 at 02:00 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -288,7 +288,8 @@ INSERT INTO `orders` (`order_id`, `user_id`, `order_date`, `product_details`, `t
 (81, 29, '2025-11-17 18:35:50', '[{\"product_name\":\"Apple iPhone 17\",\"price\":92999,\"quantity\":1,\"subtotal\":92999},{\"product_name\":\"MarQ Power Bank\",\"price\":5999,\"quantity\":2,\"subtotal\":11998}]', 90347.42, 50.00, '1', '2', NULL, NULL, NULL, '4', 'kapodra , Surat.', 511349, 'X6DM5JQR', '14699.58', NULL),
 (82, 30, '2025-11-18 18:00:28', '[{\"product_name\":\"MarQ Power Bank\",\"price\":5999,\"quantity\":1,\"subtotal\":5999},{\"product_name\":\"OnePlus Nord Buds 3r\",\"price\":1699,\"quantity\":2,\"subtotal\":3398},{\"product_name\":\"PTron Power Bank\",\"price\":2199,\"quantity\":1,\"subtotal\":2199}]', 10486.40, 50.00, '1', '2', NULL, NULL, NULL, '4', 'surat.', 771497, 'K4FJ8TZQ', '1159.6', NULL),
 (83, 26, '2025-11-19 18:22:39', '[{\"product_name\":\"HP Intel Core i7\",\"price\":77503,\"quantity\":1,\"subtotal\":77503},{\"product_name\":\"Mouse ( USB 2.0, Black )\",\"price\":599,\"quantity\":1,\"subtotal\":599}]', 72684.86, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Mota Varachha, Surat,Gujarat.', 238085, 'V9TL2XQM', '5467.14', NULL),
-(84, 9, '2025-12-08 17:33:30', '[{\"product_name\":\"DELL\",\"price\":70990,\"quantity\":1,\"subtotal\":70990}]', 67490.50, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Mumbai', 636032, 'H2NB6PRJ', '3549.5', NULL);
+(84, 9, '2025-12-08 17:33:30', '[{\"product_name\":\"DELL\",\"price\":70990,\"quantity\":1,\"subtotal\":70990}]', 67490.50, 50.00, '1', '2', NULL, NULL, NULL, '4', 'Mumbai', 636032, 'H2NB6PRJ', '3549.5', NULL),
+(85, 7, '2025-12-09 18:28:29', '[{\"product_name\":\"OnePlus Nord Buds 3r\",\"price\":1699,\"quantity\":1,\"subtotal\":1699}]', 1759.00, 60.00, '2', '2', 'pay_RpWNgA3R7pMITr', 'order_RpWNYF23MELcgu', 'pay_RpWNgA3R7pMITr', '1', '106, Bapunagar, India Colony, Ahmedabad..', 600001, 'none', '0', NULL);
 
 -- --------------------------------------------------------
 
@@ -2058,7 +2059,7 @@ ALTER TABLE `feedback`
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `product`
@@ -2100,7 +2101,7 @@ ALTER TABLE `userdata`
 -- AUTO_INCREMENT for table `viewcart`
 --
 ALTER TABLE `viewcart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
 
 --
 -- AUTO_INCREMENT for table `wishlist`

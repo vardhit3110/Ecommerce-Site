@@ -12,117 +12,12 @@ include "db_connect.php";
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <style>
-        #box-detail {
-            color: black;
-        }
-
-        #box {
-            border-radius: 15px;
-        }
-
-        .not-data {
-            background-color: #ffebebff;
-            border-radius: 8px;
-        }
-
-        .detail-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 18px rgba(0, 119, 204, 0.3);
-            background: linear-gradient(135deg, #e0f7ff, #cceeff);
-        }
-
-        .wishlist-btn {
-            transition: all 0.3s ease;
-        }
-
-        .wishlist-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .main-image-container {
-            position: relative;
-            width: 350px;
-            height: 350px;
-            overflow: hidden;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            cursor: zoom-in;
-            margin: 0 auto;
-            padding: 5px;
-        }
-
-        .main-image {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s ease;
-        }
-
-        .zoom-floating {
-            position: fixed;
-            top: 100px;
-            right: 50px;
-            width: 700px;
-            height: 83%;
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 180%;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-            display: none;
-            z-index: 9999;
-            background-color: #fff;
-        }
-
-        .thumb-row {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .thumb-row img {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 6px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.3s;
-        }
-
-        .thumb-row img:hover {
-            border-color: #0077cc;
-            transform: scale(1.05);
-        }
-
-        .col-md-8.details-box {
-            padding-left: 40px;
-        }
-
-        @media (max-width: 768px) {
-            .col-md-8.details-box {
-                padding-left: 15px;
-                margin-top: 20px;
-            }
-
-            .zoom-floating {
-                display: none !important;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="assets/viewproduct.css">
 </head>
 
 <body>
-
     <?php require_once "header.php"; ?>
-
     <main class="container py-4">
-
         <!-- message -->
         <?php if (isset($_GET['msg'])): ?>
             <div class="alert alert-<?php echo $_GET['msg'] === 'addedtocart' ? 'success' : 'warning'; ?> alert-dismissible fade show mt-3"
@@ -187,27 +82,20 @@ include "db_connect.php";
                             $user_res = mysqli_query($conn, "SELECT id FROM userdata WHERE email='$user_email'");
                             $user_data = mysqli_fetch_assoc($user_res);
                             $user_id = $user_data['id'];
-
                             $wishlist_result = mysqli_query($conn, "SELECT * FROM wishlist WHERE user_id='$user_id' AND prod_id='$product_id'");
                             $is_in_wishlist = (mysqli_num_rows($wishlist_result) > 0);
                         }
                         ?>
-
                         <div class="row shadow p-4 rounded align-items-center" id="box-detail">
                             <!-- left: image -->
                             <div class="col-md-4 text-center mb-3 mb-md-0">
                                 <h6 class="text-primary mb-3"><?php echo htmlspecialchars($category_name); ?></h6>
-
                                 <div class="main-image-container position-relative">
                                     <img id="mainImage"
                                         src="<?php echo htmlspecialchars('./admin/images/product_img/' . $productimage); ?>"
                                         class="main-image rounded" alt="Product Image">
                                 </div>
-
-                                <!-- Floating zoom -->
                                 <div class="zoom-floating" id="zoomFloating"></div>
-
-                                <!-- Thumbnails -->
                                 <div class="thumb-row">
                                     <?php
                                     foreach ($allImages as $img) {

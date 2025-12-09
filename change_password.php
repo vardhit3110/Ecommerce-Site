@@ -60,66 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="utf-8">
     <title>Set New Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        body {
-            background: #ffffff;
-            background: radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(148, 187, 233, 1) 100%);
-        }
-
-        .container {
-            max-width: 500px;
-            margin-top: 80px;
-        }
-
-        .password-card {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            padding: 30px;
-            transition: all 0.3s ease;
-        }
-
-        .password-card:hover {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        h3 {
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 25px;
-            color: #333;
-        }
-
-        label {
-            font-weight: 500;
-            color: #555;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            transition: border-color 0.2s ease;
-        }
-
-        .form-control:focus {
-            border-color: #0d6efd;
-            box-shadow: none;
-        }
-
-        .btn-primary {
-            width: 100%;
-            border-radius: 8px;
-            padding: 10px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .alert {
-            border-radius: 8px;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/change_password.css">
 </head>
 
 <body>
