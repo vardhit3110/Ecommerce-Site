@@ -37,62 +37,7 @@ if (isset($_GET['edit'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <style>
-        :root {
-            --primary: #4361ee;
-            --light-bg: #f5f7fa;
-            --card-bg: #ffffff;
-        }
-
-        body {
-            background: linear-gradient(135deg, var(--light-bg) 0%, #c3cfe2 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-        }
-
-        .card {
-            border-radius: 15px;
-            background: var(--card-bg);
-        }
-
-        .img-preview {
-            width: 100%;
-            height: 250px;
-            border: 2px dashed #ced4da;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f8f9fa;
-            overflow: hidden;
-        }
-
-        .img-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-        }
-
-        .btn-custom {
-            border-radius: 8px;
-            transition: 0.3s;
-        }
-
-        .btn-custom:hover {
-            transform: scale(1.03);
-        }
-
-        .read-only {
-            background-color: #f3f4f6;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/banner_edit.css">
 </head>
 
 <body>

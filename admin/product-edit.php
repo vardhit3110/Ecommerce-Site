@@ -34,67 +34,7 @@ if (isset($_GET['id'])) {
     <?php include "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-
-    <style>
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .card {
-            border-radius: 12px;
-            margin: 30px auto;
-            max-width: 850px;
-        }
-
-        .main-box {
-            background-color: #ffffff;
-            border-radius: 25px;
-            padding: 20px;
-        }
-
-        .img-large {
-            width: 100%;
-            max-height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .gallery-wrapper {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-
-        .gallery-item {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f8f8f8;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 4px;
-        }
-
-        .img-small {
-            width: 100%;
-            height: 120px;
-            object-fit: contain;
-            border-radius: 5px;
-        }
-
-
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 20px 0;
-            background-color: #fff;
-        }
-
-        .price-input {
-            width: 80%;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/product-edit.css">
 </head>
 
 <body>

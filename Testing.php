@@ -57,7 +57,6 @@ if (!$conn) {
                 <th scope="col">Pic</th>
             </tr>
         </thead>
-
 </body>
 
 </html>

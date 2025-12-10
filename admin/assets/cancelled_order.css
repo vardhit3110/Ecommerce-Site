@@ -1,0 +1,155 @@
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.footer {
+    text-align: center;
+    margin-top: 30px;
+    padding: 15px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+.filter-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.view-btn {
+    color: #007bff;
+    cursor: pointer;
+}
+
+.view-btn:hover {
+    color: #0056b3;
+}
+
+.update-status-btn {
+    color: #198754;
+    cursor: pointer;
+}
+
+.update-status-btn:hover {
+    color: #145c32;
+}
+
+.modal-content {
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.info-icon {
+    color: #0d6efd;
+    margin-left: 8px;
+    cursor: pointer;
+    position: relative;
+}
+
+.fa-filter {
+    width: 50px;
+}
+
+.info-tooltip {
+    display: none;
+    position: absolute;
+    background-color: #212529;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    top: -10px;
+    left: 25px;
+    z-index: 10;
+}
+
+.info-icon:hover .info-tooltip {
+    display: block;
+}
+
+.pagination {
+    display: flex;
+    list-style: none;
+    justify-content: flex-end;
+    padding-left: 0;
+}
+
+.page-item {
+    margin: 0 4px;
+}
+
+.page-link {
+    display: block;
+    padding: 8px 12px;
+    color: #007bff;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+    cursor: default;
+}
+
+.page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    cursor: default;
+}
+
+.page-link:hover {
+    background-color: #e9ecef;
+}
+
+.disabled:hover {
+    cursor: not-allowed;
+}
+
+.pagination-info {
+    font-size: 14px;
+    color: #333;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .pagination-info {
+        margin-bottom: 10px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .pagination {
+        justify-content: center;
+        width: 100%;
+    }
+}

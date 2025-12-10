@@ -52,7 +52,6 @@ session_start();
             </button>
         </div>';
         }
-
         mysqli_stmt_close($stmt);
     }
     ?>

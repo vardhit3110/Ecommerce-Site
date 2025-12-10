@@ -10,7 +10,6 @@ if (isset($_GET['email'])) {
 /* user data show */
 if (isset($_GET['email']) && !empty($_GET['email'])) {
     $get_email = $_GET['email'];
-
     $stmt = mysqli_prepare($conn, "SELECT * FROM userdata WHERE email = ?");
     mysqli_stmt_bind_param($stmt, "s", $get_email);
     mysqli_stmt_execute($stmt);
@@ -31,7 +30,6 @@ if (isset($_GET['email']) && !empty($_GET['email'])) {
     }
     mysqli_stmt_close($stmt);
 }
-
 /* update user code */
 if (isset($_POST['change-image']) && isset($_FILES['profile_image']['name']) && !empty($_FILES['profile_image']['name'])) {
 
@@ -56,11 +54,9 @@ if (isset($_POST['change-image']) && isset($_FILES['profile_image']['name']) && 
                 echo "<script>alert('Error updating image in database.');</script>";
             }
             mysqli_stmt_close($stmt);
-
         } else {
             echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
         }
-
     } else {
         echo "<script>alert('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');</script>";
     }
@@ -110,22 +106,15 @@ if (isset($_POST['change-image']) && isset($_FILES['profile_image']['name']) && 
                             <?php
                             if (isset($_POST['change-image'])) {
                                 $imagepath = "store/images/user_img/";
-
                                 $originalName = basename($_FILES["profile_image"]["name"]);
                                 $imageFileType = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-
                                 $fileName = $username . "_" . time() . "." . $imageFileType;
-
                                 $targetFilePath = $imagepath . $fileName;
-
                                 $allowedTypes = array('jpg', 'png', 'jpeg', 'gif');
-
                                 if (in_array($imageFileType, $allowedTypes)) {
-
                                     if (move_uploaded_file($_FILES["profile_image"]["tmp_name"], $targetFilePath)) {
                                         $stmt = mysqli_prepare($conn, "UPDATE userdata SET image = ? WHERE email = ?");
                                         mysqli_stmt_bind_param($stmt, "ss", $fileName, $email);
-
                                         if (mysqli_stmt_execute($stmt)) {
                                             echo "<script>alert('Image updated successfully.'); window.location.href = window.location.href;</script>";
                                             exit;
@@ -133,11 +122,9 @@ if (isset($_POST['change-image']) && isset($_FILES['profile_image']['name']) && 
                                             echo "<script>alert('Error updating image in database.');</script>";
                                         }
                                         mysqli_stmt_close($stmt);
-
                                     } else {
                                         echo "<script>alert('Sorry, there was an error uploading your file.');</script>";
                                     }
-
                                 } else {
                                     echo "<script>alert('Sorry, only JPG, JPEG, PNG & GIF files are allowed.');</script>";
                                 }

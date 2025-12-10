@@ -16,72 +16,7 @@ error_reporting(0);
     <?php include "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --success: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --accent: #7209b7;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .error {
-            color: red;
-            font-size: 13px;
-            margin-top: 3px;
-        }
-
-        .card-header {
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .card {
-            border-radius: 12px;
-            margin: 30px auto;
-            max-width: 600px;
-        }
-
-        .table th,
-        .table td {
-            vertical-align: middle;
-        }
-
-        .btn i {
-            pointer-events: none;
-        }
-
-        .desc-size {
-            max-width: 450px;
-        }
-
-        #box-color {
-            background-color: rgba(235, 235, 235, 1)
-        }
-
-        .main-box {
-            background-color: #ffffffff;
-            border-radius: 25px;
-        }
-
-        .card-body {
-            background-color: rgba(255, 249, 249, 1)
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 50px;
-            padding: 20px 0;
-            background-color: #fff;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/category-edit.css">
 </head>
 
 <body>

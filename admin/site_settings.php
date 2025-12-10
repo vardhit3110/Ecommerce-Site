@@ -32,57 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <?php require "links/icons.html"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --success: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --accent: #7209b7;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .container {
-            background-color: white;
-            border-radius: 20px;
-            max-width: 100%;
-            margin: 50px auto;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 25px 35px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .card-header {
-            background-color: var(--dark);
-            color: white;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--secondary);
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #666;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/site_settings.css">
 </head>
 
 <body>

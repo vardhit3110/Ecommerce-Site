@@ -17,75 +17,7 @@ require "db_connect.php";
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --success: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --accent: #7209b7;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .card {
-            border-radius: 15px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-        }
-
-        input:checked+.slider {
-            background-color: #7cd992;
-        }
-
-        input:checked+.slider:before {
-            transform: translateX(23px);
-        }
-
-        /* Image Preview Box */
-        .img-preview {
-            width: 100%;
-            max-width: 100%;
-            height: 250px;
-            border: 2px dashed #ced4da;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            background-color: #f8f9fa;
-            cursor: pointer;
-        }
-
-        .img-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/add_banner.css">
 </head>
 
 <body>

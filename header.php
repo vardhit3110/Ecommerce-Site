@@ -28,7 +28,8 @@ if (mysqli_num_rows($result) > 0) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
-  <link rel="stylesheet" href="assets/header.css">
+  <link rel="shortcut icon" href="./store/images/logo.jpg" type="image/x-icon">
+  <link rel="stylesheet" href="assets/header.css">  
 </head>
 
 <body>

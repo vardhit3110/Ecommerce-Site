@@ -30,37 +30,7 @@ if (mysqli_num_rows($result) > 0) {
     <?php include "links/icons.html"; ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-    <style>
-        .card {
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-label {
-            font-weight: 600;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <link rel="stylesheet" href="assets/Edit_admin.css">
 </head>
 
 <body>

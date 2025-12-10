@@ -28,39 +28,7 @@ if (isset($_GET['user_id'])) {
     <?php require "links/icons.html"; ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --success: #4cc9f0;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --accent: #7209b7;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .container {
-            background-color: white;
-            border-radius: 20px;
-            max-width: 100%;
-            overflow-x: auto;
-        }
-
-        .rating {
-            display: flex;
-            gap: 3px;
-        }
-        .star{
-            color: #ffc107;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/feedbackReply.css">
 </head>
 
 <body>
