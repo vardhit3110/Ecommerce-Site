@@ -6,11 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['action']) && $_POST['action'] === 'update_status') {
         $user_id = intval($_POST['user_id']);
         $status = intval($_POST['status']);
-
         $stmt = mysqli_prepare($conn, "UPDATE userdata SET status = ? WHERE id = ?");
         mysqli_stmt_bind_param($stmt, "ii", $status, $user_id);
         $result = mysqli_stmt_execute($stmt);
-
         if ($result) {
             echo json_encode(['success' => true, 'message' => 'Status updated successfully']);
         } else {
@@ -18,18 +16,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         exit;
     }
-
     if (isset($_POST['search'])) {
         $search = mysqli_real_escape_string($conn, $_POST['search']);
     }
 }
-
 $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
-
-$total_data = 6;
+$total_data = isset($_GET['entries']) ? (int) $_GET['entries'] : 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $total_data;
-
 if (!empty($search)) {
     $search_term = "%$search%";
     $sql = "SELECT * FROM userdata WHERE username LIKE ? OR email LIKE ? OR phone LIKE ? OR city LIKE ? LIMIT {$offset}, {$total_data}";
@@ -89,7 +83,22 @@ $end = min($page * $total_data, $total_user);
         <div class="card shadow border-0" id="card-body">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="fw-bold mb-0"><i class="fa-solid fa-user-plus"></i> Users List</h4>
+                    <!-- <h4 class="fw-bold mb-0"><i class="fa-solid fa-user-plus"></i> Users List</h4> -->
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-0">
+                        <div class="d-flex align-items-center mb-3">
+                            <label class="me-2">Show entries</label>
+                            <select id="showEntries" class="form-select form-select-sm" style="width: 80px;">
+                                <option value="10" <?php if ($total_data == 10)
+                                    echo 'selected'; ?>>10</option>
+                                <option value="25" <?php if ($total_data == 25)
+                                    echo 'selected'; ?>>25</option>
+                                <option value="50" <?php if ($total_data == 50)
+                                    echo 'selected'; ?>>50</option>
+                                <option value="100" <?php if ($total_data == 100)
+                                    echo 'selected'; ?>>100</option>
+                            </select>
+                        </div>
+                    </div>
                     <div>
                         <input id="searchInput" type="text" class="form-control d-inline-block w-auto"
                             placeholder="Search..." value="<?php echo htmlspecialchars($search); ?>">
@@ -134,7 +143,6 @@ $end = min($page * $total_data, $total_user);
                                     echo "<td><p class='user-email'><i class='fa-regular fa-envelope'></i>&nbsp;{$email}<span class='tooltip-text'><i class='fa-regular fa-envelope'></i>&nbsp;{$email}</span></p></td>";
                                     echo "<td><div class='user-ph><div class='user-ph'><i class='fa-regular fa-phone'></i>&nbsp" . ($row['phone'] ?: 'N/A') . "</div></td>";
                                     echo "<td>" . ($row['city'] ?: 'N/A') . "</td>";
-
                                     if ($row['gender'] == 1) {
                                         $gender = "Male";
                                     } elseif ($row['gender'] == 2) {
@@ -142,12 +150,9 @@ $end = min($page * $total_data, $total_user);
                                     } else {
                                         $gender = "N/A";
                                     }
-
                                     echo "<td>" . $gender . "</td>";
-
                                     $status_class = ($row['status'] == 1) ? 'active' : 'inactive';
                                     $status_text = ($row['status'] == 1) ? 'Active' : 'Inactive';
-
                                     echo '<td>
                                             <div class="d-flex flex-column align-items-center">
                                                 <div class="status-indicator ' . $status_class . '" data-user-id="' . $row['id'] . '">' . $status_text . '</div>
@@ -156,12 +161,10 @@ $end = min($page * $total_data, $total_user);
                                                 </div>
                                             </div>
                                         </td>';
-
                                     echo "<td>
                                             <a href='user_edit.php?id={$row['id']}" . (!empty($search) ? "&search=" . urlencode($search) : "") . "' class='btn btn-sm btn-outline-primary me-2'><i class='bi bi-pencil-square'></i> Edit</a>
                                             <a href='partials/_delete-user.php?id={$row['id']}' class='btn btn-sm btn-outline-danger' onclick=\"return confirm('Are you sure you want to delete this record?')\"><i class='bi bi-trash'></i> Delete</a>
                                         </td>";
-
                                     echo "</tr>";
                                 }
                             } else {
@@ -181,36 +184,32 @@ $end = min($page * $total_data, $total_user);
                         <ul class="pagination mb-0">
                             <?php if ($page > 1): ?>
                                 <li class="page-item"><a class="page-link"
-                                        href="?page=<?php echo $page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">«
+                                        href="?page=<?php echo $page - 1; ?>&entries=<?php echo $total_data; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>">«
                                         Prev</a></li>
                             <?php else: ?>
                                 <li class="page-item disabled"><a class="page-link" href="#">« Prev</a></li>
                             <?php endif; ?>
-
                             <?php
                             $visiblePages = 1;
                             $startPage = max(1, $page - $visiblePages);
                             $endPage = min($total_page, $page + $visiblePages);
-
                             if ($startPage > 1) {
-                                echo '<li class="page-item"><a class="page-link" href="?page=1' . (!empty($search) ? '&search=' . urlencode($search) : '') . '">1</a></li>';
+                                echo '<li class="page-item"><a class="page-link" href="?page=1&entries=' . $total_data . (!empty($search) ? '&search=' . urlencode($search) : '') . '">1</a></li>';
                                 if ($startPage > 2)
                                     echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
                             }
-
                             for ($i = $startPage; $i <= $endPage; $i++) {
                                 $active = ($i == $page) ? 'active' : '';
-                                echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . (!empty($search) ? '&search=' . urlencode($search) : '') . '">' . $i . '</a></li>';
+                                echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '&entries=' . $total_data . (!empty($search) ? '&search=' . urlencode($search) : '') . '">' . $i . '</a></li>';
                             }
-
                             if ($endPage < $total_page) {
                                 if ($endPage < $total_page - 1)
                                     echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
-                                echo '<li class="page-item"><a class="page-link" href="?page=' . $total_page . (!empty($search) ? '&search=' . urlencode($search) : '') . '">' . $total_page . '</a></li>';
-                            }
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . $total_page . '&entries=' . $total_data . (!empty($search) ? '&search=' . urlencode($search) : '') . '">' . $total_page . '</a></li>';
 
+                            }
                             if ($page < $total_page) {
-                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . (!empty($search) ? '&search=' . urlencode($search) : '') . '">Next »</a></li>';
+                                echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '&entries=' . $total_data . (!empty($search) ? '&search=' . urlencode($search) : '') . '">Next »</a></li>';
                             } else {
                                 echo '<li class="page-item disabled"><a class="page-link" href="#">Next »</a></li>';
                             }
@@ -219,6 +218,7 @@ $end = min($page * $total_data, $total_user);
                     </div>
                 <?php endif; ?>
             </div>
+
         </div>
         <br>
         <div class="footer">
@@ -241,7 +241,7 @@ $end = min($page * $total_data, $total_user);
                 $.ajax({
                     url: 'users_data.php',
                     type: 'GET',
-                    data: { search: searchTerm, page: 1 },
+                    data: { search: searchTerm, page: 1, entries: $('#showEntries').val() },
                     success: function (response) {
                         const tempDiv = $('<div>').html(response);
                         const newTableBody = tempDiv.find('#userTableBody').html();
@@ -255,7 +255,7 @@ $end = min($page * $total_data, $total_user);
                         const newUrl = new URL(window.location);
                         if (searchTerm) newUrl.searchParams.set('search', searchTerm);
                         else newUrl.searchParams.delete('search');
-                        newUrl.searchParams.set('page', '1');
+                        newUrl.searchParams.set('entries', $('#showEntries').val());
                         window.history.replaceState({}, '', newUrl);
 
                         attachToggleListeners();
@@ -333,6 +333,10 @@ $end = min($page * $total_data, $total_user);
             } else if ($('.singleCheck:checked').length === $('.singleCheck').length) {
                 $('#selectAll').prop('checked', true);
             }
+        });
+        $('#showEntries').on('change', function () {
+            var entries = $(this).val();
+            window.location.href = "?entries=" + entries;
         });
     </script>
 </body>

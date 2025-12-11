@@ -3,7 +3,6 @@ session_start();
 error_reporting(0);
 $useremail = $_SESSION['email'];
 $username = $_SESSION['username'];
-
 ?>
 <!DOCTYPE html>
 <html lang="en">

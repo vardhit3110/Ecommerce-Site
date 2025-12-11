@@ -77,7 +77,7 @@ mysqli_close($conn);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Delivery</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-      <link rel="stylesheet" href="assets/onlinePayment.css">
+    <link rel="stylesheet" href="assets/onlinePayment.css">
 
 </head>
 
@@ -139,7 +139,6 @@ mysqli_close($conn);
                                             <td>
                                                 <?php echo $item['quantity']; ?>
                                             </td>
-
                                             <?php
                                             $Subtotal = $item['product_price'] * $item['quantity'];
                                             ?>
@@ -155,12 +154,10 @@ mysqli_close($conn);
                                 <?php endif; ?>
                             </tbody>
                             <tfoot>
-
                                 <tr class="table-bordered border-secondary table-light">
                                     <td colspan="4" class="text-end">Shipping</td>
                                     <td>₹<?php echo number_format($shipping, 2); ?></td>
                                 </tr>
-
                                 <tr class="table-bordered border-secondary table-light">
                                     <td colspan="4" class="text-end">Discount (<?php echo strtoupper($coupon_code); ?>)
                                     </td>
@@ -168,13 +165,11 @@ mysqli_close($conn);
                                         ₹<?php echo number_format($discount_amount, 2); ?>
                                     </td>
                                 </tr>
-
                                 <tr class="table-bordered border-secondary table-active">
                                     <td colspan="4" class="text-end fw-bolder">Total</td>
                                     <td class="fw-bolder text-danger">₹<?php echo number_format($grand_total, 2); ?>
                                     </td>
                                 </tr>
-
                                 <?php if (isset($msg)): ?>
                                     <tr>
                                         <td colspan="5" class="text-center text-danger small"><?php echo $msg; ?></td>
@@ -188,7 +183,6 @@ mysqli_close($conn);
             <div class="col-lg-4 col-md-12">
                 <div class="summary-box bg-light">
                     <h5 class="mb-3"><i class="fa-solid fa-truck-fast me-2 text-success"></i>Delivery Details</h5>
-
                     <!-- Delivery Address -->
                     <div class="mb-3 border rounded p-3 bg-white position-relative">
                         <h6 class="fw-bold mb-1"><i class="fa-solid fa-location-dot me-2 text-danger"></i>Delivery
@@ -205,7 +199,6 @@ mysqli_close($conn);
                             <i class="fa-solid fa-pen-to-square"></i> Edit
                         </a>
                     </div>
-
                     <div class="mb-3">
                         <h6><i class="fa-solid fa-circle-info me-2 text-warning"></i>Online Payment Instructions</h6>
                         <ul style="font-size: 14px;">
@@ -214,8 +207,6 @@ mysqli_close($conn);
                             <li>Ensure stable internet and avoid refreshing during the transaction.</li>
                         </ul>
                     </div>
-
-
                     <div class="mb-3 text-center">
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa"
@@ -228,14 +219,12 @@ mysqli_close($conn);
                                 alt="Paytm" style="height: 25px; width: auto;">
                         </div>
                     </div>
-
                     <!-- Order Button -->
                     <div class="mb-3 text-center">
                         <button type="button" id="rzpButton" class="btn btn-success w-100 fw-semibold">
                             <i class="fa-solid fa-credit-card me-2"></i>Confirm Order & Pay Online
                         </button>
                     </div>
-
                     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
                     <script>
                         document.getElementById('rzpButton').addEventListener('click', function () {

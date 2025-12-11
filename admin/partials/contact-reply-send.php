@@ -16,31 +16,19 @@ if (isset($_POST['contact_id'], $_POST['user_id'], $_POST['reply_message'], $_PO
 
     date_default_timezone_set("Asia/Kolkata");
     $current_time = date("Y-m-d H:i:s");
-
-
     $update = "UPDATE contactus SET reply_status = '1', reply_message = '$reply_msg', updated_at='$current_time' WHERE id = $contact_id";
     if (mysqli_query($conn, $update)) {
-
         $mail = new PHPMailer(true);
-
         try {
-            // Server settings
             $mail->isSMTP();
             $mail->Host = "smtp.gmail.com";
             $mail->SMTPAuth = true;
-
-            //  Your email login credentials
-            $mail->Username = "gujjudayro21@gmail.com"; 
-            $mail->Password = "fumf livn uijg tiuj";     
-
+            $mail->Username = "gujjudayro21@gmail.com";
+            $mail->Password = "fumf livn uijg tiuj";
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
             $mail->Port = 465;
-
-            // Sender & Receiver
             $mail->setFrom("gujjudayro21@gmail.com", "Admin Support");
             $mail->addAddress($user_email);
-
-            // Email Content
             $mail->isHTML(true);
             $mail->Subject = "Reply to your Contact Message";
             $mail->Body = "
@@ -51,17 +39,12 @@ if (isset($_POST['contact_id'], $_POST['user_id'], $_POST['reply_message'], $_PO
                 <br>
                 <p>Thank you!</p>
             ";
-
             $mail->send();
-
-            // Redirect After Success
             header("Location: ../user_contact.php?reply=success&contact_id=$contact_id&user_id=$user_id");
             exit;
-
         } catch (Exception $e) {
             echo "Email Error: " . $mail->ErrorInfo;
         }
-
     } else {
         echo "DB Error: " . mysqli_error($conn);
     }

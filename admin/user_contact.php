@@ -2,13 +2,12 @@
 require "slider.php";
 require "db_connect.php";
 
-$total_data = 8;
+$total_data = isset($_GET['entries']) ? (int) $_GET['entries'] : 10;
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
 $offset = ($page - 1) * $total_data;
 $query = "SELECT c.id, c.user_id, u.username AS name, u.email AS user_email, c.subject, c.message, c.reply_status, c.email_send  FROM contactus c JOIN userdata u ON c.user_id = u.id ORDER BY c.id DESC LIMIT {$offset}, {$total_data}";
 $result = mysqli_query($conn, $query);
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,10 +28,23 @@ $result = mysqli_query($conn, $query);
         <div class="header mb-4">
             <h1><i class="fa-solid fa-envelope"></i> User Contact Messages</h1>
         </div>
-
         <div class="card shadow border-0">
             <div class="card-body">
-                <h4 class="fw-bold mb-3"><i class="fa-solid fa-message"></i> Contact Us</h4>
+                <!-- <h4 class="fw-bold mb-3"><i class="fa-solid fa-message"></i> Contact Us</h4> -->
+                <div class="d-flex align-items-center mb-3">
+                    <label class="me-2">Show entries</label>
+                    <select id="showEntries" class="form-select form-select-sm" style="width: 80px;">
+                        <option value="10" <?php if ($total_data == 10)
+                            echo 'selected'; ?>>10</option>
+                        <option value="25" <?php if ($total_data == 25)
+                            echo 'selected'; ?>>25</option>
+                        <option value="50" <?php if ($total_data == 50)
+                            echo 'selected'; ?>>50</option>
+                        <option value="100" <?php if ($total_data == 100)
+                            echo 'selected'; ?>>100</option>
+                    </select>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-hover table-striped align-middle text-center">
                         <thead class="table-primary">
@@ -54,11 +66,9 @@ $result = mysqli_query($conn, $query);
                                     $replyStatus = $row['reply_status'] == 1
                                         ? '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Replied</span>'
                                         : '<span class="badge text-warning" style="background-color: hsla(43, 100%, 95%, 1.00);">Pending</span>';
-
                                     $emailSend = $row['email_send'] == 1
                                         ? '<span class="badge text-success" style="background-color: hsla(152, 85%, 92%, 1.00);">Send</span>'
                                         : '<span class="badge text-secondary" style="background-color: hsla(0, 0%, 85%, 1.00);">Not Send</span>';
-
                                     echo "<tr id='row_{$row['id']}'>
                                         <td><input type='checkbox' class='checkbox-style singleCheck'></td></td>
                                         <td>{$row['name']}</td>
@@ -95,50 +105,41 @@ $result = mysqli_query($conn, $query);
                     $row = mysqli_fetch_assoc($result);
                     $total_user = $row['total'];
                     $total_page = ceil($total_user / $total_data);
-
                     $start = ($page - 1) * $total_data + 1;
                     $end = min($page * $total_data, $total_user);
-
                     if ($total_user > 0) {
                         echo '<div class="d-flex justify-content-between align-items-center mt-3 flex-wrap">';
                         echo "<div class='pagination-info mb-0'>Showing $start to $end of $total_user entries</div>";
                         echo '<ul class="pagination mb-0">';
-
                         // Prev button
                         if ($page > 1) {
-                            echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
+                            echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '&entries=' . $total_data . '">« Prev</a></li>';
                         } else {
                             echo '<li class="page-item disabled"><a class="page-link" href="#">« Prev</a></li>';
                         }
-
                         $visiblePages = 1;
                         $startPage = max(1, $page - $visiblePages);
                         $endPage = min($total_page, $page + $visiblePages);
-
                         if ($startPage > 1) {
                             echo '<li class="page-item"><a class="page-link" href="?page=1">1</a></li>';
                             if ($startPage > 2)
                                 echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
                         }
-
                         for ($i = $startPage; $i <= $endPage; $i++) {
                             $active = ($i == $page) ? 'active' : '';
                             echo '<li class="page-item ' . $active . '"><a class="page-link" href="?page=' . $i . '">' . $i . '</a></li>';
                         }
-
                         if ($endPage < $total_page) {
                             if ($endPage < $total_page - 1)
                                 echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
                             echo '<li class="page-item"><a class="page-link" href="?page=' . $total_page . '">' . $total_page . '</a></li>';
                         }
-
                         // Next button
                         if ($page < $total_page) {
-                            echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
+                            echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '&entries=' . $total_data . '">Next »</a></li>';
                         } else {
                             echo '<li class="page-item disabled"><a class="page-link" href="#">Next »</a></li>';
                         }
-
                         echo '</ul>';
                         echo '</div>';
                     }
@@ -221,6 +222,11 @@ $result = mysqli_query($conn, $query);
                     $('#selectAll').prop('checked', true);
                 }
             });
+            $('#showEntries').on('change', function () {
+                var entries = $(this).val();
+                window.location.href = "?entries=" + entries;
+            });
+
         </script>
         <br>
         <div class="footer">

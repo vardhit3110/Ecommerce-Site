@@ -124,7 +124,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             <textarea id="address" name="address" rows="3" class="form-control" disabled
                                 required><?php echo htmlspecialchars($user['address']); ?></textarea>
                         </div>
-
                         <!-- Status -->
                         <div class="col-md-6">
                             <label for="status" class="form-label fw-semibold">Status</label>
@@ -134,7 +133,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <option value="2" <?php if ($user['status'] == '2')
                                     echo "selected"; ?>>Inactive</option>
                             </select>
-
                         </div>
                     </div>
 
@@ -148,7 +146,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </button>
                     </div>
                 </form>
-
             </div>
         </div>
         <!-- </div> -->

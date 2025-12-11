@@ -2,8 +2,10 @@
 require "slider.php";
 require "db_connect.php";
 
+$total_data = isset($_GET['entries']) ? (int) $_GET['entries'] : 10;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
+$offset = ($page - 1) * $total_data;
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,10 +36,20 @@ require "db_connect.php";
         <div class="card shadow border-0" id="card-body">
             <div class="card-body">
                 <!-- Header Section -->
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
-                    <h4 class="fw-bold mb-3 mb-md-0">
-                        <i class="fa-solid fa-users"></i> Subscribers
-                    </h4>
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-0">
+                    <div class="d-flex align-items-center mb-3">
+                        <label class="me-2">Show entries</label>
+                        <select id="showEntries" class="form-select form-select-sm" style="width: 80px;">
+                            <option value="10" <?php if ($total_data == 10)
+                                echo 'selected'; ?>>10</option>
+                            <option value="25" <?php if ($total_data == 25)
+                                echo 'selected'; ?>>25</option>
+                            <option value="50" <?php if ($total_data == 50)
+                                echo 'selected'; ?>>50</option>
+                            <option value="100" <?php if ($total_data == 100)
+                                echo 'selected'; ?>>100</option>
+                        </select>
+                    </div>
                 </div>
 
                 <!-- Table Section -->
@@ -53,9 +65,6 @@ require "db_connect.php";
                         </thead>
                         <tbody>
                             <?php
-                            $total_data = 8;
-                            $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
-                            $offset = ($page - 1) * $total_data;
                             $stmt = mysqli_prepare($conn, "SELECT * FROM subscriber ORDER BY subscriber_id DESC LIMIT {$offset}, {$total_data}");
 
                             if ($stmt) {
@@ -106,7 +115,7 @@ require "db_connect.php";
 
                     // Prev button
                     if ($page > 1) {
-                        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '">« Prev</a></li>';
+                        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page - 1) . '&entries=' . $total_data . '">« Prev</a></li>';
                     } else {
                         echo '<li class="page-item disabled"><a class="page-link" href="#">« Prev</a></li>';
                     }
@@ -135,7 +144,7 @@ require "db_connect.php";
 
                     // Next button
                     if ($page < $total_page) {
-                        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '">Next »</a></li>';
+                        echo '<li class="page-item"><a class="page-link" href="?page=' . ($page + 1) . '&entries=' . $total_data . '">Next »</a></li>';
                     } else {
                         echo '<li class="page-item disabled"><a class="page-link" href="#">Next »</a></li>';
                     }
@@ -154,6 +163,11 @@ require "db_connect.php";
         </div>
     </div>
     <script>
+        $('#showEntries').on('change', function () {
+            var entries = $(this).val();
+            window.location.href = "?entries=" + entries;
+        });
+
         function confirmDelete() {
             return confirm("Are you sure you want to delete this feedback?");
         }
